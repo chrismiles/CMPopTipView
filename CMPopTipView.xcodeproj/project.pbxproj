@@ -16,6 +16,8 @@
 		2860E32F111B888700E27156 /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2860E32D111B888700E27156 /* MainWindow_iPad.xib */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		83FEEE46128E496A007C310F /* CMPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FEEE45128E496A007C310F /* CMPopTipView.m */; };
+		83FEEE61128E4F98007C310F /* Demo1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FEEE5F128E4F98007C310F /* Demo1ViewController.m */; };
+		83FEEE62128E4F98007C310F /* Demo1ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83FEEE60128E4F98007C310F /* Demo1ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,9 @@
 		32CA4F630368D1EE00C91783 /* CMPopTipView_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPopTipView_Prefix.pch; sourceTree = "<group>"; };
 		83FEEE44128E496A007C310F /* CMPopTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPopTipView.h; sourceTree = "<group>"; };
 		83FEEE45128E496A007C310F /* CMPopTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPopTipView.m; sourceTree = "<group>"; };
+		83FEEE5E128E4F98007C310F /* Demo1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demo1ViewController.h; sourceTree = "<group>"; };
+		83FEEE5F128E4F98007C310F /* Demo1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Demo1ViewController.m; sourceTree = "<group>"; };
+		83FEEE60128E4F98007C310F /* Demo1ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Demo1ViewController.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* CMPopTipView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CMPopTipView-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -63,6 +68,9 @@
 			children = (
 				2860E325111B887F00E27156 /* AppDelegate_iPhone.h */,
 				2860E326111B887F00E27156 /* AppDelegate_iPhone.m */,
+				83FEEE5E128E4F98007C310F /* Demo1ViewController.h */,
+				83FEEE5F128E4F98007C310F /* Demo1ViewController.m */,
+				83FEEE60128E4F98007C310F /* Demo1ViewController.xib */,
 				2860E327111B887F00E27156 /* MainWindow_iPhone.xib */,
 			);
 			path = iPhone;
@@ -179,6 +187,7 @@
 			files = (
 				2860E329111B887F00E27156 /* MainWindow_iPhone.xib in Resources */,
 				2860E32F111B888700E27156 /* MainWindow_iPad.xib in Resources */,
+				83FEEE62128E4F98007C310F /* Demo1ViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +202,7 @@
 				2860E328111B887F00E27156 /* AppDelegate_iPhone.m in Sources */,
 				2860E32E111B888700E27156 /* AppDelegate_iPad.m in Sources */,
 				83FEEE46128E496A007C310F /* CMPopTipView.m in Sources */,
+				83FEEE61128E4F98007C310F /* Demo1ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

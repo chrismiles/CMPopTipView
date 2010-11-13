@@ -15,7 +15,7 @@
  
  Example:
  
-	- (void)showAddWaterwayHint {
+	- (void)showPopTipView {
 		NSString *message = @"Start by adding a waterway to your favourites.";
 		CMPopTipView *popTipView = [[CMPopTipView alloc] initWithMessage:message];
 		popTipView.delegate = self;
@@ -25,7 +25,7 @@
 		[popTipView release];
 	}
 
-	- (void)dismissAddWaterwayHint {
+	- (void)dismissPopTipView {
 		[self.myPopTipView dismissAnimated:NO];
 		self.myPopTipView = nil;
 	}
