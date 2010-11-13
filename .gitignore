@@ -1,0 +1,11 @@
+# Can ignore specific files
+.DS_Store
+*.xcodeproj/*.mode1v3
+*.xcodeproj/*.pbxuser
+
+# Use wildcards as well
+#*~
+#*.swp
+
+# Can also ignore all directories and files in a directory.
+#tmp/**/* 
