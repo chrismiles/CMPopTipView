@@ -133,7 +133,8 @@
 				83FEEE44128E496A007C310F /* CMPopTipView.h */,
 				83FEEE45128E496A007C310F /* CMPopTipView.m */,
 			);
-			path = CMPopTipView;
+			name = CMPopTipView;
+			path = ../CMPopTipView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
