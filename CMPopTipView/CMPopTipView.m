@@ -188,7 +188,6 @@
 		return;
 	}
 	
-	NSLog(@"containerView: %@", containerView);
 	[containerView addSubview:self];
 	
 	CGPoint barButtonItemWindowCoord = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:nil];

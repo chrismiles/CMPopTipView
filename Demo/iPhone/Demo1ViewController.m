@@ -3,7 +3,7 @@
 //  CMPopTipView
 //
 //  Created by Chris Miles on 13/11/10.
-//  Copyright 2010 __MyCompanyName__. All rights reserved.
+//  Copyright 2010 Chris Miles. All rights reserved.
 //
 
 #import "Demo1ViewController.h"
@@ -13,8 +13,11 @@
 #pragma mark Private interface
 
 @interface Demo1ViewController ()
-@property (nonatomic, retain)	CMPopTipView	*aboutPopTipView;
-@property (nonatomic, retain)	CMPopTipView	*toolbarButtonItem1PopTipView;
+@property (nonatomic, retain)	CMPopTipView	*navBarLeftButtonPopTipView;
+@property (nonatomic, retain)	CMPopTipView	*navBarRightButtonPopTipView;
+@property (nonatomic, retain)	CMPopTipView	*toolbarLeftButtonPopTipView;
+@property (nonatomic, retain)	CMPopTipView	*toolbarMiddleButtonPopTipView;
+@property (nonatomic, retain)	CMPopTipView	*toolbarRightButtonPopTipView;
 @end
 
 
@@ -23,36 +26,107 @@
 
 @implementation Demo1ViewController
 
-@synthesize aboutPopTipView, toolbarButtonItem1PopTipView;
-@synthesize toolbarButtonItem1;
+@synthesize navBarRightButtonPopTipView, navBarLeftButtonPopTipView, toolbarLeftButtonPopTipView, toolbarMiddleButtonPopTipView, toolbarRightButtonPopTipView;
 
-- (void)showToolbarButtonItem1PopTipView {
-	NSString *message = @"CMPopTipView can point at any bar button items, in navigation bars or toolbars, top or bottom.";
-	CMPopTipView *popTipView = [[CMPopTipView alloc] initWithMessage:message];
-	popTipView.delegate = self;
-	[popTipView presentPointingAtBarButtonItem:self.toolbarButtonItem1 animated:YES];
+- (void)dismissAllPopTipViews {
+	NSArray *allPopTipViews = [NSArray arrayWithObjects:
+							   @"navBarLeftButtonPopTipView",
+							   @"navBarRightButtonPopTipView",
+							   @"toolbarLeftButtonPopTipView",
+							   @"toolbarMiddleButtonPopTipView",
+							   @"toolbarRightButtonPopTipView",
+							   nil];
 	
-	self.toolbarButtonItem1PopTipView = popTipView;
-	[popTipView release];
+	for (NSString *propertyName in allPopTipViews) {
+		SEL getter = NSSelectorFromString(propertyName);
+		CMPopTipView *popTipView = [self performSelector:getter];
+		if (popTipView != nil) {
+			[popTipView dismissAnimated:YES];
+			SEL setter = NSSelectorFromString([NSString stringWithFormat:@"set%@%@:", [[propertyName substringToIndex:1] uppercaseString], [propertyName substringFromIndex:1]]);
+			[self performSelector:setter withObject:nil];
+		}
+	}
 }
 
-- (void)showAboutPopTipView {
-	NSString *message = @"Tap here to view information about the app.";
-	CMPopTipView *popTipView = [[CMPopTipView alloc] initWithMessage:message];
-	popTipView.delegate = self;
-	[popTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
-	
-	self.aboutPopTipView = popTipView;
-	[popTipView release];
+- (IBAction)navBarLeftButtonAction:(id)sender {
+	if (nil == self.navBarLeftButtonPopTipView) {
+		[self dismissAllPopTipViews];
+		NSString *message = @"This CMPopTipView is pointing at a leftBarButtonItem of a navigationItem.";
+		self.navBarLeftButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
+		self.navBarLeftButtonPopTipView.delegate = self;
+		[self.navBarLeftButtonPopTipView presentPointingAtBarButtonItem:self.navigationItem.leftBarButtonItem animated:YES];
+	}
+	else {
+		// Dismiss
+		[self.navBarLeftButtonPopTipView dismissAnimated:YES];
+		self.navBarLeftButtonPopTipView = nil;
+	}
 }
 
-- (void)dismissAboutPopTipView {
-	[self.aboutPopTipView dismissAnimated:YES];
-	self.aboutPopTipView = nil;
+- (IBAction)navBarRightButtonAction:(id)sender {
+	if (nil == self.navBarRightButtonPopTipView) {
+		[self dismissAllPopTipViews];
+		NSString *message = @"A CMPopTipView can point to any navigationItem bar button items.";
+		self.navBarRightButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
+		self.navBarRightButtonPopTipView.delegate = self;
+		[self.navBarRightButtonPopTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
+	}
+	else {
+		// Dismiss
+		[self.navBarRightButtonPopTipView dismissAnimated:YES];
+		self.navBarRightButtonPopTipView = nil;
+	}
 }
 
-- (IBAction)aboutAction:(id)sender {
-	[self dismissAboutPopTipView];
+- (IBAction)toolbarLeftButtonAction:(id)sender {
+	if (nil == self.toolbarLeftButtonPopTipView) {
+		[self dismissAllPopTipViews];
+		NSString *message = @"CMPopTipView will automatically point at buttons either above or below the containing view.";
+		self.toolbarLeftButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
+		self.toolbarLeftButtonPopTipView.delegate = self;
+		
+		UIBarButtonItem *barButtonItem = (UIBarButtonItem *)sender;
+		[self.toolbarLeftButtonPopTipView presentPointingAtBarButtonItem:barButtonItem animated:YES];
+	}
+	else {
+		// Dismiss
+		[self.toolbarLeftButtonPopTipView dismissAnimated:YES];
+		self.toolbarLeftButtonPopTipView = nil;
+	}
+}
+
+- (IBAction)toolbarMiddleButtonAction:(id)sender {
+	if (nil == self.toolbarMiddleButtonPopTipView) {
+		[self dismissAllPopTipViews];
+		NSString *message = @"The arrow is automatically positioned to point to the center of the target button.";
+		self.toolbarMiddleButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
+		self.toolbarMiddleButtonPopTipView.delegate = self;
+		
+		UIBarButtonItem *barButtonItem = (UIBarButtonItem *)sender;
+		[self.toolbarMiddleButtonPopTipView presentPointingAtBarButtonItem:barButtonItem animated:YES];
+	}
+	else {
+		// Dismiss
+		[self.toolbarMiddleButtonPopTipView dismissAnimated:YES];
+		self.toolbarMiddleButtonPopTipView = nil;
+	}
+}
+
+- (IBAction)toolbarRightButtonAction:(id)sender {
+	if (nil == self.toolbarRightButtonPopTipView) {
+		[self dismissAllPopTipViews];
+		NSString *message = @"CMPopTipView knows how to point automatically to UIBarButtonItems in both nav bars and tool bars.";
+		self.toolbarRightButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
+		self.toolbarRightButtonPopTipView.delegate = self;
+		
+		UIBarButtonItem *barButtonItem = (UIBarButtonItem *)sender;
+		[self.toolbarRightButtonPopTipView presentPointingAtBarButtonItem:barButtonItem animated:YES];
+	}
+	else {
+		// Dismiss
+		[self.toolbarRightButtonPopTipView dismissAnimated:YES];
+		self.toolbarRightButtonPopTipView = nil;
+	}
 }
 
 
@@ -60,7 +134,21 @@
 #pragma mark CMPopTipViewDelegate methods
 
 - (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
-	self.aboutPopTipView = nil;
+	if (popTipView == self.navBarLeftButtonPopTipView) {
+		self.navBarLeftButtonPopTipView = nil;
+	}
+	else if (popTipView == self.navBarRightButtonPopTipView) {
+		self.navBarRightButtonPopTipView = nil;
+	}
+	else if (popTipView == self.toolbarLeftButtonPopTipView) {
+		self.toolbarLeftButtonPopTipView = nil;
+	}
+	else if (popTipView == self.toolbarMiddleButtonPopTipView) {
+		self.toolbarMiddleButtonPopTipView = nil;
+	}
+	else if (popTipView == self.toolbarRightButtonPopTipView) {
+		self.toolbarRightButtonPopTipView = nil;
+	}
 }
 
 
@@ -80,8 +168,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	[self performSelector:@selector(showAboutPopTipView) withObject:nil afterDelay:1.5];
-	[self performSelector:@selector(showToolbarButtonItem1PopTipView) withObject:nil afterDelay:1.0];
 }
 
 /*
@@ -102,14 +188,14 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-	self.toolbarButtonItem1 = nil;
 }
 
-
 - (void)dealloc {
-	[aboutPopTipView release];
-	[toolbarButtonItem1 release];
-	[toolbarButtonItem1PopTipView release];
+	[navBarLeftButtonPopTipView release];
+	[navBarRightButtonPopTipView release];
+	[toolbarLeftButtonPopTipView release];
+	[toolbarMiddleButtonPopTipView release];
+	[toolbarRightButtonPopTipView release];
 	
     [super dealloc];
 }
