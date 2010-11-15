@@ -166,6 +166,26 @@
 				   alignment:UITextAlignmentCenter];
 }
 
+- (CGPoint)transformToInterfaceOrientation:(CGPoint)point {
+	CGAffineTransform transform;
+	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+	if (orientation == UIInterfaceOrientationPortrait) {
+		transform = CGAffineTransformMakeRotation(0);
+	}
+	else if (orientation == UIInterfaceOrientationLandscapeLeft) {
+		transform = CGAffineTransformMakeRotation(1.5707964);	// 90 degrees
+	}
+	else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
+		transform = CGAffineTransformMakeRotation(3.1415927);	// 180 degrees
+	}
+	else if (orientation == UIInterfaceOrientationLandscapeRight) {
+		transform = CGAffineTransformMakeRotation(4.712389);	// 270 degrees
+	}
+	
+	CGPoint transformedPoint = CGPointApplyAffineTransform(point, transform);
+	return transformedPoint;
+}
+
 - (void)presentPointingAtRect:(CGRect)rect inView:(UIView *)view animated:(BOOL)animated {
 	assert(0);
 	NSLog(@"TODO");
@@ -190,8 +210,9 @@
 	
 	[containerView addSubview:self];
 	
-	CGPoint barButtonItemWindowCoord = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:nil];
-	CGPoint containerViewWindowCoord = [containerView convertPoint:CGPointMake(0.0, 0.0) toView:nil];
+	CGPoint barButtonItemWindowCoord = [self transformToInterfaceOrientation:[targetView convertPoint:CGPointMake(0.0, 0.0) toView:nil]];
+	CGPoint containerViewWindowCoord = [self transformToInterfaceOrientation:[containerView convertPoint:CGPointMake(0.0, 0.0) toView:nil]];
+	
 	CGFloat targetY;
 	if (barButtonItemWindowCoord.y < containerViewWindowCoord.y) {
 		// Bar button item is above the container view; point to top
