@@ -158,8 +158,8 @@
 	[[UIColor whiteColor] set];
 	CGRect textFrame = CGRectMake(bubbleRect.origin.x + cornerRadius,
 								  bubbleRect.origin.y + cornerRadius,
-								  bubbleRect.size.width - cornerRadius,
-								  bubbleRect.size.height - cornerRadius);
+								  bubbleRect.size.width - cornerRadius*2,
+								  bubbleRect.size.height - cornerRadius*2);
 	[self.message drawInRect:textFrame
 					withFont:textFont
 			   lineBreakMode:UILineBreakModeWordWrap
