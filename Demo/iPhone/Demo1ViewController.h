@@ -13,6 +13,8 @@
 
 }
 
+@property (nonatomic, retain)	IBOutlet	UIBarButtonItem		*toolbarButtonItem1;
+
 - (IBAction)aboutAction:(id)sender;
 
 @end

@@ -39,6 +39,12 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum {
+	PointDirectionUp = 0,
+	PointDirectionDown
+} PointDirection;
+
+
 @protocol CMPopTipViewDelegate;
 
 
@@ -53,6 +59,7 @@
 	CGFloat					cornerRadius;
 	CGFloat					sidePadding;
 	CGFloat					topMargin;
+	PointDirection			pointDirection;
 	CGFloat					pointerSize;
 	CGPoint					targetPoint;
 }

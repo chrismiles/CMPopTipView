@@ -14,6 +14,7 @@
 
 @interface Demo1ViewController ()
 @property (nonatomic, retain)	CMPopTipView	*aboutPopTipView;
+@property (nonatomic, retain)	CMPopTipView	*toolbarButtonItem1PopTipView;
 @end
 
 
@@ -22,13 +23,24 @@
 
 @implementation Demo1ViewController
 
-@synthesize aboutPopTipView;
+@synthesize aboutPopTipView, toolbarButtonItem1PopTipView;
+@synthesize toolbarButtonItem1;
+
+- (void)showToolbarButtonItem1PopTipView {
+	NSString *message = @"CMPopTipView can point at any bar button items, in navigation bars or toolbars, top or bottom.";
+	CMPopTipView *popTipView = [[CMPopTipView alloc] initWithMessage:message];
+	popTipView.delegate = self;
+	[popTipView presentPointingAtBarButtonItem:self.toolbarButtonItem1 animated:YES];
+	
+	self.toolbarButtonItem1PopTipView = popTipView;
+	[popTipView release];
+}
 
 - (void)showAboutPopTipView {
 	NSString *message = @"Tap here to view information about the app.";
 	CMPopTipView *popTipView = [[CMPopTipView alloc] initWithMessage:message];
 	popTipView.delegate = self;
-	[popTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];	// "+" button
+	[popTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
 	
 	self.aboutPopTipView = popTipView;
 	[popTipView release];
@@ -69,6 +81,7 @@
     [super viewDidLoad];
 	
 	[self performSelector:@selector(showAboutPopTipView) withObject:nil afterDelay:1.5];
+	[self performSelector:@selector(showToolbarButtonItem1PopTipView) withObject:nil afterDelay:1.0];
 }
 
 /*
@@ -89,12 +102,14 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+	self.toolbarButtonItem1 = nil;
 }
 
 
 - (void)dealloc {
 	[aboutPopTipView release];
+	[toolbarButtonItem1 release];
+	[toolbarButtonItem1PopTipView release];
 	
     [super dealloc];
 }

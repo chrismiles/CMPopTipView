@@ -16,7 +16,23 @@
 @synthesize textFont;
 
 - (void)drawRect:(CGRect)rect {
-	CGRect bubbleRect = CGRectMake(2.0, targetPoint.y+pointerSize, bubbleSize.width, bubbleSize.height);
+	
+//	CGFloat directionSign;
+//	if (pointDirection == PointDirectionUp) {
+//		directionSign = 1.0;
+//	}
+//	else {
+//		directionSign = -1.0;
+//	}
+
+	CGRect bubbleRect;
+	if (pointDirection == PointDirectionUp) {
+		bubbleRect = CGRectMake(2.0, targetPoint.y+pointerSize, bubbleSize.width, bubbleSize.height);
+	}
+	else {
+		bubbleRect = CGRectMake(2.0, targetPoint.y-pointerSize-bubbleSize.height, bubbleSize.width, bubbleSize.height);
+	}
+
 	
 	CGContextRef c = UIGraphicsGetCurrentContext(); 
 	
@@ -24,32 +40,57 @@
 	CGContextSetLineWidth(c, 1.0);
 
 	// DEBUG
-//	CGContextSetRGBFillColor(c, 1.0, 0.0, 0.0, 0.5);
-//	CGContextFillRect(c, CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height));
+	//CGContextSetRGBFillColor(c, 1.0, 0.0, 0.0, 0.5);
+	//CGContextFillRect(c, CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height));
 
 
 	CGMutablePathRef bubblePath = CGPathCreateMutable();
-	CGPathMoveToPoint(bubblePath, NULL, targetPoint.x, targetPoint.y);
-	CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+pointerSize, targetPoint.y+pointerSize);
 	
-	CGPathAddArcToPoint(bubblePath, NULL,
-						   bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y,
-						   bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+cornerRadius,
-						   cornerRadius);
-	CGPathAddArcToPoint(bubblePath, NULL,
-						   bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+bubbleRect.size.height,
-						   bubbleRect.origin.x+bubbleRect.size.width-cornerRadius, bubbleRect.origin.y+bubbleRect.size.height,
-						   cornerRadius);
-	CGPathAddArcToPoint(bubblePath, NULL,
-						   bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height,
-						   bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height-cornerRadius,
-						   cornerRadius);
-	CGPathAddArcToPoint(bubblePath, NULL,
-						   bubbleRect.origin.x, bubbleRect.origin.y,
-						   bubbleRect.origin.x+cornerRadius, bubbleRect.origin.y,
-						   cornerRadius);
-	CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x-pointerSize, targetPoint.y+pointerSize);
-	
+	if (pointDirection == PointDirectionUp) {
+		CGPathMoveToPoint(bubblePath, NULL, targetPoint.x, targetPoint.y);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+pointerSize, targetPoint.y+pointerSize);
+		
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y,
+							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+cornerRadius,
+							cornerRadius);
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+bubbleRect.size.height,
+							bubbleRect.origin.x+bubbleRect.size.width-cornerRadius, bubbleRect.origin.y+bubbleRect.size.height,
+							cornerRadius);
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height,
+							bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height-cornerRadius,
+							cornerRadius);
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x, bubbleRect.origin.y,
+							bubbleRect.origin.x+cornerRadius, bubbleRect.origin.y,
+							cornerRadius);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x-pointerSize, targetPoint.y+pointerSize);
+	}
+	else {
+		CGPathMoveToPoint(bubblePath, NULL, targetPoint.x, targetPoint.y);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x-pointerSize, targetPoint.y-pointerSize);
+		
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height,
+							bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height-cornerRadius,
+							cornerRadius);
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x, bubbleRect.origin.y,
+							bubbleRect.origin.x+cornerRadius, bubbleRect.origin.y,
+							cornerRadius);
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y,
+							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+cornerRadius,
+							cornerRadius);
+		CGPathAddArcToPoint(bubblePath, NULL,
+							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+bubbleRect.size.height,
+							bubbleRect.origin.x+bubbleRect.size.width-cornerRadius, bubbleRect.origin.y+bubbleRect.size.height,
+							cornerRadius);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+pointerSize, targetPoint.y-pointerSize);
+	}
+
 	CGPathCloseSubpath(bubblePath);
 
 	
@@ -132,10 +173,42 @@
 
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
 	UIView *targetView = (UIView *)[barButtonItem performSelector:@selector(view)];
-	UINavigationController *navController = [(UINavigationBar *)[targetView superview] delegate];
-	UIView *containerView = [[navController topViewController] view];
+	UIView *targetSuperview = [targetView superview];
+	UIView *containerView = nil;
+	if ([targetSuperview isKindOfClass:[UINavigationBar class]]) {
+		UINavigationController *navController = [(UINavigationBar *)targetSuperview delegate];
+		containerView = [[navController topViewController] view];
+	}
+	else if ([targetSuperview isKindOfClass:[UIToolbar class]]) {
+		containerView = [targetSuperview superview];
+	}
+	
+	if (nil == containerView) {
+		NSLog(@"Cannot determine container view from UIBarButtonItem: %@", barButtonItem);
+		return;
+	}
+	
+	NSLog(@"containerView: %@", containerView);
 	[containerView addSubview:self];
 	
+	CGPoint barButtonItemWindowCoord = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:nil];
+	CGPoint containerViewWindowCoord = [containerView convertPoint:CGPointMake(0.0, 0.0) toView:nil];
+	CGFloat targetY;
+	if (barButtonItemWindowCoord.y < containerViewWindowCoord.y) {
+		// Bar button item is above the container view; point to top
+		pointDirection = PointDirectionUp;
+		targetY = 0.0;
+	}
+	else {
+		// Bar button item is below the container view; point to bottom
+		pointDirection = PointDirectionDown;
+		targetY = containerView.bounds.size.height;
+		
+		if ([targetSuperview isDescendantOfView:containerView]) {
+			targetY -= targetSuperview.bounds.size.height;
+		}
+	}
+
 	CGSize textSize = [self.message sizeWithFont:textFont
 							   constrainedToSize:CGSizeMake(containerView.frame.size.width*2/3, 99999.0)
 								   lineBreakMode:UILineBreakModeWordWrap];
@@ -158,11 +231,23 @@
 		x_p = x_b + bubbleSize.width - cornerRadius - pointerSize;
 	}
 	
-	targetPoint = CGPointMake(x_p-x_b, 0.0);	// assumption: target at top
+	CGFloat fullHeight = bubbleSize.height + pointerSize + 10.0;
+	CGFloat y_b;
+	if (pointDirection == PointDirectionUp) {
+		y_b = topMargin;
+		targetPoint = CGPointMake(x_p-x_b, 0);
+	}
+	else {
+		y_b = targetY - fullHeight;
+		targetPoint = CGPointMake(x_p-x_b, fullHeight-2.0);
+	}
+
+	
+//	targetPoint = CGPointMake(x_p-x_b, targetY);
 	CGRect finalFrame = CGRectMake(x_b-sidePadding,
-								   topMargin,
+								   y_b,
 								   bubbleSize.width+sidePadding*2,
-								   bubbleSize.height + pointerSize + 10.0);
+								   fullHeight);
 
 	if (animated) {
 		self.alpha = 0.0;
