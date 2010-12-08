@@ -26,9 +26,10 @@
 
 #import "AppDelegate_iPad.h"
 
+
 @implementation AppDelegate_iPad
 
-@synthesize window;
+@synthesize mainNavigationController, window;
 
 
 #pragma mark -
@@ -36,8 +37,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
-    // Override point for customization after application launch.
-    
+	[window addSubview:mainNavigationController.view];
     [window makeKeyAndVisible];
     
     return YES;
@@ -77,6 +77,7 @@
 
 
 - (void)dealloc {
+	[mainNavigationController release];
     [window release];
     [super dealloc];
 }

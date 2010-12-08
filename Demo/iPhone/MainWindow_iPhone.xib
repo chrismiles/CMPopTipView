@@ -76,12 +76,14 @@
 						<object class="IBUINavigationItem" key="IBUINavigationItem" id="336995782">
 							<string key="IBUITitle">CMPopTipView</string>
 							<object class="IBUIBarButtonItem" key="IBUILeftBarButtonItem" id="205818758">
+								<int key="IBUITag">21</int>
 								<string key="IBUITitle">Left</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIStyle">1</int>
 								<reference key="IBUINavigationItem" ref="336995782"/>
 							</object>
 							<object class="IBUIBarButtonItem" key="IBUIRightBarButtonItem" id="984583369">
+								<int key="IBUITag">22</int>
 								<string key="IBUITitle">Right</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIStyle">1</int>
@@ -128,19 +130,19 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">navBarRightButtonAction:</string>
-						<reference key="source" ref="984583369"/>
-						<reference key="destination" ref="177513840"/>
-					</object>
-					<int key="connectionID">17</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">navBarLeftButtonAction:</string>
+						<string key="label">buttonAction:</string>
 						<reference key="source" ref="205818758"/>
 						<reference key="destination" ref="177513840"/>
 					</object>
-					<int key="connectionID">18</int>
+					<int key="connectionID">19</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">buttonAction:</string>
+						<reference key="source" ref="984583369"/>
+						<reference key="destination" ref="177513840"/>
+					</object>
+					<int key="connectionID">20</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -286,7 +288,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">18</int>
+			<int key="maxID">20</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -335,51 +337,30 @@
 					<string key="className">Demo1ViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>navBarLeftButtonAction:</string>
-							<string>navBarRightButtonAction:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-						</object>
+						<string key="NS.key.0">buttonAction:</string>
+						<string key="NS.object.0">id</string>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>navBarLeftButtonAction:</string>
-							<string>navBarRightButtonAction:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">navBarLeftButtonAction:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">navBarRightButtonAction:</string>
-								<string key="candidateClassName">id</string>
-							</object>
+						<string key="NS.key.0">buttonAction:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">buttonAction:</string>
+							<string key="candidateClassName">id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">toolbarLeftButtonItem</string>
-						<string key="NS.object.0">UIBarButtonItem</string>
+						<string key="NS.key.0">iPadToolbarView</string>
+						<string key="NS.object.0">UIView</string>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">toolbarLeftButtonItem</string>
+						<string key="NS.key.0">iPadToolbarView</string>
 						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">toolbarLeftButtonItem</string>
-							<string key="candidateClassName">UIBarButtonItem</string>
+							<string key="name">iPadToolbarView</string>
+							<string key="candidateClassName">UIView</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">iPhone/Demo1ViewController.h</string>
+						<string key="minorKey">Shared/Demo1ViewController.h</string>
 					</object>
 				</object>
 			</object>

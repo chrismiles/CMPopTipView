@@ -27,9 +27,11 @@
 #import <UIKit/UIKit.h>
 
 @interface AppDelegate_iPad : NSObject <UIApplicationDelegate> {
+	UINavigationController *mainNavigationController;
     UIWindow *window;
 }
 
+@property (nonatomic, retain) IBOutlet UINavigationController *mainNavigationController;
 @property (nonatomic, retain) IBOutlet UIWindow *window;
 
 @end

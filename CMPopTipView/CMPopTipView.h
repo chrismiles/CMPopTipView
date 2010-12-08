@@ -29,15 +29,15 @@
 	A UIView subclass drawn using core graphics. Pops up (optionally animated)
 	a speech bubble-like view on screen, a rounded rectangle with a gradiant
 	fill containing a specified text message, drawn with a pointer dynamically
-	positioned to point at the designated button.
+	positioned to point at the center of the designated button or view.
  
- Example:
+ Example 1 - point at a UIBarButtonItem in a nav bar:
  
 	- (void)showPopTipView {
 		NSString *message = @"Start by adding a waterway to your favourites.";
 		CMPopTipView *popTipView = [[CMPopTipView alloc] initWithMessage:message];
 		popTipView.delegate = self;
-		[popTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];	// "+" button
+		[popTipView presentPointingAtBarButtonItem:self.navigationItem.rightBarButtonItem animated:YES];
 		
 		self.myPopTipView = popTipView;
 		[popTipView release];
@@ -48,9 +48,35 @@
 		self.myPopTipView = nil;
 	}
 
+ 
 	#pragma mark CMPopTipViewDelegate methods
 	- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
+		// User can tap CMPopTipView to dismiss it
 		self.myPopTipView = nil;
+	}
+
+ Example 2 - pointing at a UIButton:
+
+	- (IBAction)buttonAction:(id)sender {
+		// Toggle popTipView when a standard UIButton is pressed
+		if (nil == self.roundRectButtonPopTipView) {
+			self.roundRectButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:@"My message"] autorelease];
+			self.roundRectButtonPopTipView.delegate = self;
+
+			UIButton *button = (UIButton *)sender;
+			[self.roundRectButtonPopTipView presentPointingAtView:button inView:self.view animated:YES];
+		}
+		else {
+			// Dismiss
+			[self.roundRectButtonPopTipView dismissAnimated:YES];
+			self.roundRectButtonPopTipView = nil;
+		}	
+	}
+
+	#pragma mark CMPopTipViewDelegate methods
+	- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
+		// User can tap CMPopTipView to dismiss it
+		self.roundRectButtonPopTipView = nil;
 	}
  
  */
@@ -70,11 +96,13 @@ typedef enum {
 	UIColor					*backgroundColor;
 	id<CMPopTipViewDelegate>	delegate;
 	NSString				*message;
+	id						targetObject;
 	UIFont					*textFont;
 
 	@private
 	CGSize					bubbleSize;
 	CGFloat					cornerRadius;
+	BOOL					highlight;
 	CGFloat					sidePadding;
 	CGFloat					topMargin;
 	PointDirection			pointDirection;
@@ -82,12 +110,13 @@ typedef enum {
 	CGPoint					targetPoint;
 }
 
-@property (nonatomic, retain)	UIColor					*backgroundColor;
-@property (nonatomic, assign)	id<CMPopTipViewDelegate>	delegate;
-@property (nonatomic, retain)	NSString				*message;
-@property (nonatomic, retain)	UIFont					*textFont;
+@property (nonatomic, retain)			UIColor					*backgroundColor;
+@property (nonatomic, assign)		id<CMPopTipViewDelegate>	delegate;
+@property (nonatomic, retain)			NSString				*message;
+@property (nonatomic, retain, readonly)	id						targetObject;
+@property (nonatomic, retain)			UIFont					*textFont;
 
-- (void)presentPointingAtRect:(CGRect)rect inView:(UIView *)view animated:(BOOL)animated;
+- (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated;
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated;
 - (void)dismissAnimated:(BOOL)animated;
 - (id)initWithMessage:(NSString *)messageToShow;

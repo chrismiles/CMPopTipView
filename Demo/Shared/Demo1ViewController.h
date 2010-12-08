@@ -28,13 +28,8 @@
 #import "CMPopTipView.h"
 
 @interface Demo1ViewController : UIViewController <CMPopTipViewDelegate> {
-
 }
 
-- (IBAction)navBarLeftButtonAction:(id)sender;
-- (IBAction)navBarRightButtonAction:(id)sender;
-- (IBAction)toolbarLeftButtonAction:(id)sender;
-- (IBAction)toolbarMiddleButtonAction:(id)sender;
-- (IBAction)toolbarRightButtonAction:(id)sender;
+- (IBAction)buttonAction:(id)sender;
 
 @end

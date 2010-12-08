@@ -25,24 +25,21 @@
 
 #import "CMPopTipView.h"
 
+@interface CMPopTipView ()
+@property (nonatomic, retain, readwrite)	id	targetObject;
+@end
+
 
 @implementation CMPopTipView
 
 @synthesize backgroundColor;
 @synthesize delegate;
 @synthesize message;
+@synthesize targetObject;
 @synthesize textFont;
 
 - (void)drawRect:(CGRect)rect {
 	
-//	CGFloat directionSign;
-//	if (pointDirection == PointDirectionUp) {
-//		directionSign = 1.0;
-//	}
-//	else {
-//		directionSign = -1.0;
-//	}
-
 	CGRect bubbleRect;
 	if (pointDirection == PointDirectionUp) {
 		bubbleRect = CGRectMake(2.0, targetPoint.y+pointerSize, bubbleSize.width, bubbleSize.height);
@@ -50,17 +47,11 @@
 	else {
 		bubbleRect = CGRectMake(2.0, targetPoint.y-pointerSize-bubbleSize.height, bubbleSize.width, bubbleSize.height);
 	}
-
 	
 	CGContextRef c = UIGraphicsGetCurrentContext(); 
 	
 	CGContextSetRGBStrokeColor(c, 0.0, 0.0, 0.0, 1.0);	// black
 	CGContextSetLineWidth(c, 1.0);
-
-	// DEBUG
-	//CGContextSetRGBFillColor(c, 1.0, 0.0, 0.0, 0.5);
-	//CGContextFillRect(c, CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height));
-
 
 	CGMutablePathRef bubblePath = CGPathCreateMutable();
 	
@@ -132,6 +123,11 @@
 	size_t locationCount = 5;
 	CGFloat locationList[] = {0.0, bubbleMiddle-0.03, bubbleMiddle, bubbleMiddle+0.03, 1.0};
 
+	CGFloat colourHL = 0.0;
+	if (highlight) {
+		colourHL = 0.25;
+	}
+	
 //	int numComponents = CGColorGetNumberOfComponents([backgroundColor CGColor]);
 //	assert(numComponents == 4);
 	const CGFloat *components = CGColorGetComponents([backgroundColor CGColor]);
@@ -141,11 +137,11 @@
 	CGFloat alpha = components[3];
 	CGFloat colorList[] = {
 		//red, green, blue, alpha 
-		red*1.16, green*1.16, blue*1.16, alpha,
-		red*1.16, green*1.16, blue*1.16, alpha,
-		red*1.08, green*1.08, blue*1.08, alpha,
-		red,      green,      blue,      alpha,
-		red,      green,      blue,      alpha
+		red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
+		red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
+		red*1.08+colourHL, green*1.08+colourHL, blue*1.08+colourHL, alpha,
+		red     +colourHL, green     +colourHL, blue     +colourHL, alpha,
+		red     +colourHL, green     +colourHL, blue     +colourHL, alpha
 	};
 	//	CGFloat colorList[] = {
 //		//red, green, blue, alpha 
@@ -167,6 +163,7 @@
 	CGGradientRelease(myGradient);
 	CGColorSpaceRelease(myColorSpace);
 	
+	CGContextSetRGBStrokeColor(c, 0.4, 0.4, 0.4, 1.0);
 	CGContextAddPath(c, bubblePath);
 	CGContextDrawPath(c, kCGPathStroke);
 	
@@ -184,73 +181,54 @@
 				   alignment:UITextAlignmentCenter];
 }
 
-- (CGPoint)transformToInterfaceOrientation:(CGPoint)point {
-	CGAffineTransform transform;
-	UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-	if (orientation == UIInterfaceOrientationPortrait) {
-		transform = CGAffineTransformMakeRotation(0);
-	}
-	else if (orientation == UIInterfaceOrientationLandscapeLeft) {
-		transform = CGAffineTransformMakeRotation(1.5707964);	// 90 degrees
-	}
-	else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-		transform = CGAffineTransformMakeRotation(3.1415927);	// 180 degrees
-	}
-	else if (orientation == UIInterfaceOrientationLandscapeRight) {
-		transform = CGAffineTransformMakeRotation(4.712389);	// 270 degrees
-	}
-	
-	CGPoint transformedPoint = CGPointApplyAffineTransform(point, transform);
-	return transformedPoint;
-}
-
-- (void)presentPointingAtRect:(CGRect)rect inView:(UIView *)view animated:(BOOL)animated {
-	assert(0);
-	NSLog(@"TODO");
-}
-
-- (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
-	UIView *targetView = (UIView *)[barButtonItem performSelector:@selector(view)];
-	UIView *targetSuperview = [targetView superview];
-	UIView *containerView = nil;
-	if ([targetSuperview isKindOfClass:[UINavigationBar class]]) {
-		UINavigationController *navController = [(UINavigationBar *)targetSuperview delegate];
-		containerView = [[navController topViewController] view];
-	}
-	else if ([targetSuperview isKindOfClass:[UIToolbar class]]) {
-		containerView = [targetSuperview superview];
-	}
-	
-	if (nil == containerView) {
-		NSLog(@"Cannot determine container view from UIBarButtonItem: %@", barButtonItem);
-		return;
+- (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
+	if (!self.targetObject) {
+		self.targetObject = targetView;
 	}
 	
 	[containerView addSubview:self];
-	
-	CGPoint barButtonItemWindowCoord = [self transformToInterfaceOrientation:[targetView convertPoint:CGPointMake(0.0, 0.0) toView:nil]];
-	CGPoint containerViewWindowCoord = [self transformToInterfaceOrientation:[containerView convertPoint:CGPointMake(0.0, 0.0) toView:nil]];
-	
-	CGFloat targetY;
-	if (barButtonItemWindowCoord.y < containerViewWindowCoord.y) {
-		// Bar button item is above the container view; point to top
-		pointDirection = PointDirectionUp;
-		targetY = 0.0;
+
+	// Size of rounded rect
+	CGFloat rectWidth;
+	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+		// iPad
+		rectWidth = containerView.frame.size.width/3;
 	}
 	else {
-		// Bar button item is below the container view; point to bottom
-		pointDirection = PointDirectionDown;
-		targetY = containerView.bounds.size.height;
-		
-		if ([targetSuperview isDescendantOfView:containerView]) {
-			targetY -= targetSuperview.bounds.size.height;
-		}
+		// iPhone
+		rectWidth = containerView.frame.size.width*2/3;
 	}
 
 	CGSize textSize = [self.message sizeWithFont:textFont
-							   constrainedToSize:CGSizeMake(containerView.frame.size.width*2/3, 99999.0)
+							   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
 								   lineBreakMode:UILineBreakModeWordWrap];
 	bubbleSize = CGSizeMake(textSize.width + cornerRadius*2, textSize.height + cornerRadius*2);
+	
+	CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:containerView.superview];
+	CGPoint containerRelativeOrigin = [containerView.superview convertPoint:containerView.frame.origin toView:containerView.superview];
+
+	CGFloat pointerY;	// Y coordinate of pointer target (within containerView)
+	
+	if (targetRelativeOrigin.y+targetView.bounds.size.height < containerRelativeOrigin.y) {
+		pointerY = 0.0;
+		pointDirection = PointDirectionUp;
+	}
+	else if (targetRelativeOrigin.y > containerRelativeOrigin.y+containerView.bounds.size.height) {
+		pointerY = containerView.bounds.size.height;
+		pointDirection = PointDirectionDown;
+	}
+	else {
+		CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:containerView];
+		CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
+		if (sizeBelow > targetOriginInContainer.y) {
+			pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
+			pointDirection = PointDirectionUp;
+		}
+		else {
+			pointerY = targetOriginInContainer.y;
+			pointDirection = PointDirectionDown;
+		}
+	}
 	
 	CGFloat W = containerView.frame.size.width;
 	
@@ -272,21 +250,19 @@
 	CGFloat fullHeight = bubbleSize.height + pointerSize + 10.0;
 	CGFloat y_b;
 	if (pointDirection == PointDirectionUp) {
-		y_b = topMargin;
+		y_b = topMargin + pointerY;
 		targetPoint = CGPointMake(x_p-x_b, 0);
 	}
 	else {
-		y_b = targetY - fullHeight;
+		y_b = pointerY - fullHeight;
 		targetPoint = CGPointMake(x_p-x_b, fullHeight-2.0);
 	}
-
 	
-//	targetPoint = CGPointMake(x_p-x_b, targetY);
 	CGRect finalFrame = CGRectMake(x_b-sidePadding,
 								   y_b,
 								   bubbleSize.width+sidePadding*2,
 								   fullHeight);
-
+	
 	if (animated) {
 		self.alpha = 0.0;
 		CGRect startFrame = finalFrame;
@@ -295,7 +271,7 @@
 	}
 	
 	[self setNeedsDisplay];
-
+	
 	if (animated) {
 		[UIView beginAnimations:nil context:nil];
 		self.alpha = 1.0;
@@ -306,10 +282,35 @@
 	if (animated) {
 		[UIView commitAnimations];
 	}
+	
+}
+
+- (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
+	UIView *targetView = (UIView *)[barButtonItem performSelector:@selector(view)];
+	UIView *targetSuperview = [targetView superview];
+	UIView *containerView = nil;
+	if ([targetSuperview isKindOfClass:[UINavigationBar class]]) {
+		UINavigationController *navController = [(UINavigationBar *)targetSuperview delegate];
+		containerView = [[navController topViewController] view];
+	}
+	else if ([targetSuperview isKindOfClass:[UIToolbar class]]) {
+		containerView = [targetSuperview superview];
+	}
+	
+	if (nil == containerView) {
+		NSLog(@"Cannot determine container view from UIBarButtonItem: %@", barButtonItem);
+		self.targetObject = nil;
+		return;
+	}
+	
+	self.targetObject = barButtonItem;
+	
+	[self presentPointingAtView:targetView inView:containerView animated:animated];
 }
 
 - (void)finaliseDismiss {
 	[self removeFromSuperview];
+	self.targetObject = nil;
 }
 
 - (void)dismissAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
@@ -335,6 +336,9 @@
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event { 
+	highlight = YES;
+	[self setNeedsDisplay];
+	
 	[self dismissAnimated:YES];
 	
 	if (delegate && [delegate respondsToSelector:@selector(popTipViewWasDismissedByUser:)]) {
@@ -347,7 +351,7 @@
         // Initialization code
 		self.opaque = NO;
 		
-		cornerRadius = 8.0;
+		cornerRadius = 10.0;
 		topMargin = 2.0;
 		pointerSize = 12.0;
 		sidePadding = 2.0;
@@ -371,6 +375,7 @@
 - (void)dealloc {
 	[backgroundColor release];
 	[message release];
+	[targetObject release];
 	[textFont release];
 	
     [super dealloc];
