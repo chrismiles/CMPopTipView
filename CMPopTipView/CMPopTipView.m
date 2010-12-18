@@ -36,6 +36,7 @@
 @synthesize delegate;
 @synthesize message;
 @synthesize targetObject;
+@synthesize textColor;
 @synthesize textFont;
 
 - (void)drawRect:(CGRect)rect {
@@ -128,13 +129,24 @@
 		colourHL = 0.25;
 	}
 	
-//	int numComponents = CGColorGetNumberOfComponents([backgroundColor CGColor]);
-//	assert(numComponents == 4);
+	CGFloat red;
+	CGFloat green;
+	CGFloat blue;
+	CGFloat alpha;
+	int numComponents = CGColorGetNumberOfComponents([backgroundColor CGColor]);
 	const CGFloat *components = CGColorGetComponents([backgroundColor CGColor]);
-	CGFloat red = components[0];
-	CGFloat green = components[1];
-	CGFloat blue = components[2];
-	CGFloat alpha = components[3];
+	if (numComponents == 2) {
+		red = components[0];
+		green = components[0];
+		blue = components[0];
+		alpha = components[1];
+	}
+	else {
+		red = components[0];
+		green = components[1];
+		blue = components[2];
+		alpha = components[3];
+	}
 	CGFloat colorList[] = {
 		//red, green, blue, alpha 
 		red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
@@ -170,7 +182,7 @@
 	CGPathRelease(bubblePath);
 	
 	// Draw text
-	[[UIColor whiteColor] set];
+	[textColor set];
 	CGRect textFrame = CGRectMake(bubbleRect.origin.x + cornerRadius,
 								  bubbleRect.origin.y + cornerRadius,
 								  bubbleRect.size.width - cornerRadius*2,
@@ -357,7 +369,7 @@
 		sidePadding = 2.0;
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
-//		self.backgroundColor = [UIColor colorWithRed:134.0/255.0 green:74.0/255.0 blue:110.0/255.0 alpha:1.0];
+		self.textColor = [UIColor whiteColor];
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
     }
     return self;
@@ -376,6 +388,7 @@
 	[backgroundColor release];
 	[message release];
 	[targetObject release];
+	[textColor release];
 	[textFont release];
 	
     [super dealloc];

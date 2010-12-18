@@ -13,12 +13,18 @@ It can also be pointed at a UIBarButtonItem within either a UINavigationBar
 or a UIToolbar and it will automatically position itself to point at the
 target.
 
+The background and text colors can be customised if the defaults are not
+suitable.
+
 A CMPopTipView can be dismissed by the user tapping on it.  It can also
 be dismissed programatically.
 
 CMPopTipView is rendered entirely by Core Graphics.
 
 The source includes a universal (iPhone/iPad) demo app.
+
+Used in apps:
+ * River Level http://itunes.apple.com/au/app/river-level/id356158594?mt=8
 
 https://github.com/chrismiles/CMPopTipView
 
@@ -52,13 +58,15 @@ Example 1 - point at a UIBarButtonItem in a nav bar::
   }
 
 
-Example 2 - pointing at a UIButton::
+Example 2 - pointing at a UIButton, with custom color scheme::
 
   - (IBAction)buttonAction:(id)sender {
     // Toggle popTipView when a standard UIButton is pressed
     if (nil == self.roundRectButtonPopTipView) {
       self.roundRectButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:@"My message"] autorelease];
       self.roundRectButtonPopTipView.delegate = self;
+      self.roundRectButtonPopTipView.backgroundColor = [UIColor lightGrayColor];
+      self.roundRectButtonPopTipView.textColor = [UIColor darkTextColor];
 
       UIButton *button = (UIButton *)sender;
       [self.roundRectButtonPopTipView presentPointingAtView:button inView:self.view animated:YES];

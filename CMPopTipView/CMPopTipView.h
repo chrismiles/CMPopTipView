@@ -97,6 +97,7 @@ typedef enum {
 	id<CMPopTipViewDelegate>	delegate;
 	NSString				*message;
 	id						targetObject;
+	UIColor					*textColor;
 	UIFont					*textFont;
 
 	@private
@@ -114,6 +115,7 @@ typedef enum {
 @property (nonatomic, assign)		id<CMPopTipViewDelegate>	delegate;
 @property (nonatomic, retain)			NSString				*message;
 @property (nonatomic, retain, readonly)	id						targetObject;
+@property (nonatomic, retain)			UIColor					*textColor;
 @property (nonatomic, retain)			UIFont					*textFont;
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated;

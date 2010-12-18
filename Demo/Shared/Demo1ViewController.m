@@ -26,11 +26,13 @@
 
 #import "Demo1ViewController.h"
 
+#define foo4random() (1.0 * (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX)
 
 #pragma mark -
 #pragma mark Private interface
 
 @interface Demo1ViewController ()
+@property (nonatomic, retain)	NSArray			*colorSchemes;
 @property (nonatomic, retain)	id				currentPopTipViewTarget;
 @property (nonatomic, retain)	NSDictionary	*messages;
 @property (nonatomic, retain)	NSMutableArray	*visiblePopTipViews;
@@ -42,6 +44,7 @@
 
 @implementation Demo1ViewController
 
+@synthesize colorSchemes;
 @synthesize currentPopTipViewTarget;
 @synthesize messages;
 @synthesize visiblePopTipViews;
@@ -66,8 +69,18 @@
 		if (nil == message) {
 			message = @"A CMPopTipView can automatically point to any view or bar button item.";
 		}
+		NSArray *colorScheme = [colorSchemes objectAtIndex:foo4random()*[colorSchemes count]];
+		UIColor *backgroundColor = [colorScheme objectAtIndex:0];
+		UIColor *textColor = [colorScheme objectAtIndex:1];
+		
 		CMPopTipView *popTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
 		popTipView.delegate = self;
+		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
+			popTipView.backgroundColor = backgroundColor;
+		}
+		if (textColor && ![textColor isEqual:[NSNull null]]) {
+			popTipView.textColor = textColor;
+		}
 		
 		if ([sender isKindOfClass:[UIButton class]]) {
 			UIButton *button = (UIButton *)sender;
@@ -144,6 +157,18 @@
 					 @"CMPopTipView knows how to point automatically to UIBarButtonItems in both nav bars and tool bars.", [NSNumber numberWithInt:33],
 					 nil];
 	
+	// Array of (backgroundColor, textColor) pairs.
+	// NSNull for either means leave as default.
+	// A color scheme will be picked randomly per CMPopTipView.
+	self.colorSchemes = [NSArray arrayWithObjects:
+						 [NSArray arrayWithObjects:[NSNull null], [NSNull null], nil],
+						 [NSArray arrayWithObjects:[UIColor colorWithRed:134.0/255.0 green:74.0/255.0 blue:110.0/255.0 alpha:1.0], [NSNull null], nil],
+						 [NSArray arrayWithObjects:[UIColor darkGrayColor], [NSNull null], nil],
+						 [NSArray arrayWithObjects:[UIColor lightGrayColor], [UIColor darkTextColor], nil],
+						 [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor blueColor], nil],
+						 [NSArray arrayWithObjects:[UIColor colorWithRed:220.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1.0], [NSNull null], nil],
+						 nil];
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
@@ -171,7 +196,8 @@
 
 - (void)dealloc {
 	[[NSNotificationCenter defaultCenter] removeObject:self];
-	
+
+	[colorSchemes release];
 	[currentPopTipViewTarget release];
 	[messages release];
 	[visiblePopTipViews release];
