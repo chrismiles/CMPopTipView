@@ -88,6 +88,11 @@ typedef enum {
 	PointDirectionDown
 } PointDirection;
 
+typedef enum {
+    CMPopTipAnimationSlide = 0,
+    CMPopTipAnimationPop
+} CMPopTipAnimation;
+
 
 @protocol CMPopTipViewDelegate;
 
@@ -99,6 +104,7 @@ typedef enum {
 	id						targetObject;
 	UIColor					*textColor;
 	UIFont					*textFont;
+    CMPopTipAnimation       animation;
 
 	@private
 	CGSize					bubbleSize;
@@ -117,6 +123,7 @@ typedef enum {
 @property (nonatomic, retain, readonly)	id						targetObject;
 @property (nonatomic, retain)			UIColor					*textColor;
 @property (nonatomic, retain)			UIFont					*textFont;
+@property (nonatomic, assign)           CMPopTipAnimation       animation;
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated;
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated;
