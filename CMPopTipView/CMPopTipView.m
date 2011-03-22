@@ -27,6 +27,8 @@
 
 @interface CMPopTipView ()
 @property (nonatomic, retain, readwrite)	id	targetObject;
+
+- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 @end
 
 
@@ -38,6 +40,7 @@
 @synthesize targetObject;
 @synthesize textColor;
 @synthesize textFont;
+@synthesize animation;
 
 - (void)drawRect:(CGRect)rect {
 	
@@ -53,7 +56,7 @@
 	
 	CGContextSetRGBStrokeColor(c, 0.0, 0.0, 0.0, 1.0);	// black
 	CGContextSetLineWidth(c, 1.0);
-
+    
 	CGMutablePathRef bubblePath = CGPathCreateMutable();
 	
 	if (pointDirection == PointDirectionUp) {
@@ -100,9 +103,9 @@
 							cornerRadius);
 		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+pointerSize, targetPoint.y-pointerSize);
 	}
-
+    
 	CGPathCloseSubpath(bubblePath);
-
+    
 	
 	// Draw shadow
 	CGContextAddPath(c, bubblePath);
@@ -111,7 +114,7 @@
 	CGContextSetRGBFillColor(c, 0.0, 0.0, 0.0, 0.9);
 	CGContextFillPath(c);
     CGContextRestoreGState(c);
-
+    
 	
 	// Draw clipped background gradient
 	CGContextAddPath(c, bubblePath);
@@ -123,7 +126,7 @@
 	CGColorSpaceRef myColorSpace;
 	size_t locationCount = 5;
 	CGFloat locationList[] = {0.0, bubbleMiddle-0.03, bubbleMiddle, bubbleMiddle+0.03, 1.0};
-
+    
 	CGFloat colourHL = 0.0;
 	if (highlight) {
 		colourHL = 0.25;
@@ -156,13 +159,13 @@
 		red     +colourHL, green     +colourHL, blue     +colourHL, alpha
 	};
 	//	CGFloat colorList[] = {
-//		//red, green, blue, alpha 
-//		154.0/255.0, 94.0/255.0, 130.0/255.0, 1.0,
-//		154.0/255.0, 94.0/255.0, 130.0/255.0, 1.0,
-//		144.0/255.0, 84.0/255.0, 120.0/255.0, 1.0,
-//		134.0/255.0, 74.0/255.0, 110.0/255.0, 1.0,
-//		134.0/255.0, 74.0/255.0, 110.0/255.0, 1.0
-//	};
+    //		//red, green, blue, alpha 
+    //		154.0/255.0, 94.0/255.0, 130.0/255.0, 1.0,
+    //		154.0/255.0, 94.0/255.0, 130.0/255.0, 1.0,
+    //		144.0/255.0, 84.0/255.0, 120.0/255.0, 1.0,
+    //		134.0/255.0, 74.0/255.0, 110.0/255.0, 1.0,
+    //		134.0/255.0, 74.0/255.0, 110.0/255.0, 1.0
+    //	};
 	myColorSpace = CGColorSpaceCreateDeviceRGB();
 	myGradient = CGGradientCreateWithColorComponents(myColorSpace, colorList, locationList, locationCount);
 	CGPoint startPoint, endPoint;
@@ -199,7 +202,7 @@
 	}
 	
 	[containerView addSubview:self];
-
+    
 	// Size of rounded rect
 	CGFloat rectWidth;
 	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -210,7 +213,7 @@
 		// iPhone
 		rectWidth = containerView.frame.size.width*2/3;
 	}
-
+    
 	CGSize textSize = [self.message sizeWithFont:textFont
 							   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
 								   lineBreakMode:UILineBreakModeWordWrap];
@@ -218,7 +221,7 @@
 	
 	CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:containerView.superview];
 	CGPoint containerRelativeOrigin = [containerView.superview convertPoint:containerView.frame.origin toView:containerView.superview];
-
+    
 	CGFloat pointerY;	// Y coordinate of pointer target (within containerView)
 	
 	if (targetRelativeOrigin.y+targetView.bounds.size.height < containerRelativeOrigin.y) {
@@ -274,27 +277,42 @@
 								   y_b,
 								   bubbleSize.width+sidePadding*2,
 								   fullHeight);
-	
+    
+   	
 	if (animated) {
-		self.alpha = 0.0;
-		CGRect startFrame = finalFrame;
-		startFrame.origin.y += 10;
-		self.frame = startFrame;
+        if (animation == CMPopTipAnimationSlide) {
+            self.alpha = 0.0;
+            CGRect startFrame = finalFrame;
+            startFrame.origin.y += 10;
+            self.frame = startFrame;
+        } else if (animation == CMPopTipAnimationPop) {
+            self.frame = finalFrame;
+            self.alpha = 0.5;
+            
+            // start a little smaller
+            self.transform = CGAffineTransformMakeScale(0.75f, 0.75f);
+            
+            // animate to a bigger size
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDelegate:self];
+            [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
+            [UIView setAnimationDuration:0.15f];
+            self.transform = CGAffineTransformMakeScale(1.3f, 1.3f);
+            self.alpha = 1.0;
+            [UIView commitAnimations];
+        }
 	}
 	
 	[self setNeedsDisplay];
 	
 	if (animated) {
-		[UIView beginAnimations:nil context:nil];
-		self.alpha = 1.0;
+        if (animation == CMPopTipAnimationSlide) {
+            [UIView beginAnimations:nil context:nil];
+            self.alpha = 1.0;
+            self.frame = finalFrame;
+            [UIView commitAnimations];
+        }
 	}
-	
-	self.frame = finalFrame;
-	
-	if (animated) {
-		[UIView commitAnimations];
-	}
-	
 }
 
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
@@ -358,6 +376,12 @@
 	}
 }
 
+- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    // at the end set to normal size
+	self.transform = CGAffineTransformIdentity;
+    
+}
+
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
@@ -371,6 +395,7 @@
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
+        self.animation = CMPopTipAnimationSlide;
     }
     return self;
 }

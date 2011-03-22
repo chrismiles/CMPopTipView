@@ -81,6 +81,8 @@
 		if (textColor && ![textColor isEqual:[NSNull null]]) {
 			popTipView.textColor = textColor;
 		}
+        
+        popTipView.animation = arc4random() % 2;
 		
 		if ([sender isKindOfClass:[UIButton class]]) {
 			UIButton *button = (UIButton *)sender;
