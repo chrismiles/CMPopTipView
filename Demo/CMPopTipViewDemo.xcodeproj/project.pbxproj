@@ -15,6 +15,8 @@
 		2860E32E111B888700E27156 /* AppDelegate_iPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 2860E32C111B888700E27156 /* AppDelegate_iPad.m */; };
 		2860E32F111B888700E27156 /* MainWindow_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2860E32D111B888700E27156 /* MainWindow_iPad.xib */; };
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
+		839195F71377FE2700FC65F9 /* appicon57.png in Resources */ = {isa = PBXBuildFile; fileRef = 839195F51377FE2700FC65F9 /* appicon57.png */; };
+		839195F81377FE2700FC65F9 /* appicon114.png in Resources */ = {isa = PBXBuildFile; fileRef = 839195F61377FE2700FC65F9 /* appicon114.png */; };
 		83FEEE46128E496A007C310F /* CMPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FEEE45128E496A007C310F /* CMPopTipView.m */; };
 		83FEEE61128E4F98007C310F /* Demo1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FEEE5F128E4F98007C310F /* Demo1ViewController.m */; };
 		83FEEE62128E4F98007C310F /* Demo1ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83FEEE60128E4F98007C310F /* Demo1ViewController.xib */; };
@@ -33,6 +35,8 @@
 		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Shared/main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* CMPopTipViewDemo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPopTipViewDemo_Prefix.pch; sourceTree = "<group>"; };
+		839195F51377FE2700FC65F9 /* appicon57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appicon57.png; path = Resources/appicon57.png; sourceTree = "<group>"; };
+		839195F61377FE2700FC65F9 /* appicon114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = appicon114.png; path = Resources/appicon114.png; sourceTree = "<group>"; };
 		83FEEE44128E496A007C310F /* CMPopTipView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CMPopTipView.h; sourceTree = "<group>"; };
 		83FEEE45128E496A007C310F /* CMPopTipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CMPopTipView.m; sourceTree = "<group>"; };
 		83FEEE5E128E4F98007C310F /* Demo1ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Demo1ViewController.h; path = Shared/Demo1ViewController.h; sourceTree = "<group>"; };
@@ -102,6 +106,7 @@
 				2860E324111B887F00E27156 /* iPhone */,
 				28EEBF621118D79A00187D67 /* Shared */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
+				839195F41377FE0F00FC65F9 /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -125,6 +130,15 @@
 				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		839195F41377FE0F00FC65F9 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				839195F51377FE2700FC65F9 /* appicon57.png */,
+				839195F61377FE2700FC65F9 /* appicon114.png */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 		83FEEE43128E496A007C310F /* CMPopTipView */ = {
@@ -192,6 +206,8 @@
 				2860E329111B887F00E27156 /* MainWindow_iPhone.xib in Resources */,
 				2860E32F111B888700E27156 /* MainWindow_iPad.xib in Resources */,
 				83FEEE62128E4F98007C310F /* Demo1ViewController.xib in Resources */,
+				839195F71377FE2700FC65F9 /* appicon57.png in Resources */,
+				839195F81377FE2700FC65F9 /* appicon114.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
