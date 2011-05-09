@@ -16,6 +16,9 @@ target.
 The background and text colors can be customised if the defaults are not
 suitable.
 
+Two animation options are available for when a CMPopTipView is presented:
+"slide" and "pop".
+
 A CMPopTipView can be dismissed by the user tapping on it.  It can also
 be dismissed programatically.
 
@@ -90,4 +93,4 @@ License
 
 CMPopTipView is released under the MIT license.  See LICENSE for details.
 
-CMPopTipView is copyright (c) Chris Miles 2010.
+CMPopTipView is copyright (c) Chris Miles 2010-2011.
