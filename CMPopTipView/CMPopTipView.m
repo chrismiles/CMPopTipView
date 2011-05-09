@@ -2,7 +2,7 @@
 //  CMPopTipView.m
 //
 //  Created by Chris Miles on 18/07/10.
-//  Copyright (c) Chris Miles 2010.
+//  Copyright (c) Chris Miles 2010-2011.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,6 @@
 
 @interface CMPopTipView ()
 @property (nonatomic, retain, readwrite)	id	targetObject;
-
-- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context;
 @end
 
 
@@ -295,9 +293,9 @@
             // animate to a bigger size
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDelegate:self];
-            [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
+            [UIView setAnimationDidStopSelector:@selector(popAnimationDidStop:finished:context:)];
             [UIView setAnimationDuration:0.15f];
-            self.transform = CGAffineTransformMakeScale(1.3f, 1.3f);
+            self.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
             self.alpha = 1.0;
             [UIView commitAnimations];
         }
@@ -376,10 +374,12 @@
 	}
 }
 
-- (void)animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+- (void)popAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     // at the end set to normal size
+	[UIView beginAnimations:nil context:nil];
+	[UIView setAnimationDuration:0.1f];
 	self.transform = CGAffineTransformIdentity;
-    
+	[UIView commitAnimations];
 }
 
 - (id)initWithFrame:(CGRect)frame {
