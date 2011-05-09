@@ -152,7 +152,7 @@
 					 @"A CMPopTipView works fine in both iPhone and iPad interfaces.", [NSNumber numberWithInt:16],
 					 // Nav bar buttons
 					 @"This CMPopTipView is pointing at a leftBarButtonItem of a navigationItem.", [NSNumber numberWithInt:21],
-					 @"A CMPopTipView can point to any navigationItem bar button items.", [NSNumber numberWithInt:22],
+					 @"Two popup animations are provided: slide and pop. Tap other buttons to see them both.", [NSNumber numberWithInt:22],
 					 // Toolbar buttons
 					 @"CMPopTipView will automatically point at buttons either above or below the containing view.", [NSNumber numberWithInt:31],
 					 @"The arrow is automatically positioned to point to the center of the target button.", [NSNumber numberWithInt:32],
