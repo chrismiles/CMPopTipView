@@ -283,7 +283,8 @@
             CGRect startFrame = finalFrame;
             startFrame.origin.y += 10;
             self.frame = startFrame;
-        } else if (animation == CMPopTipAnimationPop) {
+        }
+		else if (animation == CMPopTipAnimationPop) {
             self.frame = finalFrame;
             self.alpha = 0.5;
             
@@ -299,17 +300,20 @@
             self.alpha = 1.0;
             [UIView commitAnimations];
         }
+		
+		[self setNeedsDisplay];
+		
+		if (animation == CMPopTipAnimationSlide) {
+			[UIView beginAnimations:nil context:nil];
+			self.alpha = 1.0;
+			self.frame = finalFrame;
+			[UIView commitAnimations];
+		}
 	}
-	
-	[self setNeedsDisplay];
-	
-	if (animated) {
-        if (animation == CMPopTipAnimationSlide) {
-            [UIView beginAnimations:nil context:nil];
-            self.alpha = 1.0;
-            self.frame = finalFrame;
-            [UIView commitAnimations];
-        }
+	else {
+		// Not animated
+		[self setNeedsDisplay];
+		self.frame = finalFrame;
 	}
 }
 
