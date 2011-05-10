@@ -98,7 +98,21 @@
 	}
 }
 
-- (void)deviceOrientationDidChange:(NSNotification *)notification {
+
+#pragma mark -
+#pragma mark CMPopTipViewDelegate methods
+
+- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
+	[visiblePopTipViews removeObject:popTipView];
+	self.currentPopTipViewTarget = nil;
+}
+
+
+#pragma mark -
+#pragma mark UIViewController methods
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
 	for (CMPopTipView *popTipView in visiblePopTipViews) {
 		id targetObject = popTipView.targetObject;
 		[popTipView dismissAnimated:NO];
@@ -113,19 +127,6 @@
 		}
 	}
 }
-
-
-#pragma mark -
-#pragma mark CMPopTipViewDelegate methods
-
-- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
-	[visiblePopTipViews removeObject:popTipView];
-	self.currentPopTipViewTarget = nil;
-}
-
-
-#pragma mark -
-#pragma mark UIViewController methods
 
 /*
  // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
@@ -170,8 +171,6 @@
 						 [NSArray arrayWithObjects:[UIColor orangeColor], [UIColor blueColor], nil],
 						 [NSArray arrayWithObjects:[UIColor colorWithRed:220.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:1.0], [NSNull null], nil],
 						 nil];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -190,15 +189,11 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
 	
-	[[NSNotificationCenter defaultCenter] removeObject:self];
-	
 	self.messages = nil;
 	self.visiblePopTipViews = nil;
 }
 
 - (void)dealloc {
-	[[NSNotificationCenter defaultCenter] removeObject:self];
-
 	[colorSchemes release];
 	[currentPopTipViewTarget release];
 	[messages release];
