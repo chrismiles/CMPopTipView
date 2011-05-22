@@ -39,6 +39,7 @@
 @synthesize textColor;
 @synthesize textFont;
 @synthesize animation;
+@synthesize maxWidth;
 
 - (void)drawRect:(CGRect)rect {
 	
@@ -203,15 +204,36 @@
     
 	// Size of rounded rect
 	CGFloat rectWidth;
-	if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-		// iPad
-		rectWidth = containerView.frame.size.width/3;
-	}
-	else {
-		// iPhone
-		rectWidth = containerView.frame.size.width*2/3;
-	}
     
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        // iPad
+        if (maxWidth) {
+            if (maxWidth < containerView.frame.size.width) {
+                rectWidth = maxWidth;
+            }
+            else {
+                rectWidth = containerView.frame.size.width - 20;
+            }
+        }
+        else {
+            rectWidth = containerView.frame.size.width/3;
+        }
+    }
+    else {
+        // iPhone
+        if (maxWidth) {
+            if (maxWidth < containerView.frame.size.width) {
+                rectWidth = maxWidth;
+            }
+            else {
+                rectWidth = containerView.frame.size.width - 10;
+            }
+        }
+        else {
+            rectWidth = containerView.frame.size.width*2/3;
+        }
+    }
+
 	CGSize textSize = [self.message sizeWithFont:textFont
 							   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
 								   lineBreakMode:UILineBreakModeWordWrap];
