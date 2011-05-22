@@ -124,6 +124,7 @@ typedef enum {
 @property (nonatomic, retain)			UIColor					*textColor;
 @property (nonatomic, retain)			UIFont					*textFont;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
+@property (nonatomic, assign)           CGFloat                 maxWidth;
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated;
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated;
