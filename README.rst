@@ -26,10 +26,16 @@ CMPopTipView is rendered entirely by Core Graphics.
 
 The source includes a universal (iPhone/iPad) demo app.
 
+
+URLs
+----
+
+ * https://github.com/chrismiles/CMPopTipView
+ * http://chrismiles-tech.blogspot.com/2010/12/cmpoptipview-custom-popup-view-for-ios.html
+ * http://chrismiles-tech.blogspot.com/2011/05/cmpoptipview-new-animation-option.html
+
 Used in apps:
  * River Level http://itunes.apple.com/au/app/river-level/id356158594?mt=8
-
-https://github.com/chrismiles/CMPopTipView
 
 
 Screenshots
@@ -40,6 +46,12 @@ Screenshots
 .. |iphone_demo_1| image:: http://farm5.static.flickr.com/4005/5191641030_2b93a4a559.jpg
 .. |iphone_demo_2| image:: http://farm5.static.flickr.com/4112/5191046667_109a98dfc7.jpg
 .. |ipad_demo_1| image:: http://farm6.static.flickr.com/5170/5266199718_4720c56384.jpg
+
+
+Videos
+------
+
+http://www.youtube.com/watch?v=nul9VA_QsGI
 
 
 Usage
