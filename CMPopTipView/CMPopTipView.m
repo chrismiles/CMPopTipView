@@ -119,7 +119,7 @@
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
 	
-	CGFloat bubbleMiddle = (bubbleRect.origin.y+(bubbleRect.size.height/2)) / self.bounds.size.height;
+	CGFloat bubbleMiddle = roundf((bubbleRect.origin.y+(bubbleRect.size.height/2)) / self.bounds.size.height);
 	
 	CGGradientRef myGradient;
 	CGColorSpaceRef myColorSpace;
@@ -216,7 +216,7 @@
             }
         }
         else {
-            rectWidth = containerView.frame.size.width/3;
+            rectWidth = (int)(containerView.frame.size.width/3);
         }
     }
     else {
@@ -230,7 +230,7 @@
             }
         }
         else {
-            rectWidth = containerView.frame.size.width*2/3;
+            rectWidth = (int)(containerView.frame.size.width*2/3);
         }
     }
 
@@ -268,7 +268,7 @@
 	CGFloat W = containerView.frame.size.width;
 	
 	CGFloat x_p = targetView.center.x;
-	CGFloat x_b = x_p - (bubbleSize.width/2);
+	CGFloat x_b = x_p - roundf(bubbleSize.width/2);
 	if (x_b < sidePadding) {
 		x_b = sidePadding;
 	}
