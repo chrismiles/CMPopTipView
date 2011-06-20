@@ -119,7 +119,7 @@
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
 	
-	CGFloat bubbleMiddle = roundf((bubbleRect.origin.y+(bubbleRect.size.height/2)) / self.bounds.size.height);
+	CGFloat bubbleMiddle = (bubbleRect.origin.y+(bubbleRect.size.height/2)) / self.bounds.size.height;
 	
 	CGGradientRef myGradient;
 	CGColorSpaceRef myColorSpace;
