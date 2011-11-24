@@ -267,7 +267,8 @@
 	
 	CGFloat W = containerView.frame.size.width;
 	
-	CGFloat x_p = targetView.center.x;
+	CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
+	CGFloat x_p = p.x;
 	CGFloat x_b = x_p - roundf(bubbleSize.width/2);
 	if (x_b < sidePadding) {
 		x_b = sidePadding;
