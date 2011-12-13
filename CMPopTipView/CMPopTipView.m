@@ -38,6 +38,7 @@
 @synthesize targetObject;
 @synthesize textColor;
 @synthesize textFont;
+@synthesize textAlignment;
 @synthesize animation;
 @synthesize maxWidth;
 
@@ -192,7 +193,7 @@
 	[self.message drawInRect:textFrame
 					withFont:textFont
 			   lineBreakMode:UILineBreakModeWordWrap
-				   alignment:UITextAlignmentCenter];
+				   alignment:self.textAlignment];
 }
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
@@ -421,10 +422,15 @@
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
+		self.textAlignment = UITextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.animation = CMPopTipAnimationSlide;
     }
     return self;
+}
+
+- (PointDirection) getPointDirection {
+  return pointDirection;
 }
 
 - (id)initWithMessage:(NSString *)messageToShow {
