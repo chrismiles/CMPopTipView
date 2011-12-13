@@ -132,6 +132,8 @@ typedef enum {
 - (void)dismissAnimated:(BOOL)animated;
 - (id)initWithMessage:(NSString *)messageToShow;
 
+- (PointDirection) getPointDirection;
+
 @end
 
 

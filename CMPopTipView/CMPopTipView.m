@@ -429,6 +429,10 @@
     return self;
 }
 
+- (PointDirection) getPointDirection {
+  return pointDirection;
+}
+
 - (id)initWithMessage:(NSString *)messageToShow {
 	CGRect frame = CGRectZero;
 	
