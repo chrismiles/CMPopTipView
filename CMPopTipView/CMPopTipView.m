@@ -38,9 +38,10 @@
 @synthesize targetObject;
 @synthesize textColor;
 @synthesize textFont;
-@synthesize textAlignment;
 @synthesize animation;
 @synthesize maxWidth;
+@synthesize contentsView;
+@synthesize dismissByTapOnPopTipView=_dismissByTapOnView;
 
 - (void)drawRect:(CGRect)rect {
 	
@@ -190,10 +191,26 @@
 								  bubbleRect.origin.y + cornerRadius,
 								  bubbleRect.size.width - cornerRadius*2,
 								  bubbleRect.size.height - cornerRadius*2);
-	[self.message drawInRect:textFrame
-					withFont:textFont
-			   lineBreakMode:UILineBreakModeWordWrap
-				   alignment:self.textAlignment];
+	
+   // NSLog(@"%@ %@ %@",NSStringFromCGRect(textFrame),NSStringFromCGRect(self.contentsView.frame),NSStringFromCGRect(self.frame));
+    
+    if (self.message!=nil) {
+        [self.message drawInRect:textFrame
+                        withFont:textFont
+                   lineBreakMode:UILineBreakModeWordWrap
+                       alignment:UITextAlignmentCenter];
+    }
+    
+    if (self.contentsView!=nil) {
+        
+        [self.contentsView setFrame:CGRectMake(textFrame.origin.x, textFrame.origin.y, textFrame.size.width, textFrame.size.height)];
+        
+        //[self.contentsView setFrame:CGRectMake((self.frame.size.width-self.contentsView.frame.size.width)/2, (self.frame.size.height-self.contentsView.frame.size.height)/2, textFrame.size.width, textFrame.size.height)];
+        
+        //NSLog(@"%@ %@ %@",NSStringFromCGRect(textFrame),NSStringFromCGRect(self.contentsView.frame),NSStringFromCGRect(self.frame));
+
+          [self addSubview:self.contentsView];
+    }
 }
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
@@ -202,7 +219,7 @@
 	}
 	
 	[containerView addSubview:self];
-    
+    //[contentsView addSubview:contentsView];
 	// Size of rounded rect
 	CGFloat rectWidth;
     
@@ -235,9 +252,22 @@
         }
     }
 
-	CGSize textSize = [self.message sizeWithFont:textFont
-							   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-								   lineBreakMode:UILineBreakModeWordWrap];
+
+    
+	CGSize textSize;
+    
+    if (self.message!=nil) {
+        textSize= [self.message sizeWithFont:textFont
+                           constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                               lineBreakMode:UILineBreakModeWordWrap];
+    }
+    if (self.contentsView!=nil) {
+        textSize= self.contentsView.frame.size;
+    }
+
+    
+    
+    
 	bubbleSize = CGSizeMake(textSize.width + cornerRadius*2, textSize.height + cornerRadius*2);
 	
 	CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:containerView.superview];
@@ -392,7 +422,9 @@
 }
 
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event { 
-	highlight = YES;
+	if (_dismissByTapOnView) {
+        
+    highlight = YES;
 	[self setNeedsDisplay];
 	
 	[self dismissAnimated:YES];
@@ -400,6 +432,7 @@
 	if (delegate && [delegate respondsToSelector:@selector(popTipViewWasDismissedByUser:)]) {
 		[delegate popTipViewWasDismissedByUser:self];
 	}
+    }
 }
 
 - (void)popAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
@@ -420,17 +453,14 @@
 		pointerSize = 12.0;
 		sidePadding = 2.0;
 		
+        self.dismissByTapOnPopTipView=YES;
+        
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
-		self.textAlignment = UITextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.animation = CMPopTipAnimationSlide;
     }
     return self;
-}
-
-- (PointDirection) getPointDirection {
-  return pointDirection;
 }
 
 - (id)initWithMessage:(NSString *)messageToShow {
@@ -438,9 +468,21 @@
 	
 	if ((self = [self initWithFrame:frame])) {
 		self.message = messageToShow;
+        self.contentsView=nil;
 	}
 	return self;
 }
+
+- (id)initWithContentsView:(UIView *)aContentsView {
+	CGRect frame = CGRectZero;
+	
+	if ((self = [self initWithFrame:frame])) {
+		self.contentsView = aContentsView;
+        self.message=nil;
+	}
+	return self;
+}
+
 
 - (void)dealloc {
 	[backgroundColor release];

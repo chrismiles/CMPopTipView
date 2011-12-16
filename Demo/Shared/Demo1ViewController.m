@@ -72,9 +72,24 @@
 		NSArray *colorScheme = [colorSchemes objectAtIndex:foo4random()*[colorSchemes count]];
 		UIColor *backgroundColor = [colorScheme objectAtIndex:0];
 		UIColor *textColor = [colorScheme objectAtIndex:1];
-		
-		CMPopTipView *popTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
+		 
+        //custom view test
+        UIView *view=[[UIView alloc]initWithFrame:CGRectMake(0, 0, 160, 60)];
+        view.backgroundColor=[UIColor blueColor];
+
+        
+        
+		CMPopTipView *popTipView = [[[CMPopTipView alloc] initWithContentsView:view] autorelease];
+        
+        [view release];
+
+        //
+        
+        popTipView.dismissByTapOnPopTipView=NO;
+        
 		popTipView.delegate = self;
+        
+        
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;
 		}
