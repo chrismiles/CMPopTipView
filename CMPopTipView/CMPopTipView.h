@@ -120,17 +120,20 @@ typedef enum {
 @property (nonatomic, retain)			UIColor					*backgroundColor;
 @property (nonatomic, assign)		id<CMPopTipViewDelegate>	delegate;
 @property (nonatomic, retain)			NSString				*message;
+@property (nonatomic, retain)           UIView	                *customView;
 @property (nonatomic, retain, readonly)	id						targetObject;
 @property (nonatomic, retain)			UIColor					*textColor;
 @property (nonatomic, retain)			UIFont					*textFont;
 @property (nonatomic)			        UITextAlignment	textAlignment;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
 @property (nonatomic, assign)           CGFloat                 maxWidth;
+@property (nonatomic)                   BOOL                    dismissByTapOnPopTipView; 
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated;
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated;
 - (void)dismissAnimated:(BOOL)animated;
 - (id)initWithMessage:(NSString *)messageToShow;
+- (id)initWithCustomView:(UIView *)aView;
 
 - (PointDirection) getPointDirection;
 

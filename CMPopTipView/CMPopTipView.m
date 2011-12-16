@@ -35,12 +35,14 @@
 @synthesize backgroundColor;
 @synthesize delegate;
 @synthesize message;
+@synthesize customView;
 @synthesize targetObject;
 @synthesize textColor;
 @synthesize textFont;
 @synthesize textAlignment;
 @synthesize animation;
 @synthesize maxWidth;
+@synthesize dismissByTapOnPopTipView;
 
 - (void)drawRect:(CGRect)rect {
 	
@@ -190,10 +192,19 @@
 								  bubbleRect.origin.y + cornerRadius,
 								  bubbleRect.size.width - cornerRadius*2,
 								  bubbleRect.size.height - cornerRadius*2);
-	[self.message drawInRect:textFrame
-					withFont:textFont
-			   lineBreakMode:UILineBreakModeWordWrap
-				   alignment:self.textAlignment];
+	if (self.message!=nil) {
+        [self.message drawInRect:textFrame
+                        withFont:textFont
+                   lineBreakMode:UILineBreakModeWordWrap
+                       alignment:UITextAlignmentCenter];
+    }
+    
+    if (self.contentsView!=nil) {
+        
+        [self.contentsView setFrame:CGRectMake(textFrame.origin.x, textFrame.origin.y, textFrame.size.width, textFrame.size.height)];
+        
+        [self addSubview:self.contentsView];
+    }
 }
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
@@ -235,9 +246,17 @@
         }
     }
 
-	CGSize textSize = [self.message sizeWithFont:textFont
-							   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-								   lineBreakMode:UILineBreakModeWordWrap];
+	CGSize textSize;
+    
+    if (self.message!=nil) {
+        textSize= [self.message sizeWithFont:textFont
+                           constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                               lineBreakMode:UILineBreakModeWordWrap];
+    }
+    if (self.contentsView!=nil) {
+        textSize= self.contentsView.frame.size;
+    }
+    
 	bubbleSize = CGSizeMake(textSize.width + cornerRadius*2, textSize.height + cornerRadius*2);
 	
 	CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:containerView.superview];
@@ -425,6 +444,7 @@
 		self.textAlignment = UITextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.animation = CMPopTipAnimationSlide;
+        self.dismissByTapOnPopTipView=YES;
     }
     return self;
 }
@@ -442,9 +462,20 @@
 	return self;
 }
 
+- (id)initWithCustomView:(UIView *)aView {
+	CGRect frame = CGRectZero;
+	
+	if ((self = [self initWithFrame:frame])) {
+		self.customView = aView;
+        self.message=nil;
+	}
+	return self;
+}
+
 - (void)dealloc {
 	[backgroundColor release];
 	[message release];
+    [customView release];
 	[targetObject release];
 	[textColor release];
 	[textFont release];
