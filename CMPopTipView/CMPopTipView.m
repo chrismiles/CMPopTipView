@@ -35,22 +35,46 @@
 @synthesize backgroundColor;
 @synthesize delegate;
 @synthesize message;
+@synthesize customView;
 @synthesize targetObject;
 @synthesize textColor;
 @synthesize textFont;
 @synthesize textAlignment;
 @synthesize animation;
 @synthesize maxWidth;
+@synthesize disableTapToDismiss;
+
+- (CGRect)bubbleFrame {
+	CGRect bubbleFrame;
+	if (pointDirection == PointDirectionUp) {
+		bubbleFrame = CGRectMake(2.0, targetPoint.y+pointerSize, bubbleSize.width, bubbleSize.height);
+	}
+	else {
+		bubbleFrame = CGRectMake(2.0, targetPoint.y-pointerSize-bubbleSize.height, bubbleSize.width, bubbleSize.height);
+	}
+	return bubbleFrame;
+}
+
+- (CGRect)contentFrame {
+	CGRect bubbleFrame = [self bubbleFrame];
+	CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + cornerRadius,
+									 bubbleFrame.origin.y + cornerRadius,
+									 bubbleFrame.size.width - cornerRadius*2,
+									 bubbleFrame.size.height - cornerRadius*2);
+	return contentFrame;
+}
+
+- (void)layoutSubviews {
+	if (self.customView) {
+		
+		CGRect contentFrame = [self contentFrame];
+        [self.customView setFrame:contentFrame];
+    }
+}
 
 - (void)drawRect:(CGRect)rect {
 	
-	CGRect bubbleRect;
-	if (pointDirection == PointDirectionUp) {
-		bubbleRect = CGRectMake(2.0, targetPoint.y+pointerSize, bubbleSize.width, bubbleSize.height);
-	}
-	else {
-		bubbleRect = CGRectMake(2.0, targetPoint.y-pointerSize-bubbleSize.height, bubbleSize.width, bubbleSize.height);
-	}
+	CGRect bubbleRect = [self bubbleFrame];
 	
 	CGContextRef c = UIGraphicsGetCurrentContext(); 
 	
@@ -158,14 +182,6 @@
 		red     +colourHL, green     +colourHL, blue     +colourHL, alpha,
 		red     +colourHL, green     +colourHL, blue     +colourHL, alpha
 	};
-	//	CGFloat colorList[] = {
-    //		//red, green, blue, alpha 
-    //		154.0/255.0, 94.0/255.0, 130.0/255.0, 1.0,
-    //		154.0/255.0, 94.0/255.0, 130.0/255.0, 1.0,
-    //		144.0/255.0, 84.0/255.0, 120.0/255.0, 1.0,
-    //		134.0/255.0, 74.0/255.0, 110.0/255.0, 1.0,
-    //		134.0/255.0, 74.0/255.0, 110.0/255.0, 1.0
-    //	};
 	myColorSpace = CGColorSpaceCreateDeviceRGB();
 	myGradient = CGGradientCreateWithColorComponents(myColorSpace, colorList, locationList, locationCount);
 	CGPoint startPoint, endPoint;
@@ -185,15 +201,15 @@
 	CGPathRelease(bubblePath);
 	
 	// Draw text
-	[textColor set];
-	CGRect textFrame = CGRectMake(bubbleRect.origin.x + cornerRadius,
-								  bubbleRect.origin.y + cornerRadius,
-								  bubbleRect.size.width - cornerRadius*2,
-								  bubbleRect.size.height - cornerRadius*2);
-	[self.message drawInRect:textFrame
-					withFont:textFont
-			   lineBreakMode:UILineBreakModeWordWrap
-				   alignment:self.textAlignment];
+	
+	if (self.message) {
+		[textColor set];
+		CGRect textFrame = [self contentFrame];
+        [self.message drawInRect:textFrame
+                        withFont:textFont
+                   lineBreakMode:UILineBreakModeWordWrap
+                       alignment:UITextAlignmentCenter];
+    }
 }
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
@@ -235,9 +251,17 @@
         }
     }
 
-	CGSize textSize = [self.message sizeWithFont:textFont
-							   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-								   lineBreakMode:UILineBreakModeWordWrap];
+	CGSize textSize;
+    
+    if (self.message!=nil) {
+        textSize= [self.message sizeWithFont:textFont
+                           constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                               lineBreakMode:UILineBreakModeWordWrap];
+    }
+    if (self.customView != nil) {
+        textSize = self.customView.frame.size;
+    }
+    
 	bubbleSize = CGSizeMake(textSize.width + cornerRadius*2, textSize.height + cornerRadius*2);
 	
 	CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:containerView.superview];
@@ -391,7 +415,12 @@
 	}
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event { 
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+	if (self.disableTapToDismiss) {
+		[super touchesBegan:touches withEvent:event];
+		return;
+	}
+	
 	highlight = YES;
 	[self setNeedsDisplay];
 	
@@ -442,8 +471,19 @@
 	return self;
 }
 
+- (id)initWithCustomView:(UIView *)aView {
+	CGRect frame = CGRectZero;
+	
+	if ((self = [self initWithFrame:frame])) {
+		self.customView = aView;
+        [self addSubview:self.customView];
+	}
+	return self;
+}
+
 - (void)dealloc {
 	[backgroundColor release];
+    [customView release];
 	[message release];
 	[targetObject release];
 	[textColor release];

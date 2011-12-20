@@ -33,8 +33,8 @@
 
 @interface Demo1ViewController ()
 @property (nonatomic, retain)	NSArray			*colorSchemes;
+@property (nonatomic, retain)	NSDictionary	*contents;
 @property (nonatomic, retain)	id				currentPopTipViewTarget;
-@property (nonatomic, retain)	NSDictionary	*messages;
 @property (nonatomic, retain)	NSMutableArray	*visiblePopTipViews;
 @end
 
@@ -45,8 +45,8 @@
 @implementation Demo1ViewController
 
 @synthesize colorSchemes;
+@synthesize contents=_contents;
 @synthesize currentPopTipViewTarget;
-@synthesize messages;
 @synthesize visiblePopTipViews;
 
 - (void)dismissAllPopTipViews {
@@ -65,16 +65,31 @@
 		self.currentPopTipViewTarget = nil;
 	}
 	else {
-		NSString *message = [self.messages objectForKey:[NSNumber numberWithInt:[(UIView *)sender tag]]];
-		if (nil == message) {
-			message = @"A CMPopTipView can automatically point to any view or bar button item.";
+		NSString *contentMessage = nil;
+		UIView *contentView = nil;
+		id content = [self.contents objectForKey:[NSNumber numberWithInt:[(UIView *)sender tag]]];
+		if ([content isKindOfClass:[UIView class]]) {
+			contentView = content;
+		}
+		else if ([content isKindOfClass:[NSString class]]) {
+			contentMessage = content;
+		}
+		else {
+			contentMessage = @"A CMPopTipView can automatically point to any view or bar button item.";
 		}
 		NSArray *colorScheme = [colorSchemes objectAtIndex:foo4random()*[colorSchemes count]];
 		UIColor *backgroundColor = [colorScheme objectAtIndex:0];
 		UIColor *textColor = [colorScheme objectAtIndex:1];
 		
-		CMPopTipView *popTipView = [[[CMPopTipView alloc] initWithMessage:message] autorelease];
+		CMPopTipView *popTipView;
+		if (contentView) {
+			popTipView = [[[CMPopTipView alloc] initWithCustomView:contentView] autorelease];
+		}
+		else {
+			popTipView = [[[CMPopTipView alloc] initWithMessage:contentMessage] autorelease];
+		}
 		popTipView.delegate = self;
+		popTipView.disableTapToDismiss = YES;
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;
 		}
@@ -143,14 +158,14 @@
 	
 	self.visiblePopTipViews = [NSMutableArray array];
 	
-	self.messages = [NSDictionary dictionaryWithObjectsAndKeys:
+	self.contents = [NSDictionary dictionaryWithObjectsAndKeys:
 					 // Rounded rect buttons
 					 @"A CMPopTipView will automatically position itself within the container view.", [NSNumber numberWithInt:11],
 					 @"A CMPopTipView will automatically orient itself above or below the target view based on the available space.", [NSNumber numberWithInt:12],
 					 @"A CMPopTipView always tries to point at the center of the target view.", [NSNumber numberWithInt:13],
 					 @"A CMPopTipView can point to any UIView subclass.", [NSNumber numberWithInt:14],
 					 @"A CMPopTipView will automatically size itself to fit the text message.", [NSNumber numberWithInt:15],
-					 @"A CMPopTipView works fine in both iPhone and iPad interfaces.", [NSNumber numberWithInt:16],
+					 [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"appicon57.png"]] autorelease], [NSNumber numberWithInt:16],	// content can be a UIView
 					 // Nav bar buttons
 					 @"This CMPopTipView is pointing at a leftBarButtonItem of a navigationItem.", [NSNumber numberWithInt:21],
 					 @"Two popup animations are provided: slide and pop. Tap other buttons to see them both.", [NSNumber numberWithInt:22],
@@ -189,14 +204,14 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
 	
-	self.messages = nil;
+	self.contents = nil;
 	self.visiblePopTipViews = nil;
 }
 
 - (void)dealloc {
+	[_contents release];
 	[colorSchemes release];
 	[currentPopTipViewTarget release];
-	[messages release];
 	[visiblePopTipViews release];
 	
     [super dealloc];
