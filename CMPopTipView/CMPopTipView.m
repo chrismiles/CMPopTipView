@@ -251,7 +251,7 @@
         }
     }
 
-	CGSize textSize;
+	CGSize textSize = CGSizeZero;
     
     if (self.message!=nil) {
         textSize= [self.message sizeWithFont:textFont
