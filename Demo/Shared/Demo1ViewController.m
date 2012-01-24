@@ -89,7 +89,7 @@
 			popTipView = [[[CMPopTipView alloc] initWithMessage:contentMessage] autorelease];
 		}
 		popTipView.delegate = self;
-		popTipView.disableTapToDismiss = YES;
+		//popTipView.disableTapToDismiss = YES;
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;
 		}
