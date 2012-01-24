@@ -390,6 +390,7 @@
 
 - (void)finaliseDismiss {
 	[self removeFromSuperview];
+	highlight = NO;
 	self.targetObject = nil;
 }
 
