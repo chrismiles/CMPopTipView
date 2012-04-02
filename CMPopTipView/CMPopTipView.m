@@ -40,6 +40,8 @@
 @synthesize textColor;
 @synthesize textFont;
 @synthesize textAlignment;
+@synthesize borderColor;
+@synthesize borderWidth;
 @synthesize animation;
 @synthesize maxWidth;
 @synthesize disableTapToDismiss;
@@ -77,9 +79,9 @@
 	CGRect bubbleRect = [self bubbleFrame];
 	
 	CGContextRef c = UIGraphicsGetCurrentContext(); 
-	
-	CGContextSetRGBStrokeColor(c, 0.0, 0.0, 0.0, 1.0);	// black
-	CGContextSetLineWidth(c, 1.0);
+    
+    CGContextSetRGBStrokeColor(c, 0.0, 0.0, 0.0, 1.0);	// black
+	CGContextSetLineWidth(c, borderWidth);
     
 	CGMutablePathRef bubblePath = CGPathCreateMutable();
 	
@@ -194,7 +196,24 @@
 	CGGradientRelease(myGradient);
 	CGColorSpaceRelease(myColorSpace);
 	
-	CGContextSetRGBStrokeColor(c, 0.4, 0.4, 0.4, 1.0);
+    //Draw Border
+    int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
+    const CGFloat *borderComponents = CGColorGetComponents(borderColor.CGColor);
+    CGFloat r, g, b, a;
+	if (numBorderComponents == 2) {
+		r = borderComponents[0];
+		g = borderComponents[0];
+		b = borderComponents[0];
+		a = borderComponents[1];
+	}
+	else {
+		r = borderComponents[0];
+		g = borderComponents[1];
+		b = borderComponents[2];
+		a = borderComponents[3];
+	}
+    
+	CGContextSetRGBStrokeColor(c, r, g, b, a);
 	CGContextAddPath(c, bubblePath);
 	CGContextDrawPath(c, kCGPathStroke);
 	
@@ -449,11 +468,13 @@
 		topMargin = 2.0;
 		pointerSize = 12.0;
 		sidePadding = 2.0;
+        borderWidth = 1.0;
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
 		self.textAlignment = UITextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
+        self.borderColor = [UIColor blackColor];
         self.animation = CMPopTipAnimationSlide;
     }
     return self;
