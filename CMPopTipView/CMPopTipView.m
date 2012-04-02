@@ -505,6 +505,7 @@
 
 - (void)dealloc {
 	[backgroundColor release];
+    [borderColor release];
     [customView release];
 	[message release];
 	[targetObject release];
