@@ -416,6 +416,21 @@
 	}
 }
 
+- (void)autoDismissAnimatedDidFired:(NSTimer *)theTimer{
+    NSNumber *animated = [[theTimer userInfo] objectForKey:@"animated"];
+    [self dismissAnimated:[animated boolValue]];
+}
+
+- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal{
+    NSDictionary * userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:animated] forKey:@"animated"];
+    
+    [NSTimer scheduledTimerWithTimeInterval:timeInvertal
+                                     target:self
+                                   selector:@selector(autoDismissAnimatedDidFired:)
+                                   userInfo:userInfo
+                                    repeats:NO];
+}
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	if (self.disableTapToDismiss) {
 		[super touchesBegan:touches withEvent:event];
