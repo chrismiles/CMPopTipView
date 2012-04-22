@@ -136,7 +136,7 @@ typedef enum {
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated;
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated;
 - (void)dismissAnimated:(BOOL)animated;
-
+- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal;
 - (PointDirection) getPointDirection;
 
 @end
