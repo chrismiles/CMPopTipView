@@ -2,7 +2,7 @@
 //  CMPopTipView.h
 //
 //  Created by Chris Miles on 18/07/10.
-//  Copyright (c) Chris Miles 2010-2011.
+//  Copyright (c) Chris Miles 2010-2012.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,11 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 //
+
+/*
+	Version: 1.1
+ */
+
 
 /** \brief	Display a speech bubble-like popup on screen, pointing at the
 			designated view or button.
