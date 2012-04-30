@@ -416,17 +416,17 @@
 	}
 }
 
-- (void)autoDismissAnimatedDidFired:(NSTimer *)theTimer{
+- (void)autoDismissAnimatedDidFire:(NSTimer *)theTimer {
     NSNumber *animated = [[theTimer userInfo] objectForKey:@"animated"];
     [self dismissAnimated:[animated boolValue]];
 }
 
-- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal{
+- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal {
     NSDictionary * userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:animated] forKey:@"animated"];
     
     [NSTimer scheduledTimerWithTimeInterval:timeInvertal
                                      target:self
-                                   selector:@selector(autoDismissAnimatedDidFired:)
+                                   selector:@selector(autoDismissAnimatedDidFire:)
                                    userInfo:userInfo
                                     repeats:NO];
 }
