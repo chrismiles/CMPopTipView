@@ -106,4 +106,4 @@ License
 
 CMPopTipView is released under the MIT license.  See LICENSE for details.
 
-CMPopTipView is copyright (c) Chris Miles 2010-2011.
+CMPopTipView is copyright (c) Chris Miles 2010-2012.
