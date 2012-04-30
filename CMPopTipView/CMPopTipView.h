@@ -109,6 +109,8 @@ typedef enum {
 	id						targetObject;
 	UIColor					*textColor;
 	UIFont					*textFont;
+    UIColor                 *borderColor;
+    CGFloat                 borderWidth;
     CMPopTipAnimation       animation;
 
 	@private
@@ -131,6 +133,8 @@ typedef enum {
 @property (nonatomic, retain)			UIColor					*textColor;
 @property (nonatomic, retain)			UIFont					*textFont;
 @property (nonatomic, assign)			UITextAlignment			textAlignment;
+@property (nonatomic, retain)			UIColor					*borderColor;
+@property (nonatomic, assign)			CGFloat					borderWidth;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
 @property (nonatomic, assign)           CGFloat                 maxWidth;
 
