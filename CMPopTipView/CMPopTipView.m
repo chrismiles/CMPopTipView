@@ -45,6 +45,7 @@
 @synthesize animation;
 @synthesize maxWidth;
 @synthesize disableTapToDismiss;
+@synthesize dismissTapAnywhere;
 
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
@@ -235,6 +236,16 @@
 	if (!self.targetObject) {
 		self.targetObject = targetView;
 	}
+    
+    // If we want to dismiss the bubble when the user taps anywhere, we need to insert
+    // an invisible button over the background.
+    if ( self.dismissTapAnywhere ) {
+        self->dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self->dismissTarget addTarget:self action:@selector(touchesBegan:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+        [self->dismissTarget setTitle:@"" forState:UIControlStateNormal];
+        self->dismissTarget.frame = containerView.bounds;
+        [containerView addSubview:self->dismissTarget];
+    }
 	
 	[containerView addSubview:self];
     
@@ -409,6 +420,11 @@
 
 - (void)finaliseDismiss {
 	[self removeFromSuperview];
+    
+    if ( self->dismissTarget ) {
+        [self->dismissTarget removeFromSuperview];        
+    }
+            
 	highlight = NO;
 	self.targetObject = nil;
 }
@@ -491,6 +507,7 @@
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.borderColor = [UIColor blackColor];
         self.animation = CMPopTipAnimationSlide;
+        self.dismissTapAnywhere = NO;
     }
     return self;
 }

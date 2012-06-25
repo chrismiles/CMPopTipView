@@ -122,11 +122,13 @@ typedef enum {
 	PointDirection			pointDirection;
 	CGFloat					pointerSize;
 	CGPoint					targetPoint;
+    UIButton                *dismissTarget;
 }
 
 @property (nonatomic, retain)			UIColor					*backgroundColor;
 @property (nonatomic, assign)		id<CMPopTipViewDelegate>	delegate;
 @property (nonatomic, assign)			BOOL					disableTapToDismiss;
+@property (nonatomic, assign)			BOOL					dismissTapAnywhere;
 @property (nonatomic, retain)			NSString				*message;
 @property (nonatomic, retain)           UIView	                *customView;
 @property (nonatomic, retain, readonly)	id						targetObject;
