@@ -228,7 +228,7 @@
         [self.message drawInRect:textFrame
                         withFont:textFont
                    lineBreakMode:UILineBreakModeWordWrap
-                       alignment:UITextAlignmentCenter];
+                       alignment:self.textAlignment];
     }
 }
 
