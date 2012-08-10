@@ -324,7 +324,7 @@
 		}
 	}
 	
-	CGFloat W = containerView.frame.size.width;
+	CGFloat W = containerView.bounds.size.width;
 	
 	CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
 	CGFloat x_p = p.x;
