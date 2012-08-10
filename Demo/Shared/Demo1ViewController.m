@@ -52,8 +52,8 @@
 - (void)dismissAllPopTipViews {
 	while ([visiblePopTipViews count] > 0) {
 		CMPopTipView *popTipView = [visiblePopTipViews objectAtIndex:0];
-		[visiblePopTipViews removeObjectAtIndex:0];
 		[popTipView dismissAnimated:YES];
+		[visiblePopTipViews removeObjectAtIndex:0];
 	}
 }
 
@@ -99,6 +99,9 @@
         
         popTipView.animation = arc4random() % 2;
 		
+		popTipView.dismissTapAnywhere = YES;
+        [popTipView autoDismissAnimated:YES atTimeInterval:3.0];
+
 		if ([sender isKindOfClass:[UIButton class]]) {
 			UIButton *button = (UIButton *)sender;
 			[popTipView presentPointingAtView:button inView:self.view animated:YES];

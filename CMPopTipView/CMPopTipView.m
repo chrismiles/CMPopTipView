@@ -27,11 +27,14 @@
 
 @interface CMPopTipView ()
 @property (nonatomic, retain, readwrite)	id	targetObject;
+@property (nonatomic, retain) NSTimer *autoDismissTimer;
+@property (nonatomic, retain) UIButton *dismissTarget;
 @end
 
 
 @implementation CMPopTipView
 
+@synthesize autoDismissTimer = _autoDismissTimer;
 @synthesize backgroundColor;
 @synthesize delegate;
 @synthesize message;
@@ -46,6 +49,7 @@
 @synthesize maxWidth;
 @synthesize disableTapToDismiss;
 @synthesize dismissTapAnywhere;
+@synthesize dismissTarget=_dismissTarget;
 
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
@@ -240,11 +244,11 @@
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
     if ( self.dismissTapAnywhere ) {
-        self->dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self->dismissTarget addTarget:self action:@selector(touchesBegan:withEvent:) forControlEvents:UIControlEventTouchUpInside];
-        [self->dismissTarget setTitle:@"" forState:UIControlStateNormal];
-        self->dismissTarget.frame = containerView.bounds;
-        [containerView addSubview:self->dismissTarget];
+        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.dismissTarget addTarget:self action:@selector(touchesBegan:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
+        self.dismissTarget.frame = containerView.bounds;
+        [containerView addSubview:self.dismissTarget];
     }
 	
 	[containerView addSubview:self];
@@ -423,12 +427,15 @@
 }
 
 - (void)finaliseDismiss {
+	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
+
+    if (self.dismissTarget) {
+        [self.dismissTarget removeFromSuperview];
+		self.dismissTarget = nil;
+    }
+	
 	[self removeFromSuperview];
     
-    if ( self->dismissTarget ) {
-        [self->dismissTarget removeFromSuperview];        
-    }
-            
 	highlight = NO;
 	self.targetObject = nil;
 }
@@ -458,19 +465,26 @@
 - (void)autoDismissAnimatedDidFire:(NSTimer *)theTimer {
     NSNumber *animated = [[theTimer userInfo] objectForKey:@"animated"];
     [self dismissAnimated:[animated boolValue]];
+	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
 - (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal {
     NSDictionary * userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:animated] forKey:@"animated"];
     
-    [NSTimer scheduledTimerWithTimeInterval:timeInvertal
-                                     target:self
-                                   selector:@selector(autoDismissAnimatedDidFire:)
-                                   userInfo:userInfo
-                                    repeats:NO];
+    self.autoDismissTimer = [NSTimer scheduledTimerWithTimeInterval:timeInvertal
+															 target:self
+														   selector:@selector(autoDismissAnimatedDidFire:)
+														   userInfo:userInfo
+															repeats:NO];
 }
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+- (void)notifyDelegatePopTipViewWasDismissedByUser {
+	if (delegate && [delegate respondsToSelector:@selector(popTipViewWasDismissedByUser:)]) {
+		[delegate popTipViewWasDismissedByUser:self];
+	}
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
 	if (self.disableTapToDismiss) {
 		[super touchesBegan:touches withEvent:event];
 		return;
@@ -481,9 +495,7 @@
 	
 	[self dismissAnimated:YES];
 	
-	if (delegate && [delegate respondsToSelector:@selector(popTipViewWasDismissedByUser:)]) {
-		[delegate popTipViewWasDismissedByUser:self];
-	}
+	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
 - (void)popAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
@@ -540,6 +552,8 @@
 }
 
 - (void)dealloc {
+	[_autoDismissTimer release];
+	[_dismissTarget release];
 	[backgroundColor release];
     [borderColor release];
     [customView release];

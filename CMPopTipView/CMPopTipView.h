@@ -122,7 +122,6 @@ typedef enum {
 	PointDirection			pointDirection;
 	CGFloat					pointerSize;
 	CGPoint					targetPoint;
-    UIButton                *dismissTarget;
 }
 
 @property (nonatomic, retain)			UIColor					*backgroundColor;
