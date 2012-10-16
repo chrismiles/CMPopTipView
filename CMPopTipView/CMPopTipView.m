@@ -246,6 +246,7 @@
     if ( self.dismissTapAnywhere ) {
         self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
+        [self.dismissTarget setBackgroundColor: [UIColor colorWithWhite:0 alpha:0.75]];
         [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
         self.dismissTarget.frame = containerView.bounds;
         [containerView addSubview:self.dismissTarget];
