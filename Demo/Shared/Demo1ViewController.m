@@ -131,19 +131,7 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-	for (CMPopTipView *popTipView in visiblePopTipViews) {
-		id targetObject = popTipView.targetObject;
-		[popTipView dismissAnimated:NO];
-		
-		if ([targetObject isKindOfClass:[UIButton class]]) {
-			UIButton *button = (UIButton *)targetObject;
-			[popTipView presentPointingAtView:button inView:self.view animated:NO];
-		}
-		else {
-			UIBarButtonItem *barButtonItem = (UIBarButtonItem *)targetObject;
-			[popTipView presentPointingAtBarButtonItem:barButtonItem animated:NO];
-		}
-	}
+
 }
 
 /*

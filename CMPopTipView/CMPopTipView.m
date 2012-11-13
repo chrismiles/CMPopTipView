@@ -236,24 +236,15 @@
     }
 }
 
-- (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
-	if (!self.targetObject) {
-		self.targetObject = targetView;
-	}
-    
-    // If we want to dismiss the bubble when the user taps anywhere, we need to insert
-    // an invisible button over the background.
-    if ( self.dismissTapAnywhere ) {
-        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.dismissTarget addTarget:self action:@selector(touchesBegan:withEvent:) forControlEvents:UIControlEventTouchUpInside];
-        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
-        self.dismissTarget.frame = containerView.bounds;
-        [containerView addSubview:self.dismissTarget];
+- (void)layoutInContainerView:(UIView *)containerView animated:(BOOL)animated presented:(BOOL)presented {
+    UIView *targetView;
+    if ([self.targetObject isKindOfClass:[UIBarButtonItem class]]) {
+        targetView = (UIView *)[self.targetObject performSelector:@selector(view)];
+    } else {
+        targetView = (UIView *)self.targetObject;
     }
-	
-	[containerView addSubview:self];
     
-	// Size of rounded rect
+    // Size of rounded rect
 	CGFloat rectWidth;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -362,45 +353,81 @@
 								   bubbleSize.width+sidePadding*2,
 								   fullHeight);
     
-   	
-	if (animated) {
-        if (animation == CMPopTipAnimationSlide) {
-            self.alpha = 0.0;
-            CGRect startFrame = finalFrame;
-            startFrame.origin.y += 10;
-            self.frame = startFrame;
+    
+    if (presented == NO) {
+        if (animated) {
+            if (animation == CMPopTipAnimationSlide) {
+                self.alpha = 0.0;
+                CGRect startFrame = finalFrame;
+                startFrame.origin.y += 10;
+                self.frame = startFrame;
+            }
+            else if (animation == CMPopTipAnimationPop) {
+                self.frame = finalFrame;
+                self.alpha = 0.5;
+                
+                // start a little smaller
+                self.transform = CGAffineTransformMakeScale(0.75f, 0.75f);
+                
+                // animate to a bigger size
+                [UIView beginAnimations:nil context:nil];
+                [UIView setAnimationDelegate:self];
+                [UIView setAnimationDidStopSelector:@selector(popAnimationDidStop:finished:context:)];
+                [UIView setAnimationDuration:0.15f];
+                self.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
+                self.alpha = 1.0;
+                [UIView commitAnimations];
+            }
+            
+            [self setNeedsDisplay];
+            
+            if (animation == CMPopTipAnimationSlide) {
+                [UIView beginAnimations:nil context:nil];
+                self.alpha = 1.0;
+                self.frame = finalFrame;
+                [UIView commitAnimations];
+            }
         }
-		else if (animation == CMPopTipAnimationPop) {
+        else {
+            // Not animated
+            [self setNeedsDisplay];
             self.frame = finalFrame;
-            self.alpha = 0.5;
-            
-            // start a little smaller
-            self.transform = CGAffineTransformMakeScale(0.75f, 0.75f);
-            
-            // animate to a bigger size
+        }
+        
+    } else {
+        [self setNeedsDisplay];
+        if (animated) {
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDelegate:self];
-            [UIView setAnimationDidStopSelector:@selector(popAnimationDidStop:finished:context:)];
-            [UIView setAnimationDuration:0.15f];
-            self.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
-            self.alpha = 1.0;
+            [UIView setAnimationDuration:0.25f];
+            [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
+            self.frame = finalFrame;
             [UIView commitAnimations];
+        } else {
+            self.frame = finalFrame;
         }
-		
-		[self setNeedsDisplay];
-		
-		if (animation == CMPopTipAnimationSlide) {
-			[UIView beginAnimations:nil context:nil];
-			self.alpha = 1.0;
-			self.frame = finalFrame;
-			[UIView commitAnimations];
-		}
 	}
-	else {
-		// Not animated
-		[self setNeedsDisplay];
-		self.frame = finalFrame;
+}
+
+- (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
+	if (!self.targetObject) {
+		self.targetObject = targetView;
 	}
+    
+    // If we want to dismiss the bubble when the user taps anywhere, we need to insert
+    // an invisible button over the background.
+    if ( self.dismissTapAnywhere ) {
+        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.dismissTarget addTarget:self action:@selector(touchesBegan:withEvent:) forControlEvents:UIControlEventTouchUpInside];
+        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
+        self.dismissTarget.frame = containerView.bounds;
+        [containerView addSubview:self.dismissTarget];
+    }
+	
+	[containerView addSubview:self];
+    
+    [self layoutInContainerView:containerView animated:animated presented:NO];
+    return;
 }
 
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
@@ -506,6 +533,24 @@
 	[UIView commitAnimations];
 }
 
+- (void)onUIDeviceOrientationDidChangeNotification:(NSNotification *)notification {
+    BOOL orientationChanged = NO;
+    
+    if (UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation)
+        && UIInterfaceOrientationIsLandscape(previousInterfaceOrientation)) {
+        orientationChanged = YES;
+    } else if(UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)
+              && UIInterfaceOrientationIsPortrait(previousInterfaceOrientation)) {
+        orientationChanged = YES;
+    }
+    
+    previousInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    if (orientationChanged == YES) {
+        [self layoutInContainerView:self.superview animated:YES presented:YES];
+    }
+}
+
 - (id)initWithFrame:(CGRect)frame {
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
@@ -524,6 +569,12 @@
         self.borderColor = [UIColor blackColor];
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
+        
+        previousInterfaceOrientation = [UIApplication sharedApplication].statusBarOrientation;
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(onUIDeviceOrientationDidChangeNotification:)
+                                                     name:UIDeviceOrientationDidChangeNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -562,6 +613,8 @@
 	[textColor release];
 	[textFont release];
 	
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+    
     [super dealloc];
 }
 
