@@ -122,6 +122,7 @@ typedef enum {
 	PointDirection			pointDirection;
 	CGFloat					pointerSize;
 	CGPoint					targetPoint;
+    UIInterfaceOrientation  previousInterfaceOrientation;
 }
 
 @property (nonatomic, retain)			UIColor					*backgroundColor;
