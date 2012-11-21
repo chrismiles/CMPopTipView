@@ -50,6 +50,7 @@
 @synthesize disableTapToDismiss;
 @synthesize dismissTapAnywhere;
 @synthesize dismissTarget=_dismissTarget;
+@synthesize defaultDirection=_defaultDirection;
 
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
@@ -307,27 +308,39 @@
     
 	CGFloat pointerY;	// Y coordinate of pointer target (within containerView)
 	
-	if (targetRelativeOrigin.y+targetView.bounds.size.height < containerRelativeOrigin.y) {
-		pointerY = 0.0;
-		pointDirection = PointDirectionUp;
-	}
-	else if (targetRelativeOrigin.y > containerRelativeOrigin.y+containerView.bounds.size.height) {
-		pointerY = containerView.bounds.size.height;
-		pointDirection = PointDirectionDown;
-	}
-	else {
-		CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:containerView];
-		CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
-		if (sizeBelow > targetOriginInContainer.y) {
-			pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
-			pointDirection = PointDirectionUp;
-		}
-		else {
-			pointerY = targetOriginInContainer.y;
-			pointDirection = PointDirectionDown;
-		}
-	}
-	
+    
+    if (targetRelativeOrigin.y+targetView.bounds.size.height < containerRelativeOrigin.y) {
+        pointerY = 0.0;
+        pointDirection = PointDirectionUp;
+    }
+    else if (targetRelativeOrigin.y > containerRelativeOrigin.y+containerView.bounds.size.height) {
+        pointerY = containerView.bounds.size.height;
+        pointDirection = PointDirectionDown;
+    }
+    else {
+        pointDirection = _defaultDirection;
+        CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:containerView];
+        CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
+        if (pointDirection == PointDirectionUnknown) {
+            if (sizeBelow > targetOriginInContainer.y) {
+                pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
+                pointDirection = PointDirectionUp;
+            }
+            else {
+                pointerY = targetOriginInContainer.y;
+                pointDirection = PointDirectionDown;
+            }
+        }
+        else {
+            if (pointDirection == PointDirectionDown) {
+                pointerY = targetOriginInContainer.y;
+            }
+            else {
+                pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
+            }
+        }
+    }
+    
 	CGFloat W = containerView.bounds.size.width;
 	
 	CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
@@ -524,6 +537,7 @@
         self.borderColor = [UIColor blackColor];
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
+        self.defaultDirection = PointDirectionUnknown;
     }
     return self;
 }
