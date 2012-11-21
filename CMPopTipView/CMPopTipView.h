@@ -89,9 +89,9 @@
 #import <UIKit/UIKit.h>
 
 typedef enum {
-	PointDirectionUp = 0,
+    PointDirectionAny = 0,
+	PointDirectionUp,
 	PointDirectionDown,
-    PointDirectionUnknown,
 } PointDirection;
 
 typedef enum {
@@ -139,7 +139,7 @@ typedef enum {
 @property (nonatomic, assign)			CGFloat					borderWidth;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
 @property (nonatomic, assign)           CGFloat                 maxWidth;
-@property (nonatomic, assign)           PointDirection          defaultDirection;
+@property (nonatomic, assign)           PointDirection          preferredPointDirection;
 
 /* Contents can be either a message or a UIView */
 - (id)initWithMessage:(NSString *)messageToShow;

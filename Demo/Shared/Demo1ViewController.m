@@ -90,6 +90,7 @@
 		}
 		popTipView.delegate = self;
 		//popTipView.disableTapToDismiss = YES;
+		//popTipView.preferredPointDirection = PointDirectionUp;
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;
 		}
