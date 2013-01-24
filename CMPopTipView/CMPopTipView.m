@@ -268,7 +268,6 @@
     if ( self.dismissTapAnywhere ) {
         self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
-        [self.dismissTarget setBackgroundColor: [UIColor colorWithWhite:0 alpha:0.75]];
         [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
         self.dismissTarget.frame = containerView.bounds;
         [containerView addSubview:self.dismissTarget];
@@ -529,7 +528,17 @@
 		[super touchesBegan:touches withEvent:event];
 		return;
 	}
-	
+
+	[self dismissByUser];
+}
+
+- (void)dismissTapAnywhereFired:(UIButton *)button
+{
+	[self dismissByUser];
+}
+
+- (void)dismissByUser
+{
 	highlight = YES;
 	[self setNeedsDisplay];
 	
@@ -538,17 +547,6 @@
 	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
-
--(void)dismissTapAnywhereFired:(UIButton *)button
-{
-    highlight = YES;
-	[self setNeedsDisplay];
-	
-	[self dismissAnimated:YES];
-	
-	[self notifyDelegatePopTipViewWasDismissedByUser];
-
-}
 - (void)popAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
     // at the end set to normal size
 	[UIView beginAnimations:nil context:nil];
