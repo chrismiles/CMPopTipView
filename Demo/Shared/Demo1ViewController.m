@@ -35,6 +35,7 @@
 @property (nonatomic, retain)	NSArray			*colorSchemes;
 @property (nonatomic, retain)	NSDictionary	*contents;
 @property (nonatomic, retain)	id				currentPopTipViewTarget;
+@property (nonatomic, retain)	NSDictionary	*titles;
 @property (nonatomic, retain)	NSMutableArray	*visiblePopTipViews;
 @end
 
@@ -47,6 +48,7 @@
 @synthesize colorSchemes;
 @synthesize contents=_contents;
 @synthesize currentPopTipViewTarget;
+@synthesize titles=_titles;
 @synthesize visiblePopTipViews;
 
 - (void)dismissAllPopTipViews {
@@ -67,7 +69,8 @@
 	else {
 		NSString *contentMessage = nil;
 		UIView *contentView = nil;
-		id content = [self.contents objectForKey:[NSNumber numberWithInt:[(UIView *)sender tag]]];
+		NSNumber *key = [NSNumber numberWithInt:[(UIView *)sender tag]];
+		id content = [self.contents objectForKey:key];
 		if ([content isKindOfClass:[UIView class]]) {
 			contentView = content;
 		}
@@ -81,9 +84,14 @@
 		UIColor *backgroundColor = [colorScheme objectAtIndex:0];
 		UIColor *textColor = [colorScheme objectAtIndex:1];
 		
+		NSString *title = [self.titles objectForKey:key];
+		
 		CMPopTipView *popTipView;
 		if (contentView) {
 			popTipView = [[[CMPopTipView alloc] initWithCustomView:contentView] autorelease];
+		}
+		else if (title) {
+			popTipView = [[[CMPopTipView alloc] initWithTitle:title message:contentMessage] autorelease];
 		}
 		else {
 			popTipView = [[[CMPopTipView alloc] initWithMessage:contentMessage] autorelease];
@@ -178,6 +186,10 @@
 					 @"The arrow is automatically positioned to point to the center of the target button.", [NSNumber numberWithInt:32],
 					 @"CMPopTipView knows how to point automatically to UIBarButtonItems in both nav bars and tool bars.", [NSNumber numberWithInt:33],
 					 nil];
+	self.titles = [NSDictionary dictionaryWithObjectsAndKeys:
+				   @"Title", [NSNumber numberWithInt:14],
+				   @"Auto Orientation", [NSNumber numberWithInt:12],
+				   nil];
 	
 	// Array of (backgroundColor, textColor) pairs.
 	// NSNull for either means leave as default.
