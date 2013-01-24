@@ -37,11 +37,15 @@
 @synthesize autoDismissTimer = _autoDismissTimer;
 @synthesize backgroundColor;
 @synthesize delegate;
+@synthesize title;
 @synthesize message;
 @synthesize customView;
 @synthesize targetObject;
+@synthesize titleColor;
+@synthesize titleFont;
 @synthesize textColor;
 @synthesize textFont;
+@synthesize titleAlignment;
 @synthesize textAlignment;
 @synthesize borderColor;
 @synthesize borderWidth;
@@ -225,11 +229,28 @@
 	
 	CGPathRelease(bubblePath);
 	
-	// Draw text
+	// Draw title and text
+    
+    if (self.title) {
+        [self.titleColor set];
+        CGRect titleFrame = [self contentFrame];
+        [self.title drawInRect:titleFrame
+                      withFont:self.titleFont
+                 lineBreakMode:UILineBreakModeClip
+                     alignment:self.titleAlignment];
+    }
 	
 	if (self.message) {
 		[textColor set];
 		CGRect textFrame = [self contentFrame];
+        
+        // Move down to make room for title
+        if (self.title) {
+            textFrame.origin.y += [self.title sizeWithFont:self.titleFont
+                                         constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
+                                             lineBreakMode:UILineBreakModeClip].height;
+        }
+        
         [self.message drawInRect:textFrame
                         withFont:textFont
                    lineBreakMode:UILineBreakModeWordWrap
@@ -295,6 +316,11 @@
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
+    }
+    if (self.title != nil) {
+        textSize.height += [self.title sizeWithFont:self.titleFont
+                                  constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                                      lineBreakMode:UILineBreakModeClip].height;
     }
     
 	bubbleSize = CGSizeMake(textSize.width + cornerRadius*2, textSize.height + cornerRadius*2);
@@ -546,6 +572,23 @@
   return pointDirection;
 }
 
+- (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow {
+	CGRect frame = CGRectZero;
+	
+	if ((self = [self initWithFrame:frame])) {
+        self.title = titleToShow;
+		self.message = messageToShow;
+        
+        self.titleFont = [UIFont boldSystemFontOfSize:16.0];
+        self.titleColor = [UIColor whiteColor];
+        self.titleAlignment = UITextAlignmentCenter;
+        self.textFont = [UIFont systemFontOfSize:14.0];
+		self.textColor = [UIColor whiteColor];
+
+	}
+	return self;
+}
+
 - (id)initWithMessage:(NSString *)messageToShow {
 	CGRect frame = CGRectZero;
 	
@@ -571,8 +614,11 @@
 	[backgroundColor release];
     [borderColor release];
     [customView release];
+    [title release];
 	[message release];
 	[targetObject release];
+    [titleColor release];
+    [titleFont release];
 	[textColor release];
 	[textFont release];
 	
