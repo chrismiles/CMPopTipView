@@ -153,6 +153,7 @@
     
 	
 	// Draw clipped background gradient
+    CGContextSaveGState(c);
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
 	
@@ -205,6 +206,7 @@
 	CGContextDrawLinearGradient(c, myGradient, startPoint, endPoint,0);
 	CGGradientRelease(myGradient);
 	CGColorSpaceRelease(myColorSpace);
+    CGContextRestoreGState(c);
 	
     //Draw Border
     int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
