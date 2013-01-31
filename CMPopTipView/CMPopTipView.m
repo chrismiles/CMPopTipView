@@ -59,10 +59,10 @@
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
 	if (pointDirection == PointDirectionUp) {
-		bubbleFrame = CGRectMake(2.0, targetPoint.y+pointerSize, bubbleSize.width, bubbleSize.height);
+		bubbleFrame = CGRectMake(sidePadding, targetPoint.y+pointerSize, bubbleSize.width, bubbleSize.height);
 	}
 	else {
-		bubbleFrame = CGRectMake(2.0, targetPoint.y-pointerSize-bubbleSize.height, bubbleSize.width, bubbleSize.height);
+		bubbleFrame = CGRectMake(sidePadding, targetPoint.y-pointerSize-bubbleSize.height, bubbleSize.width, bubbleSize.height);
 	}
 	return bubbleFrame;
 }
@@ -96,8 +96,8 @@
 	CGMutablePathRef bubblePath = CGPathCreateMutable();
 	
 	if (pointDirection == PointDirectionUp) {
-		CGPathMoveToPoint(bubblePath, NULL, targetPoint.x, targetPoint.y);
-		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+pointerSize, targetPoint.y+pointerSize);
+		CGPathMoveToPoint(bubblePath, NULL, targetPoint.x+sidePadding, targetPoint.y);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+sidePadding+pointerSize, targetPoint.y+pointerSize);
 		
 		CGPathAddArcToPoint(bubblePath, NULL,
 							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y,
@@ -115,11 +115,11 @@
 							bubbleRect.origin.x, bubbleRect.origin.y,
 							bubbleRect.origin.x+cornerRadius, bubbleRect.origin.y,
 							cornerRadius);
-		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x-pointerSize, targetPoint.y+pointerSize);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+sidePadding-pointerSize, targetPoint.y+pointerSize);
 	}
 	else {
-		CGPathMoveToPoint(bubblePath, NULL, targetPoint.x, targetPoint.y);
-		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x-pointerSize, targetPoint.y-pointerSize);
+		CGPathMoveToPoint(bubblePath, NULL, targetPoint.x+sidePadding, targetPoint.y);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+sidePadding-pointerSize, targetPoint.y-pointerSize);
 		
 		CGPathAddArcToPoint(bubblePath, NULL,
 							bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height,
@@ -137,7 +137,7 @@
 							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+bubbleRect.size.height,
 							bubbleRect.origin.x+bubbleRect.size.width-cornerRadius, bubbleRect.origin.y+bubbleRect.size.height,
 							cornerRadius);
-		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+pointerSize, targetPoint.y-pointerSize);
+		CGPathAddLineToPoint(bubblePath, NULL, targetPoint.x+sidePadding+pointerSize, targetPoint.y-pointerSize);
 	}
     
 	CGPathCloseSubpath(bubblePath);
@@ -153,6 +153,7 @@
     
 	
 	// Draw clipped background gradient
+    CGContextSaveGState(c);
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
 	
@@ -205,6 +206,7 @@
 	CGContextDrawLinearGradient(c, myGradient, startPoint, endPoint,0);
 	CGGradientRelease(myGradient);
 	CGColorSpaceRelease(myColorSpace);
+    CGContextRestoreGState(c);
 	
     //Draw Border
     int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
