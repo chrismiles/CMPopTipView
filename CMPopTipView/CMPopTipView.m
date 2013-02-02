@@ -24,6 +24,7 @@
 //
 
 #import "CMPopTipView.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface CMPopTipView ()
 @property (nonatomic, retain, readwrite)	id	targetObject;
@@ -49,6 +50,7 @@
 @synthesize textAlignment;
 @synthesize borderColor;
 @synthesize borderWidth;
+@synthesize hasShadow;
 @synthesize animation;
 @synthesize maxWidth;
 @synthesize disableTapToDismiss;
@@ -141,15 +143,6 @@
 	}
     
 	CGPathCloseSubpath(bubblePath);
-    
-	
-	// Draw shadow
-	CGContextAddPath(c, bubblePath);
-    CGContextSaveGState(c);
-	CGContextSetShadow(c, CGSizeMake(0, 3), 5);
-	CGContextSetRGBFillColor(c, 0.0, 0.0, 0.0, 0.9);
-	CGContextFillPath(c);
-    CGContextRestoreGState(c);
     
 	
 	// Draw clipped background gradient
@@ -573,11 +566,23 @@
 		self.textAlignment = UITextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.borderColor = [UIColor blackColor];
+        self.hasShadow = YES;
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
         self.preferredPointDirection = PointDirectionAny;
     }
     return self;
+}
+
+- (void)setHasShadow:(BOOL)newHasShadow {
+    if (newHasShadow) {
+        self.layer.shadowOffset = CGSizeMake(0, 3);
+        self.layer.shadowRadius = 2.0;
+        self.layer.shadowColor = [[UIColor blackColor] CGColor];
+        self.layer.shadowOpacity = 0.3;
+    } else {
+        self.layer.shadowOpacity = 0.0;
+    }
 }
 
 - (PointDirection) getPointDirection {
