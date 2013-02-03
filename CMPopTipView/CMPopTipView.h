@@ -113,6 +113,7 @@ typedef enum {
     UIFont                  *titleFont;
 	UIColor					*textColor;
 	UIFont					*textFont;
+    BOOL                    has3DStyle;
     UIColor                 *borderColor;
     CGFloat                 borderWidth;
     CMPopTipAnimation       animation;
@@ -142,6 +143,7 @@ typedef enum {
 @property (nonatomic, retain)			UIFont					*textFont;
 @property (nonatomic, assign)			UITextAlignment			titleAlignment;
 @property (nonatomic, assign)			UITextAlignment			textAlignment;
+@property (nonatomic, assign)           BOOL                    has3DStyle;
 @property (nonatomic, retain)			UIColor					*borderColor;
 @property (nonatomic, assign)			CGFloat					borderWidth;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
