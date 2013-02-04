@@ -207,6 +207,36 @@
 	CGGradientRelease(myGradient);
 	CGColorSpaceRelease(myColorSpace);
 	
+    // Draw top highlight and bottom shadow
+    if (has3DStyle) {
+        CGContextSaveGState(c);
+        CGMutablePathRef innerShadowPath = CGPathCreateMutable();
+        
+        // add a rect larger than the bounds of bubblePath
+        CGPathAddRect(innerShadowPath, NULL, CGRectInset(CGPathGetPathBoundingBox(bubblePath), -30, -30));
+        
+        // add bubblePath to innershadow
+        CGPathAddPath(innerShadowPath, NULL, bubblePath);
+        CGPathCloseSubpath(innerShadowPath);
+        
+        // draw top highlight
+        CGColorRef highlightColor = [UIColor colorWithWhite:1.0 alpha:0.75].CGColor;
+        CGContextSetFillColorWithColor(c, highlightColor);
+        CGContextSetShadowWithColor(c, CGSizeMake(0.0, 4.0), 4.0, highlightColor);
+        CGContextAddPath(c, innerShadowPath);
+        CGContextEOFillPath(c);
+        
+        // draw bottom shadow
+        CGColorRef shadowColor = [UIColor colorWithWhite:0.0 alpha:0.4].CGColor;
+        CGContextSetFillColorWithColor(c, shadowColor);
+        CGContextSetShadowWithColor(c, CGSizeMake(0.0, -4.0), 4.0, shadowColor);
+        CGContextAddPath(c, innerShadowPath);
+        CGContextEOFillPath(c);
+        
+        CGPathRelease(innerShadowPath);
+        CGContextRestoreGState(c);
+    }
+	
     //Draw Border
     if (borderWidth > 0) {
         int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
@@ -230,32 +260,6 @@
         CGContextDrawPath(c, kCGPathStroke);
     }
     
-    // Draw top highlight and bottom shadow
-    if (has3DStyle) {
-        CGContextSaveGState(c);
-        CGMutablePathRef innerShadowPath = CGPathCreateMutable();
-        
-        // add a rect larger than the bounds of bubblePath
-        CGPathAddRect(innerShadowPath, NULL, CGRectInset(CGPathGetPathBoundingBox(bubblePath), -30, -30));
-        
-        // add bubblePath to innershadow
-        CGPathAddPath(innerShadowPath, NULL, bubblePath);
-        CGPathCloseSubpath(innerShadowPath);
-        
-        // draw top highlight
-        CGContextSetShadowWithColor(c, CGSizeMake(0.0, 4.0), 4.0, [UIColor colorWithWhite:1.0 alpha:0.75].CGColor);
-        CGContextAddPath(c, innerShadowPath);
-        CGContextEOFillPath(c);
-        
-        // draw bottom shadow
-        CGContextSetShadowWithColor(c, CGSizeMake(0.0, -4.0), 4.0, [UIColor colorWithWhite:0.0 alpha:0.4].CGColor);
-        CGContextAddPath(c, innerShadowPath);
-        CGContextEOFillPath(c);
-        
-        CGPathRelease(innerShadowPath);
-        CGContextRestoreGState(c);
-    }
-	
 	CGPathRelease(bubblePath);
 	
 	// Draw title and text
