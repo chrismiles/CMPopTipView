@@ -220,16 +220,16 @@
         CGPathCloseSubpath(innerShadowPath);
         
         // draw top highlight
-        CGColorRef highlightColor = [UIColor colorWithWhite:1.0 alpha:0.75].CGColor;
-        CGContextSetFillColorWithColor(c, highlightColor);
-        CGContextSetShadowWithColor(c, CGSizeMake(0.0, 4.0), 4.0, highlightColor);
+        UIColor *highlightColor = [UIColor colorWithWhite:1.0 alpha:0.75];
+        CGContextSetFillColorWithColor(c, highlightColor.CGColor);
+        CGContextSetShadowWithColor(c, CGSizeMake(0.0, 4.0), 4.0, highlightColor.CGColor);
         CGContextAddPath(c, innerShadowPath);
         CGContextEOFillPath(c);
         
         // draw bottom shadow
-        CGColorRef shadowColor = [UIColor colorWithWhite:0.0 alpha:0.4].CGColor;
-        CGContextSetFillColorWithColor(c, shadowColor);
-        CGContextSetShadowWithColor(c, CGSizeMake(0.0, -4.0), 4.0, shadowColor);
+        UIColor *shadowColor = [UIColor colorWithWhite:0.0 alpha:0.4];
+        CGContextSetFillColorWithColor(c, shadowColor.CGColor);
+        CGContextSetShadowWithColor(c, CGSizeMake(0.0, -4.0), 4.0, shadowColor.CGColor);
         CGContextAddPath(c, innerShadowPath);
         CGContextEOFillPath(c);
         
