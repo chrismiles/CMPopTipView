@@ -465,6 +465,31 @@
 	[self presentPointingAtView:targetView inView:containerView animated:animated];
 }
 
+- (void)presentPointingAtUISlider:(UISlider *)slider animated:(BOOL)animated {
+	UIView *targetView = (UIView *)slider;
+	UIView *targetSuperview = [targetView superview];
+	
+    float sliderRange = slider.frame.size.width - slider.currentThumbImage.size.width;
+    float sliderOrigin = slider.frame.origin.x + (slider.currentThumbImage.size.width / 2.0);
+    
+    float sliderValue = slider.maximumValue-slider.minimumValue;
+    sliderValue = sliderValue > 0?sliderValue:1;
+    
+    float sliderValueToPixels = (((slider.value-slider.minimumValue)/(sliderValue)) * sliderRange) + sliderOrigin;
+    
+    UIView *tempView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
+    CGSize sliderSize = slider.bounds.size;
+    
+    tempView.center = CGPointMake(sliderValueToPixels, slider.frame.origin.y + (sliderSize.height / 2));
+    tempView.backgroundColor = [UIColor greenColor];
+    [targetSuperview addSubview:tempView];
+	self.targetObject = tempView;
+	
+	[self presentPointingAtView:tempView inView:targetSuperview animated:animated];
+    [tempView removeFromSuperview];
+    tempView = nil;
+}
+
 - (void)finaliseDismiss {
 	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
 
