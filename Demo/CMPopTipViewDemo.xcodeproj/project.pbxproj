@@ -20,6 +20,7 @@
 		83FEEE46128E496A007C310F /* CMPopTipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FEEE45128E496A007C310F /* CMPopTipView.m */; };
 		83FEEE61128E4F98007C310F /* Demo1ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83FEEE5F128E4F98007C310F /* Demo1ViewController.m */; };
 		83FEEE62128E4F98007C310F /* Demo1ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83FEEE60128E4F98007C310F /* Demo1ViewController.xib */; };
+		FDCAA4DD1761A00F0002AC80 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FDCAA4DC1761A00F0002AC80 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		83FEEE5F128E4F98007C310F /* Demo1ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Demo1ViewController.m; path = Shared/Demo1ViewController.m; sourceTree = "<group>"; };
 		83FEEE60128E4F98007C310F /* Demo1ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Demo1ViewController.xib; path = Shared/Demo1ViewController.xib; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* CMPopTipViewDemo-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "CMPopTipViewDemo-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
+		FDCAA4DC1761A00F0002AC80 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				FDCAA4DC1761A00F0002AC80 /* Default-568h@2x.png */,
 				83FEEE43128E496A007C310F /* CMPopTipView */,
 				2860E32A111B888700E27156 /* iPad */,
 				2860E324111B887F00E27156 /* iPhone */,
@@ -210,6 +213,7 @@
 				83FEEE62128E4F98007C310F /* Demo1ViewController.xib in Resources */,
 				839195F71377FE2700FC65F9 /* appicon57.png in Resources */,
 				839195F81377FE2700FC65F9 /* appicon114.png in Resources */,
+				FDCAA4DD1761A00F0002AC80 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +245,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CMPopTipViewDemo_Prefix.pch;
 				INFOPLIST_FILE = "CMPopTipViewDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = CMPopTipViewDemo;
 			};
 			name = Debug;
@@ -253,6 +258,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CMPopTipViewDemo_Prefix.pch;
 				INFOPLIST_FILE = "CMPopTipViewDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = CMPopTipViewDemo;
 				VALIDATE_PRODUCT = YES;
 			};

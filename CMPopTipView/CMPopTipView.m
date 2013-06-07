@@ -229,10 +229,18 @@
 	if (self.message) {
 		[textColor set];
 		CGRect textFrame = [self contentFrame];
+        
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
         [self.message drawInRect:textFrame
                         withFont:textFont
                    lineBreakMode:UILineBreakModeWordWrap
                        alignment:self.textAlignment];
+#else
+        [self.message drawInRect:textFrame
+                        withFont:textFont
+                   lineBreakMode:NSLineBreakByWordWrapping
+                       alignment:self.textAlignment];
+#endif
     }
 }
 
@@ -288,9 +296,15 @@
 	CGSize textSize = CGSizeZero;
     
     if (self.message!=nil) {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
         textSize= [self.message sizeWithFont:textFont
                            constrainedToSize:CGSizeMake(rectWidth, 99999.0)
                                lineBreakMode:UILineBreakModeWordWrap];
+#else
+        textSize= [self.message sizeWithFont:textFont
+                           constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                               lineBreakMode:NSLineBreakByWordWrapping];
+#endif
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
@@ -519,7 +533,12 @@
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
-		self.textAlignment = UITextAlignmentCenter;
+//        if (SYSTEM_VERSION_LESS_THAN(@"6.0"))
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_6_0
+        self.textAlignment = UITextAlignmentCenter;
+#else
+        self.textAlignment = NSTextAlignmentCenter;
+#endif
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.borderColor = [UIColor blackColor];
         self.animation = CMPopTipAnimationSlide;
