@@ -48,6 +48,7 @@
 @synthesize textFont;
 @synthesize titleAlignment;
 @synthesize textAlignment;
+@synthesize has3DStyle;
 @synthesize borderColor;
 @synthesize borderWidth;
 @synthesize hasShadow;
@@ -201,31 +202,62 @@
 	CGColorSpaceRelease(myColorSpace);
     CGContextRestoreGState(c);
 	
-    //Draw Border
-    int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
-    const CGFloat *borderComponents = CGColorGetComponents(borderColor.CGColor);
-    CGFloat r, g, b, a;
-	if (numBorderComponents == 2) {
-		r = borderComponents[0];
-		g = borderComponents[0];
-		b = borderComponents[0];
-		a = borderComponents[1];
-	}
-	else {
-		r = borderComponents[0];
-		g = borderComponents[1];
-		b = borderComponents[2];
-		a = borderComponents[3];
-	}
-    
-	CGContextSetRGBStrokeColor(c, r, g, b, a);
-	CGContextAddPath(c, bubblePath);
-	CGContextDrawPath(c, kCGPathStroke);
+    // Draw top highlight and bottom shadow
+    if (has3DStyle) {
+        CGContextSaveGState(c);
+        CGMutablePathRef innerShadowPath = CGPathCreateMutable();
+        
+        // add a rect larger than the bounds of bubblePath
+        CGPathAddRect(innerShadowPath, NULL, CGRectInset(CGPathGetPathBoundingBox(bubblePath), -30, -30));
+        
+        // add bubblePath to innershadow
+        CGPathAddPath(innerShadowPath, NULL, bubblePath);
+        CGPathCloseSubpath(innerShadowPath);
+        
+        // draw top highlight
+        UIColor *highlightColor = [UIColor colorWithWhite:1.0 alpha:0.75];
+        CGContextSetFillColorWithColor(c, highlightColor.CGColor);
+        CGContextSetShadowWithColor(c, CGSizeMake(0.0, 4.0), 4.0, highlightColor.CGColor);
+        CGContextAddPath(c, innerShadowPath);
+        CGContextEOFillPath(c);
+        
+        // draw bottom shadow
+        UIColor *shadowColor = [UIColor colorWithWhite:0.0 alpha:0.4];
+        CGContextSetFillColorWithColor(c, shadowColor.CGColor);
+        CGContextSetShadowWithColor(c, CGSizeMake(0.0, -4.0), 4.0, shadowColor.CGColor);
+        CGContextAddPath(c, innerShadowPath);
+        CGContextEOFillPath(c);
+        
+        CGPathRelease(innerShadowPath);
+        CGContextRestoreGState(c);
+    }
 	
+    //Draw Border
+    if (borderWidth > 0) {
+        int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
+        const CGFloat *borderComponents = CGColorGetComponents(borderColor.CGColor);
+        CGFloat r, g, b, a;
+        if (numBorderComponents == 2) {
+            r = borderComponents[0];
+            g = borderComponents[0];
+            b = borderComponents[0];
+            a = borderComponents[1];
+        }
+        else {
+            r = borderComponents[0];
+            g = borderComponents[1];
+            b = borderComponents[2];
+            a = borderComponents[3];
+        }
+        
+        CGContextSetRGBStrokeColor(c, r, g, b, a);
+        CGContextAddPath(c, bubblePath);
+        CGContextDrawPath(c, kCGPathStroke);
+    }
+    
 	CGPathRelease(bubblePath);
 	
 	// Draw title and text
-    
     if (self.title) {
         [self.titleColor set];
         CGRect titleFrame = [self contentFrame];
@@ -565,6 +597,7 @@
 		self.textColor = [UIColor whiteColor];
 		self.textAlignment = UITextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
+        self.has3DStyle = YES;
         self.borderColor = [UIColor blackColor];
         self.hasShadow = YES;
         self.animation = CMPopTipAnimationSlide;
@@ -601,7 +634,6 @@
         self.titleAlignment = UITextAlignmentCenter;
         self.textFont = [UIFont systemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
-
 	}
 	return self;
 }
