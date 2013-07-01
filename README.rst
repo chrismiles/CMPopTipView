@@ -26,6 +26,8 @@ CMPopTipView is rendered entirely by Core Graphics.
 
 The source includes a universal (iPhone/iPad) demo app.
 
+一个泡泡风格的提示框开源控件, 继承自UIView。iPad,iPhone通用
+
 
 URLs
 ----
