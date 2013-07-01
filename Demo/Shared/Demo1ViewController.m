@@ -107,6 +107,7 @@
 		}
         
         popTipView.animation = arc4random() % 2;
+		popTipView.has3DStyle = (BOOL)(arc4random() % 2);
 		
 		popTipView.dismissTapAnywhere = YES;
         [popTipView autoDismissAnimated:YES atTimeInterval:3.0];

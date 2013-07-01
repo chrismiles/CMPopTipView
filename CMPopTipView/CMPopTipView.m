@@ -200,7 +200,6 @@
 	CGContextDrawLinearGradient(c, myGradient, startPoint, endPoint,0);
 	CGGradientRelease(myGradient);
 	CGColorSpaceRelease(myColorSpace);
-    CGContextRestoreGState(c);
 	
     // Draw top highlight and bottom shadow
     if (has3DStyle) {
@@ -232,6 +231,8 @@
         CGContextRestoreGState(c);
     }
 	
+	CGContextRestoreGState(c);
+
     //Draw Border
     if (borderWidth > 0) {
         int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
