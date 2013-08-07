@@ -58,6 +58,7 @@
 @synthesize dismissTapAnywhere;
 @synthesize dismissTarget=_dismissTarget;
 @synthesize preferredPointDirection=_preferredPointDirection;
+@synthesize hasGradient;
 
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
@@ -145,61 +146,67 @@
     
 	CGPathCloseSubpath(bubblePath);
     
-	
-	// Draw clipped background gradient
     CGContextSaveGState(c);
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
-	
-	CGFloat bubbleMiddle = (bubbleRect.origin.y+(bubbleRect.size.height/2)) / self.bounds.size.height;
-	
-	CGGradientRef myGradient;
-	CGColorSpaceRef myColorSpace;
-	size_t locationCount = 5;
-	CGFloat locationList[] = {0.0, bubbleMiddle-0.03, bubbleMiddle, bubbleMiddle+0.03, 1.0};
-    
-	CGFloat colourHL = 0.0;
-	if (highlight) {
-		colourHL = 0.25;
-	}
-	
-	CGFloat red;
-	CGFloat green;
-	CGFloat blue;
-	CGFloat alpha;
-	int numComponents = CGColorGetNumberOfComponents([backgroundColor CGColor]);
-	const CGFloat *components = CGColorGetComponents([backgroundColor CGColor]);
-	if (numComponents == 2) {
-		red = components[0];
-		green = components[0];
-		blue = components[0];
-		alpha = components[1];
-	}
-	else {
-		red = components[0];
-		green = components[1];
-		blue = components[2];
-		alpha = components[3];
-	}
-	CGFloat colorList[] = {
-		//red, green, blue, alpha 
-		red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
-		red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
-		red*1.08+colourHL, green*1.08+colourHL, blue*1.08+colourHL, alpha,
-		red     +colourHL, green     +colourHL, blue     +colourHL, alpha,
-		red     +colourHL, green     +colourHL, blue     +colourHL, alpha
-	};
-	myColorSpace = CGColorSpaceCreateDeviceRGB();
-	myGradient = CGGradientCreateWithColorComponents(myColorSpace, colorList, locationList, locationCount);
-	CGPoint startPoint, endPoint;
-	startPoint.x = 0;
-	startPoint.y = 0;
-	endPoint.x = 0;
-	endPoint.y = CGRectGetMaxY(self.bounds);
-	
-	CGContextDrawLinearGradient(c, myGradient, startPoint, endPoint,0);
-	CGGradientRelease(myGradient);
-	CGColorSpaceRelease(myColorSpace);
+
+    if (!hasGradient) {
+        // Fill with solid color
+        CGContextSetFillColorWithColor(c, [backgroundColor CGColor]);
+        CGContextFillRect(c, self.bounds);
+    }
+    else {
+        // Draw clipped background gradient
+        CGFloat bubbleMiddle = (bubbleRect.origin.y+(bubbleRect.size.height/2)) / self.bounds.size.height;
+        
+        CGGradientRef myGradient;
+        CGColorSpaceRef myColorSpace;
+        size_t locationCount = 5;
+        CGFloat locationList[] = {0.0, bubbleMiddle-0.03, bubbleMiddle, bubbleMiddle+0.03, 1.0};
+        
+        CGFloat colourHL = 0.0;
+        if (highlight) {
+            colourHL = 0.25;
+        }
+        
+        CGFloat red;
+        CGFloat green;
+        CGFloat blue;
+        CGFloat alpha;
+        int numComponents = CGColorGetNumberOfComponents([backgroundColor CGColor]);
+        const CGFloat *components = CGColorGetComponents([backgroundColor CGColor]);
+        if (numComponents == 2) {
+            red = components[0];
+            green = components[0];
+            blue = components[0];
+            alpha = components[1];
+        }
+        else {
+            red = components[0];
+            green = components[1];
+            blue = components[2];
+            alpha = components[3];
+        }
+        CGFloat colorList[] = {
+            //red, green, blue, alpha 
+            red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
+            red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
+            red*1.08+colourHL, green*1.08+colourHL, blue*1.08+colourHL, alpha,
+            red     +colourHL, green     +colourHL, blue     +colourHL, alpha,
+            red     +colourHL, green     +colourHL, blue     +colourHL, alpha
+        };
+        myColorSpace = CGColorSpaceCreateDeviceRGB();
+        myGradient = CGGradientCreateWithColorComponents(myColorSpace, colorList, locationList, locationCount);
+        CGPoint startPoint, endPoint;
+        startPoint.x = 0;
+        startPoint.y = 0;
+        endPoint.x = 0;
+        endPoint.y = CGRectGetMaxY(self.bounds);
+        
+        CGContextDrawLinearGradient(c, myGradient, startPoint, endPoint,0);
+        CGGradientRelease(myGradient);
+        CGColorSpaceRelease(myColorSpace);
+    }
 	
     // Draw top highlight and bottom shadow
     if (has3DStyle) {
