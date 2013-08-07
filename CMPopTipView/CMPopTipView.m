@@ -58,7 +58,7 @@
 @synthesize dismissTapAnywhere;
 @synthesize dismissTarget=_dismissTarget;
 @synthesize preferredPointDirection=_preferredPointDirection;
-@synthesize hasGradient;
+@synthesize hasGradientBackground;
 
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
@@ -150,7 +150,7 @@
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
 
-    if (!hasGradient) {
+    if (!hasGradientBackground) {
         // Fill with solid color
         CGContextSetFillColorWithColor(c, [backgroundColor CGColor]);
         CGContextFillRect(c, self.bounds);
@@ -611,6 +611,7 @@
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
         self.preferredPointDirection = PointDirectionAny;
+        self.hasGradientBackground = YES;
     }
     return self;
 }
