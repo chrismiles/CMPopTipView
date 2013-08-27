@@ -151,6 +151,7 @@ typedef enum {
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
 @property (nonatomic, assign)           CGFloat                 maxWidth;
 @property (nonatomic, assign)           PointDirection          preferredPointDirection;
+@property (nonatomic, assign)           BOOL                    hasGradientBackground;
 
 /* Contents can be either a message or a UIView */
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow;
