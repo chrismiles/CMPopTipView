@@ -127,7 +127,7 @@ opportunities.
 License
 -------
 
-CMPopTipView is Copyright (c) 2010-2012 Chris Miles and released open source
+CMPopTipView is Copyright (c) 2010-2013 Chris Miles and released open source
 under a MIT license:
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
