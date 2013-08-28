@@ -97,8 +97,13 @@
 			popTipView = [[[CMPopTipView alloc] initWithMessage:contentMessage] autorelease];
 		}
 		popTipView.delegate = self;
+		
+		/* Some options to try.
+		 */
 		//popTipView.disableTapToDismiss = YES;
 		//popTipView.preferredPointDirection = PointDirectionUp;
+		//popTipView.hasGradientBackground = NO;
+		
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;
 		}
