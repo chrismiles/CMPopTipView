@@ -27,9 +27,9 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface CMPopTipView ()
-@property (nonatomic, retain, readwrite)	id	targetObject;
-@property (nonatomic, retain) NSTimer *autoDismissTimer;
-@property (nonatomic, retain) UIButton *dismissTarget;
+@property (nonatomic, strong, readwrite)	id	targetObject;
+@property (nonatomic, strong) NSTimer *autoDismissTimer;
+@property (nonatomic, strong) UIButton *dismissTarget;
 @end
 
 
@@ -666,22 +666,6 @@
 	return self;
 }
 
-- (void)dealloc {
-	[_autoDismissTimer release];
-	[_dismissTarget release];
-	[backgroundColor release];
-    [borderColor release];
-    [customView release];
-    [title release];
-	[message release];
-	[targetObject release];
-    [titleColor release];
-    [titleFont release];
-	[textColor release];
-	[textFont release];
-	
-    [super dealloc];
-}
 
 
 @end

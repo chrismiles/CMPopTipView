@@ -32,11 +32,11 @@
 #pragma mark Private interface
 
 @interface Demo1ViewController ()
-@property (nonatomic, retain)	NSArray			*colorSchemes;
-@property (nonatomic, retain)	NSDictionary	*contents;
-@property (nonatomic, retain)	id				currentPopTipViewTarget;
-@property (nonatomic, retain)	NSDictionary	*titles;
-@property (nonatomic, retain)	NSMutableArray	*visiblePopTipViews;
+@property (nonatomic, strong)	NSArray			*colorSchemes;
+@property (nonatomic, strong)	NSDictionary	*contents;
+@property (nonatomic, strong)	id				currentPopTipViewTarget;
+@property (nonatomic, strong)	NSDictionary	*titles;
+@property (nonatomic, strong)	NSMutableArray	*visiblePopTipViews;
 @end
 
 
@@ -88,13 +88,13 @@
 		
 		CMPopTipView *popTipView;
 		if (contentView) {
-			popTipView = [[[CMPopTipView alloc] initWithCustomView:contentView] autorelease];
+			popTipView = [[CMPopTipView alloc] initWithCustomView:contentView];
 		}
 		else if (title) {
-			popTipView = [[[CMPopTipView alloc] initWithTitle:title message:contentMessage] autorelease];
+			popTipView = [[CMPopTipView alloc] initWithTitle:title message:contentMessage];
 		}
 		else {
-			popTipView = [[[CMPopTipView alloc] initWithMessage:contentMessage] autorelease];
+			popTipView = [[CMPopTipView alloc] initWithMessage:contentMessage];
 		}
 		popTipView.delegate = self;
 		
@@ -183,7 +183,7 @@
 					 @"A CMPopTipView always tries to point at the center of the target view.", [NSNumber numberWithInt:13],
 					 @"A CMPopTipView can point to any UIView subclass.", [NSNumber numberWithInt:14],
 					 @"A CMPopTipView will automatically size itself to fit the text message.", [NSNumber numberWithInt:15],
-					 [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"appicon57.png"]] autorelease], [NSNumber numberWithInt:16],	// content can be a UIView
+					 [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"appicon57.png"]], [NSNumber numberWithInt:16],	// content can be a UIView
 					 // Nav bar buttons
 					 @"This CMPopTipView is pointing at a leftBarButtonItem of a navigationItem.", [NSNumber numberWithInt:21],
 					 @"Two popup animations are provided: slide and pop. Tap other buttons to see them both.", [NSNumber numberWithInt:22],
@@ -230,14 +230,6 @@
 	self.visiblePopTipViews = nil;
 }
 
-- (void)dealloc {
-	[_contents release];
-	[colorSchemes release];
-	[currentPopTipViewTarget release];
-	[visiblePopTipViews release];
-	
-    [super dealloc];
-}
 
 
 @end

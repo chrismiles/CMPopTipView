@@ -31,8 +31,8 @@
     UIWindow *window;
 }
 
-@property (nonatomic, retain) IBOutlet UINavigationController *mainNavigationController;
-@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, strong) IBOutlet UINavigationController *mainNavigationController;
+@property (nonatomic, strong) IBOutlet UIWindow *window;
 
 @end
 

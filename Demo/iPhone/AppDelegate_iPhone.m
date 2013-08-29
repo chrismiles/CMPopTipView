@@ -92,11 +92,6 @@
 }
 
 
-- (void)dealloc {
-	[mainNavigationController release];
-    [window release];
-    [super dealloc];
-}
 
 
 @end
