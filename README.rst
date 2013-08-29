@@ -107,9 +107,9 @@ Example 2 - pointing at a UIButton, with custom color scheme::
 ARC
 ---
 
-The CMPopTipView Master branch is non-ARC. However, producing an ARC version is easy as CMPopTipView memory management is kept clean and ARC-conversion ready.
+The CMPopTipView Master branch uses ARC as of version 2.0.
 
-To generate an ARC version simply open the demo app project in Xcode and select: Edit / Refactor / Convert to Objective-C ARC... The project should convert cleanly and the ARC-ready CMPopTipView source can then be copied to your project. If any ARC problems, please raise an issue.
+If you want a non-ARC version you should look at tag 1.3.0.
 
 
 Support
