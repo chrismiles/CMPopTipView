@@ -121,6 +121,7 @@ typedef enum {
 @property (nonatomic, assign)			UITextAlignment			textAlignment;
 @property (nonatomic, assign)           BOOL                    has3DStyle;
 @property (nonatomic, strong)			UIColor					*borderColor;
+@property (nonatomic, assign)           CGFloat                 cornerRadius;
 @property (nonatomic, assign)			CGFloat					borderWidth;
 @property (nonatomic, assign)           BOOL                    hasShadow;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;

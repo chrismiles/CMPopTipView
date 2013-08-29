@@ -95,6 +95,7 @@
 		//popTipView.disableTapToDismiss = YES;
 		//popTipView.preferredPointDirection = PointDirectionUp;
 		//popTipView.hasGradientBackground = NO;
+        //popTipView.cornerRadius = 2.0;
 		
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;
