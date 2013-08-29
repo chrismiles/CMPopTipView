@@ -595,7 +595,7 @@
         self.dismissTapAnywhere = NO;
         self.preferredPointDirection = PointDirectionAny;
         self.hasGradientBackground = YES;
-        self.cornerRadius = 25.0;
+        self.cornerRadius = 10.0;
     }
     return self;
 }
