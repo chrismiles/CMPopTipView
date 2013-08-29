@@ -26,10 +26,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate_iPad : NSObject <UIApplicationDelegate> {
-	UINavigationController *mainNavigationController;
-    UIWindow *window;
-}
+@interface AppDelegate_iPad : NSObject <UIApplicationDelegate>
 
 @property (nonatomic, strong) IBOutlet UINavigationController *mainNavigationController;
 @property (nonatomic, strong) IBOutlet UIWindow *window;

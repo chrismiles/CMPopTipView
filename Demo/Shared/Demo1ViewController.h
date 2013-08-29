@@ -27,8 +27,7 @@
 #import <UIKit/UIKit.h>
 #import "CMPopTipView.h"
 
-@interface Demo1ViewController : UIViewController <CMPopTipViewDelegate> {
-}
+@interface Demo1ViewController : UIViewController <CMPopTipViewDelegate>
 
 - (IBAction)buttonAction:(id)sender;
 

@@ -29,16 +29,13 @@
 
 @implementation AppDelegate_iPad
 
-@synthesize mainNavigationController, window;
 
-
-#pragma mark -
-#pragma mark Application lifecycle
+#pragma mark - Application lifecycle
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
-	[window setRootViewController:self.mainNavigationController];
-    [window makeKeyAndVisible];
+	[self.window setRootViewController:self.mainNavigationController];
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

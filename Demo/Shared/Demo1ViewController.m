@@ -28,8 +28,7 @@
 
 #define foo4random() (1.0 * (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX)
 
-#pragma mark -
-#pragma mark Private interface
+#pragma mark - Private interface
 
 @interface Demo1ViewController ()
 @property (nonatomic, strong)	NSArray			*colorSchemes;
@@ -40,29 +39,22 @@
 @end
 
 
-#pragma mark -
-#pragma mark Implementation
+#pragma mark - Implementation
 
 @implementation Demo1ViewController
 
-@synthesize colorSchemes;
-@synthesize contents=_contents;
-@synthesize currentPopTipViewTarget;
-@synthesize titles=_titles;
-@synthesize visiblePopTipViews;
-
 - (void)dismissAllPopTipViews {
-	while ([visiblePopTipViews count] > 0) {
-		CMPopTipView *popTipView = [visiblePopTipViews objectAtIndex:0];
+	while ([self.visiblePopTipViews count] > 0) {
+		CMPopTipView *popTipView = [self.visiblePopTipViews objectAtIndex:0];
 		[popTipView dismissAnimated:YES];
-		[visiblePopTipViews removeObjectAtIndex:0];
+		[self.visiblePopTipViews removeObjectAtIndex:0];
 	}
 }
 
 - (IBAction)buttonAction:(id)sender {
 	[self dismissAllPopTipViews];
 	
-	if (sender == currentPopTipViewTarget) {
+	if (sender == self.currentPopTipViewTarget) {
 		// Dismiss the popTipView and that is all
 		self.currentPopTipViewTarget = nil;
 	}
@@ -80,7 +72,7 @@
 		else {
 			contentMessage = @"A CMPopTipView can automatically point to any view or bar button item.";
 		}
-		NSArray *colorScheme = [colorSchemes objectAtIndex:foo4random()*[colorSchemes count]];
+		NSArray *colorScheme = [self.colorSchemes objectAtIndex:foo4random()*[self.colorSchemes count]];
 		UIColor *backgroundColor = [colorScheme objectAtIndex:0];
 		UIColor *textColor = [colorScheme objectAtIndex:1];
 		
@@ -126,7 +118,7 @@
 			[popTipView presentPointingAtBarButtonItem:barButtonItem animated:YES];
 		}
 		
-		[visiblePopTipViews addObject:popTipView];
+		[self.visiblePopTipViews addObject:popTipView];
 		self.currentPopTipViewTarget = sender;
 	}
 }
@@ -136,7 +128,7 @@
 #pragma mark CMPopTipViewDelegate methods
 
 - (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
-	[visiblePopTipViews removeObject:popTipView];
+	[self.visiblePopTipViews removeObject:popTipView];
 	self.currentPopTipViewTarget = nil;
 }
 
@@ -146,7 +138,7 @@
 
 - (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
-	for (CMPopTipView *popTipView in visiblePopTipViews) {
+	for (CMPopTipView *popTipView in self.visiblePopTipViews) {
 		id targetObject = popTipView.targetObject;
 		[popTipView dismissAnimated:NO];
 		
