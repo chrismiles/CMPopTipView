@@ -103,34 +103,10 @@ typedef enum {
 @protocol CMPopTipViewDelegate;
 
 
-@interface CMPopTipView : UIView {
-	UIColor					*backgroundColor;
-    NSString                *title;
-	NSString				*message;
-	id						targetObject;
-    UIColor                 *titleColor;
-    UIFont                  *titleFont;
-	UIColor					*textColor;
-	UIFont					*textFont;
-    BOOL                    has3DStyle;
-    UIColor                 *borderColor;
-    CGFloat                 borderWidth;
-    BOOL                    hasShadow;
-    CMPopTipAnimation       animation;
-
-	@private
-	CGSize					bubbleSize;
-	CGFloat					cornerRadius;
-	BOOL					highlight;
-	CGFloat					sidePadding;
-	CGFloat					topMargin;
-	PointDirection			pointDirection;
-	CGFloat					pointerSize;
-	CGPoint					targetPoint;
-}
+@interface CMPopTipView : UIView
 
 @property (nonatomic, strong)			UIColor					*backgroundColor;
-@property (nonatomic, weak)		id<CMPopTipViewDelegate>	delegate;
+@property (nonatomic, weak)				id<CMPopTipViewDelegate>	delegate;
 @property (nonatomic, assign)			BOOL					disableTapToDismiss;
 @property (nonatomic, assign)			BOOL					dismissTapAnywhere;
 @property (nonatomic, strong)			NSString				*title;
