@@ -10,10 +10,10 @@
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 //  copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
-//  
+//
 //  The above copyright notice and this permission notice shall be included in
 //  all copies or substantial portions of the Software.
-//  
+//
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -92,7 +92,7 @@
 	
 	CGRect bubbleRect = [self bubbleFrame];
 	
-	CGContextRef c = UIGraphicsGetCurrentContext(); 
+	CGContextRef c = UIGraphicsGetCurrentContext();
     
     CGContextSetRGBStrokeColor(c, 0.0, 0.0, 0.0, 1.0);	// black
 	CGContextSetLineWidth(c, borderWidth);
@@ -149,7 +149,7 @@
     CGContextSaveGState(c);
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
-
+    
     if (!hasGradientBackground) {
         // Fill with solid color
         CGContextSetFillColorWithColor(c, [backgroundColor CGColor]);
@@ -188,7 +188,7 @@
             alpha = components[3];
         }
         CGFloat colorList[] = {
-            //red, green, blue, alpha 
+            //red, green, blue, alpha
             red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
             red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
             red*1.08+colourHL, green*1.08+colourHL, blue*1.08+colourHL, alpha,
@@ -239,7 +239,7 @@
     }
 	
 	CGContextRestoreGState(c);
-
+    
     //Draw Border
     if (borderWidth > 0) {
         int numBorderComponents = CGColorGetNumberOfComponents([borderColor CGColor]);
@@ -271,7 +271,7 @@
         CGRect titleFrame = [self contentFrame];
         [self.title drawInRect:titleFrame
                       withFont:self.titleFont
-                 lineBreakMode:UILineBreakModeClip
+                 lineBreakMode:NSLineBreakByClipping
                      alignment:self.titleAlignment];
     }
 	
@@ -283,12 +283,12 @@
         if (self.title) {
             textFrame.origin.y += [self.title sizeWithFont:self.titleFont
                                          constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
-                                             lineBreakMode:UILineBreakModeClip].height;
+                                             lineBreakMode:NSLineBreakByClipping].height;
         }
         
         [self.message drawInRect:textFrame
                         withFont:textFont
-                   lineBreakMode:UILineBreakModeWordWrap
+                   lineBreakMode:NSLineBreakByWordWrapping
                        alignment:self.textAlignment];
     }
 }
@@ -341,13 +341,13 @@
             rectWidth = (int)(containerView.frame.size.width*2/3);
         }
     }
-
+    
 	CGSize textSize = CGSizeZero;
     
     if (self.message!=nil) {
         textSize= [self.message sizeWithFont:textFont
                            constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                               lineBreakMode:UILineBreakModeWordWrap];
+                               lineBreakMode:NSLineBreakByWordWrapping];
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
@@ -355,7 +355,7 @@
     if (self.title != nil) {
         textSize.height += [self.title sizeWithFont:self.titleFont
                                   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                                      lineBreakMode:UILineBreakModeClip].height;
+                                      lineBreakMode:NSLineBreakByClipping].height;
     }
     
 	bubbleSize = CGSizeMake(textSize.width + cornerRadius*2, textSize.height + cornerRadius*2);
@@ -502,7 +502,7 @@
 
 - (void)finaliseDismiss {
 	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
-
+    
     if (self.dismissTarget) {
         [self.dismissTarget removeFromSuperview];
 		self.dismissTarget = nil;
@@ -563,7 +563,7 @@
 		[super touchesBegan:touches withEvent:event];
 		return;
 	}
-
+    
 	[self dismissByUser];
 }
 
@@ -603,7 +603,7 @@
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
-		self.textAlignment = UITextAlignmentCenter;
+		self.textAlignment = NSTextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.has3DStyle = YES;
         self.borderColor = [UIColor blackColor];
@@ -628,7 +628,7 @@
 }
 
 - (PointDirection) getPointDirection {
-  return pointDirection;
+    return pointDirection;
 }
 
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow {
@@ -640,7 +640,7 @@
         
         self.titleFont = [UIFont boldSystemFontOfSize:16.0];
         self.titleColor = [UIColor whiteColor];
-        self.titleAlignment = UITextAlignmentCenter;
+        self.titleAlignment = NSTextAlignmentCenter;
         self.textFont = [UIFont systemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
 	}
