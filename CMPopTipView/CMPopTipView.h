@@ -105,7 +105,6 @@ typedef enum {
 
 @interface CMPopTipView : UIView {
 	UIColor					*backgroundColor;
-	id<CMPopTipViewDelegate>	__weak delegate;
     NSString                *title;
 	NSString				*message;
 	id						targetObject;

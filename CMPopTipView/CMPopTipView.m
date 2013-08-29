@@ -37,7 +37,6 @@
 
 @synthesize autoDismissTimer = _autoDismissTimer;
 @synthesize backgroundColor;
-@synthesize delegate;
 @synthesize title;
 @synthesize message;
 @synthesize customView;
@@ -553,9 +552,8 @@
 }
 
 - (void)notifyDelegatePopTipViewWasDismissedByUser {
-	if (delegate && [delegate respondsToSelector:@selector(popTipViewWasDismissedByUser:)]) {
-		[delegate popTipViewWasDismissedByUser:self];
-	}
+	__strong id<CMPopTipViewDelegate> delegate = self.delegate;
+	[delegate popTipViewWasDismissedByUser:self];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
