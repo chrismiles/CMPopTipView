@@ -37,7 +37,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     
-	[window addSubview:mainNavigationController.view];
+	[window setRootViewController:self.mainNavigationController];
     [window makeKeyAndVisible];
     
     return YES;
