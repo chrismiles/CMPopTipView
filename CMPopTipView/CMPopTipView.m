@@ -468,7 +468,7 @@
 	UIView *targetSuperview = [targetView superview];
 	UIView *containerView = nil;
 	if ([targetSuperview isKindOfClass:[UINavigationBar class]]) {
-      containerView = [UIApplication sharedApplication].keyWindow;
+		containerView = [UIApplication sharedApplication].keyWindow;
 	}
 	else if ([targetSuperview isKindOfClass:[UIToolbar class]]) {
 		containerView = [targetSuperview superview];
