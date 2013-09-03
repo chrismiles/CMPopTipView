@@ -24,7 +24,7 @@
 //
 
 /*
-	Version: 2.0a1
+	Version: 2.0
  */
 
 
