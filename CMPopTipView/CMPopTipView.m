@@ -578,8 +578,7 @@
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
 		self.opaque = NO;
-		
-		_cornerRadius = 10.0;
+
 		_topMargin = 2.0;
 		_pointerSize = 12.0;
 		_sidePadding = 2.0;
@@ -596,6 +595,7 @@
         self.dismissTapAnywhere = NO;
         self.preferredPointDirection = PointDirectionAny;
         self.hasGradientBackground = YES;
+        self.cornerRadius = 10.0;
     }
     return self;
 }
