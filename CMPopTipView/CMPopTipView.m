@@ -31,8 +31,6 @@
 	CGSize					_bubbleSize;
 	CGFloat					_cornerRadius;
 	BOOL					_highlight;
-	CGFloat					_sidePadding;
-	CGFloat					_topMargin;
 	PointDirection			_pointDirection;
 	CGFloat					_pointerSize;
 	CGPoint					_targetPoint;
