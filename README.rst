@@ -39,6 +39,8 @@ URLs
 Used in apps:
  * River Level http://itunes.apple.com/au/app/river-level/id356158594?mt=8
  * The Happiest Hour http://itunes.apple.com/au/app/the-happiest-hour/id414453120?mt=8
+ * I-Sea http://www.i-sea.no/
+ * *Many many more apps*
  * *Your app here ...?*
 
 
