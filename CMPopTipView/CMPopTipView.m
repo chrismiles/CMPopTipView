@@ -537,7 +537,9 @@
 
 - (void)notifyDelegatePopTipViewWasDismissedByUser {
 	__strong id<CMPopTipViewDelegate> delegate = self.delegate;
-	[delegate popTipViewWasDismissedByUser:self];
+    if ([delegate respondsToSelector:@selector(popTipViewWasDismissedByUser:)]) {
+	   [delegate popTipViewWasDismissedByUser:self];
+    }
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
