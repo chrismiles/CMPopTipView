@@ -130,6 +130,7 @@ typedef enum {
 @property (nonatomic, assign)           BOOL                    hasGradientBackground;
 @property (nonatomic, assign)           CGFloat                 sidePadding;
 @property (nonatomic, assign)           CGFloat                 topMargin;
+@property (nonatomic, assign)           CGFloat                 pointerSize;
 
 /* Contents can be either a message or a UIView */
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow;
