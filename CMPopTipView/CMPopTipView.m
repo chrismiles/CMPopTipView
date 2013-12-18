@@ -72,8 +72,8 @@
     }
 }
 
-- (void)drawRect:(CGRect)rect {
-	
+- (void)drawRect:(__unused CGRect)rect
+{
 	CGRect bubbleRect = [self bubbleFrame];
 	
 	CGContextRef c = UIGraphicsGetCurrentContext(); 
@@ -255,7 +255,7 @@
         CGRect titleFrame = [self contentFrame];
         [self.title drawInRect:titleFrame
                       withFont:self.titleFont
-                 lineBreakMode:UILineBreakModeClip
+                 lineBreakMode:NSLineBreakByClipping
                      alignment:self.titleAlignment];
     }
 	
@@ -267,12 +267,12 @@
         if (self.title) {
             textFrame.origin.y += [self.title sizeWithFont:self.titleFont
                                          constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
-                                             lineBreakMode:UILineBreakModeClip].height;
+                                             lineBreakMode:NSLineBreakByClipping].height;
         }
         
         [self.message drawInRect:textFrame
                         withFont:self.textFont
-                   lineBreakMode:UILineBreakModeWordWrap
+                   lineBreakMode:NSLineBreakByWordWrapping
                        alignment:self.textAlignment];
     }
 }
@@ -331,7 +331,7 @@
     if (self.message!=nil) {
         textSize= [self.message sizeWithFont:self.textFont
                            constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                               lineBreakMode:UILineBreakModeWordWrap];
+                               lineBreakMode:NSLineBreakByWordWrapping];
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
@@ -339,7 +339,7 @@
     if (self.title != nil) {
         textSize.height += [self.title sizeWithFont:self.titleFont
                                   constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                                      lineBreakMode:UILineBreakModeClip].height;
+                                      lineBreakMode:NSLineBreakByClipping].height;
     }
     
 	_bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
@@ -497,7 +497,8 @@
 	self.targetObject = nil;
 }
 
-- (void)dismissAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+- (void)dismissAnimationDidStop:(__unused NSString *)animationID finished:(__unused NSNumber *)finished context:(__unused void *)context
+{
 	[self finaliseDismiss];
 }
 
@@ -549,7 +550,7 @@
 	[self dismissByUser];
 }
 
-- (void)dismissTapAnywhereFired:(UIButton *)button
+- (void)dismissTapAnywhereFired:(__unused UIButton *)button
 {
 	[self dismissByUser];
 }
@@ -564,7 +565,8 @@
 	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
-- (void)popAnimationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+- (void)popAnimationDidStop:(__unused NSString *)animationID finished:(__unused NSNumber *)finished context:(__unused void *)context
+{
     // at the end set to normal size
 	[UIView beginAnimations:nil context:nil];
 	[UIView setAnimationDuration:0.1f];
@@ -572,7 +574,8 @@
 	[UIView commitAnimations];
 }
 
-- (id)initWithFrame:(CGRect)frame {
+- (id)initWithFrame:(CGRect)frame
+{
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
 		self.opaque = NO;
@@ -584,7 +587,7 @@
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
-		self.textAlignment = UITextAlignmentCenter;
+		self.textAlignment = NSTextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.has3DStyle = YES;
         self.borderColor = [UIColor blackColor];
@@ -598,7 +601,8 @@
     return self;
 }
 
-- (void)setHasShadow:(BOOL)newHasShadow {
+- (void)setHasShadow:(BOOL)newHasShadow
+{
     if (newHasShadow) {
         self.layer.shadowOffset = CGSizeMake(0, 3);
         self.layer.shadowRadius = 2.0;
@@ -609,11 +613,13 @@
     }
 }
 
-- (PointDirection) getPointDirection {
+- (PointDirection) getPointDirection
+{
   return _pointDirection;
 }
 
-- (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow {
+- (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow
+{
 	CGRect frame = CGRectZero;
 	
 	if ((self = [self initWithFrame:frame])) {
@@ -622,14 +628,15 @@
         
         self.titleFont = [UIFont boldSystemFontOfSize:16.0];
         self.titleColor = [UIColor whiteColor];
-        self.titleAlignment = UITextAlignmentCenter;
+        self.titleAlignment = NSTextAlignmentCenter;
         self.textFont = [UIFont systemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
 	}
 	return self;
 }
 
-- (id)initWithMessage:(NSString *)messageToShow {
+- (id)initWithMessage:(NSString *)messageToShow
+{
 	CGRect frame = CGRectZero;
 	
 	if ((self = [self initWithFrame:frame])) {
@@ -638,7 +645,8 @@
 	return self;
 }
 
-- (id)initWithCustomView:(UIView *)aView {
+- (id)initWithCustomView:(UIView *)aView
+{
 	CGRect frame = CGRectZero;
 	
 	if ((self = [self initWithFrame:frame])) {

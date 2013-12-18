@@ -117,8 +117,8 @@ typedef enum {
 @property (nonatomic, strong)			UIFont					*titleFont;
 @property (nonatomic, strong)			UIColor					*textColor;
 @property (nonatomic, strong)			UIFont					*textFont;
-@property (nonatomic, assign)			UITextAlignment			titleAlignment;
-@property (nonatomic, assign)			UITextAlignment			textAlignment;
+@property (nonatomic, assign)			NSTextAlignment			titleAlignment;
+@property (nonatomic, assign)			NSTextAlignment			textAlignment;
 @property (nonatomic, assign)           BOOL                    has3DStyle;
 @property (nonatomic, strong)			UIColor					*borderColor;
 @property (nonatomic, assign)           CGFloat                 cornerRadius;
