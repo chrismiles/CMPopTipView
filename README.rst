@@ -109,7 +109,7 @@ Example 2 - pointing at a UIButton, with custom color scheme::
 If you want to force the tip view to the top edge of the button/uiview element,
 set:: 
 
-      self.yourTipView.forceToEdge = YES;
+      self.yourTipView.forceToTopEdge = YES;
 
 
 
