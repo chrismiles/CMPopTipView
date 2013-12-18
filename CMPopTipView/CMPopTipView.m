@@ -368,7 +368,14 @@
         CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
         if (_pointDirection == PointDirectionAny) {
             if (sizeBelow > targetOriginInContainer.y) {
-                pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
+				// set forceToTopEdge to make it go to the top of the view.
+				// set .forceToTopEdge when setting things like the delegate/color etc.
+				if (self.forceToTopEdge) {
+					pointerY = targetOriginInContainer.y;
+				}
+				else {
+					pointerY = targetOriginInContainer.y  + targetView.bounds.size.height;
+				}
                 _pointDirection = PointDirectionUp;
             }
             else {
@@ -594,6 +601,8 @@
         self.preferredPointDirection = PointDirectionAny;
         self.hasGradientBackground = YES;
         self.cornerRadius = 10.0;
+		self.forceToTopEdge = NO;
+		
     }
     return self;
 }
