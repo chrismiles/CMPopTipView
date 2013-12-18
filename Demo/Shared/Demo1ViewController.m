@@ -100,6 +100,7 @@
         //popTipView.cornerRadius = 2.0;
         //popTipView.sidePadding = 30.0f;
         //popTipView.topMargin = 20.0f;
+        //popTipView.pointerSize = 50.0f;
 		
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;
