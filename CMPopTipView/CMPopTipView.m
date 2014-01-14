@@ -253,17 +253,12 @@
     if (self.title) {
         [self.titleColor set];
         CGRect titleFrame = [self contentFrame];
-        
         NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
         textStyle.lineBreakMode = NSLineBreakByClipping;
         textStyle.alignment = self.titleAlignment;
         UIFont *textFont = self.titleFont;
         
         [self.title drawInRect:titleFrame withAttributes:@{ NSFontAttributeName:textFont, NSParagraphStyleAttributeName:textStyle }];
-        //        [self.title drawInRect:titleFrame
-        //                      withFont:self.titleFont
-        //                 lineBreakMode:NSLineBreakByClipping
-        //                     alignment:self.titleAlignment];
     }
 	
 	if (self.message) {
@@ -279,9 +274,9 @@
             
             NSDictionary *stringAttributes = @{NSFontAttributeName: self.titleFont, NSFontAttributeName:textFont};
             
-            textFrame.origin.y += [self.title boundingRectWithSize:CGSizeMake(textFrame.size.width, 99999.0)
-                                                           options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin
-                                                        attributes:stringAttributes context:nil].size.height;
+            textFrame.origin.y += [self.message boundingRectWithSize:CGSizeMake(textFrame.size.width, 99999.0)
+                                                             options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes:stringAttributes context:nil].size.height;
         }
         
         NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -352,9 +347,9 @@
         
         NSDictionary *stringAttributes = @{NSFontAttributeName: self.textFont, NSFontAttributeName:textFont};
         
-        textSize = [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
-                                            options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin
-                                         attributes:stringAttributes context:nil].size;
+        textSize = [self.message boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+                                              options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:stringAttributes context:nil].size;
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
