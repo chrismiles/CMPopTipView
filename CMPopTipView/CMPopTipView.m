@@ -258,7 +258,7 @@
         textStyle.alignment = self.titleAlignment;
         UIFont *textFont = self.titleFont;
         
-        [self.title drawInRect:titleFrame withAttributes:@{ NSFontAttributeName:textFont, NSParagraphStyleAttributeName:textStyle }];
+        [self.title drawInRect:titleFrame withAttributes:@{ NSFontAttributeName:textFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName: self.titleColor }];
     }
 	
 	if (self.message) {
@@ -284,7 +284,7 @@
         textStyle.alignment = self.textAlignment;
         UIFont *textFont = self.textFont;
         
-        [self.message drawInRect:textFrame withAttributes:@{ NSFontAttributeName:textFont, NSParagraphStyleAttributeName:textStyle }];
+        [self.message drawInRect:textFrame withAttributes:@{ NSFontAttributeName:textFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName: self.textColor }];
     }
 }
 
