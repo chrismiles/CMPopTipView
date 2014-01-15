@@ -10,10 +10,10 @@
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 //  copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
-//  
+//
 //  The above copyright notice and this permission notice shall be included in
 //  all copies or substantial portions of the Software.
-//  
+//
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -76,7 +76,7 @@
 {
 	CGRect bubbleRect = [self bubbleFrame];
 	
-	CGContextRef c = UIGraphicsGetCurrentContext(); 
+	CGContextRef c = UIGraphicsGetCurrentContext();
     
     CGContextSetRGBStrokeColor(c, 0.0, 0.0, 0.0, 1.0);	// black
 	CGContextSetLineWidth(c, self.borderWidth);
@@ -133,7 +133,7 @@
     CGContextSaveGState(c);
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
-
+    
     if (self.hasGradientBackground == NO) {
         // Fill with solid color
         CGContextSetFillColorWithColor(c, [self.backgroundColor CGColor]);
@@ -172,7 +172,7 @@
             alpha = components[3];
         }
         CGFloat colorList[] = {
-            //red, green, blue, alpha 
+            //red, green, blue, alpha
             red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
             red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
             red*1.08+colourHL, green*1.08+colourHL, blue*1.08+colourHL, alpha,
@@ -223,7 +223,7 @@
     }
 	
 	CGContextRestoreGState(c);
-
+    
     //Draw Border
     if (self.borderWidth > 0) {
         int numBorderComponents = CGColorGetNumberOfComponents([self.borderColor CGColor]);
@@ -253,10 +253,12 @@
     if (self.title) {
         [self.titleColor set];
         CGRect titleFrame = [self contentFrame];
-        [self.title drawInRect:titleFrame
-                      withFont:self.titleFont
-                 lineBreakMode:NSLineBreakByClipping
-                     alignment:self.titleAlignment];
+        NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        textStyle.lineBreakMode = NSLineBreakByClipping;
+        textStyle.alignment = self.titleAlignment;
+        UIFont *textFont = self.titleFont;
+        
+        [self.title drawInRect:titleFrame withAttributes:@{ NSFontAttributeName:textFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName: self.titleColor }];
     }
 	
 	if (self.message) {
@@ -265,15 +267,24 @@
         
         // Move down to make room for title
         if (self.title) {
-            textFrame.origin.y += [self.title sizeWithFont:self.titleFont
-                                         constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
-                                             lineBreakMode:NSLineBreakByClipping].height;
+            NSMutableParagraphStyle *titleStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+            titleStyle.lineBreakMode = NSLineBreakByClipping;
+            titleStyle.alignment = self.textAlignment;
+            UIFont *textFont = self.textFont;
+            
+            NSDictionary *stringAttributes = @{NSFontAttributeName: self.titleFont, NSFontAttributeName:textFont};
+            
+            textFrame.origin.y += [self.message boundingRectWithSize:CGSizeMake(textFrame.size.width, 99999.0)
+                                                             options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes:stringAttributes context:nil].size.height;
         }
         
-        [self.message drawInRect:textFrame
-                        withFont:self.textFont
-                   lineBreakMode:NSLineBreakByWordWrapping
-                       alignment:self.textAlignment];
+        NSMutableParagraphStyle *textStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        textStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        textStyle.alignment = self.textAlignment;
+        UIFont *textFont = self.textFont;
+        
+        [self.message drawInRect:textFrame withAttributes:@{ NSFontAttributeName:textFont, NSParagraphStyleAttributeName:textStyle, NSForegroundColorAttributeName: self.textColor }];
     }
 }
 
@@ -325,21 +336,35 @@
             rectWidth = (int)(containerView.frame.size.width*2/3);
         }
     }
-
+    
 	CGSize textSize = CGSizeZero;
     
     if (self.message!=nil) {
-        textSize= [self.message sizeWithFont:self.textFont
-                           constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                               lineBreakMode:NSLineBreakByWordWrapping];
+        NSMutableParagraphStyle *titleStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        titleStyle.lineBreakMode = NSLineBreakByClipping;
+        titleStyle.alignment = self.textAlignment;
+        UIFont *textFont = self.textFont;
+        
+        NSDictionary *stringAttributes = @{NSFontAttributeName: self.textFont, NSFontAttributeName:textFont};
+        
+        textSize = [self.message boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+                                              options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin
+                                           attributes:stringAttributes context:nil].size;
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
     }
     if (self.title != nil) {
-        textSize.height += [self.title sizeWithFont:self.titleFont
-                                  constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                                      lineBreakMode:NSLineBreakByClipping].height;
+        NSMutableParagraphStyle *titleStyle = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+        titleStyle.lineBreakMode = NSLineBreakByClipping;
+        titleStyle.alignment = self.textAlignment;
+        UIFont *textFont = self.textFont;
+        
+        NSDictionary *stringAttributes = @{NSFontAttributeName: self.titleFont, NSFontAttributeName:textFont};
+        
+        textSize.height += [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+                                                    options:NSStringDrawingTruncatesLastVisibleLine|NSStringDrawingUsesLineFragmentOrigin
+                                                 attributes:stringAttributes context:nil].size.height;
     }
     
 	_bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
@@ -485,7 +510,7 @@
 
 - (void)finaliseDismiss {
 	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
-
+    
     if (self.dismissTarget) {
         [self.dismissTarget removeFromSuperview];
 		self.dismissTarget = nil;
@@ -546,7 +571,7 @@
 		[super touchesBegan:touches withEvent:event];
 		return;
 	}
-
+    
 	[self dismissByUser];
 }
 
@@ -579,7 +604,7 @@
     if ((self = [super initWithFrame:frame])) {
         // Initialization code
 		self.opaque = NO;
-
+        
 		_topMargin = 2.0;
 		_pointerSize = 12.0;
 		_sidePadding = 2.0;
@@ -615,7 +640,7 @@
 
 - (PointDirection) getPointDirection
 {
-  return _pointDirection;
+    return _pointDirection;
 }
 
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow
