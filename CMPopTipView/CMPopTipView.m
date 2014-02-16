@@ -157,7 +157,7 @@
         CGFloat green;
         CGFloat blue;
         CGFloat alpha;
-        int numComponents = CGColorGetNumberOfComponents([self.backgroundColor CGColor]);
+        size_t numComponents = CGColorGetNumberOfComponents([self.backgroundColor CGColor]);
         const CGFloat *components = CGColorGetComponents([self.backgroundColor CGColor]);
         if (numComponents == 2) {
             red = components[0];
@@ -226,7 +226,7 @@
 
     //Draw Border
     if (self.borderWidth > 0) {
-        int numBorderComponents = CGColorGetNumberOfComponents([self.borderColor CGColor]);
+        size_t numBorderComponents = CGColorGetNumberOfComponents([self.borderColor CGColor]);
         const CGFloat *borderComponents = CGColorGetComponents(self.borderColor.CGColor);
         CGFloat r, g, b, a;
         if (numBorderComponents == 2) {
