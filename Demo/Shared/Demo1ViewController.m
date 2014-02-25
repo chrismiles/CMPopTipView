@@ -101,6 +101,7 @@
         //popTipView.sidePadding = 30.0f;
         //popTipView.topMargin = 20.0f;
         //popTipView.pointerSize = 50.0f;
+        //popTipView.hasShadow = NO;
 		
 		if (backgroundColor && ![backgroundColor isEqual:[NSNull null]]) {
 			popTipView.backgroundColor = backgroundColor;

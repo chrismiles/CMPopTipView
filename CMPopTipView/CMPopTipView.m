@@ -601,15 +601,19 @@
     return self;
 }
 
-- (void)setHasShadow:(BOOL)newHasShadow
+- (void)setHasShadow:(BOOL)hasShadow
 {
-    if (newHasShadow) {
-        self.layer.shadowOffset = CGSizeMake(0, 3);
-        self.layer.shadowRadius = 2.0;
-        self.layer.shadowColor = [[UIColor blackColor] CGColor];
-        self.layer.shadowOpacity = 0.3;
-    } else {
-        self.layer.shadowOpacity = 0.0;
+    if (hasShadow != _hasShadow) {
+        _hasShadow = hasShadow;
+
+        if (hasShadow) {
+            self.layer.shadowOffset = CGSizeMake(0, 3);
+            self.layer.shadowRadius = 2.0;
+            self.layer.shadowColor = [[UIColor blackColor] CGColor];
+            self.layer.shadowOpacity = 0.3;
+        } else {
+            self.layer.shadowOpacity = 0.0;
+        }
     }
 }
 
