@@ -63,7 +63,7 @@
 	else {
 		NSString *contentMessage = nil;
 		UIView *contentView = nil;
-		NSNumber *key = [NSNumber numberWithInt:[(UIView *)sender tag]];
+		NSNumber *key = [NSNumber numberWithInteger:[(UIView *)sender tag]];
 		id content = [self.contents objectForKey:key];
 		if ([content isKindOfClass:[UIView class]]) {
 			contentView = content;
