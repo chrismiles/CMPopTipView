@@ -260,7 +260,7 @@
             titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
             
             [self.title drawWithRect:titleFrame
-                             options:kNilOptions
+                             options:NSStringDrawingUsesLineFragmentOrigin
                           attributes:@{
                                        NSFontAttributeName: self.titleFont,
                                        NSForegroundColorAttributeName: self.titleColor,
