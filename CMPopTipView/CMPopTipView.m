@@ -253,10 +253,35 @@
     if (self.title) {
         [self.titleColor set];
         CGRect titleFrame = [self contentFrame];
-        [self.title drawInRect:titleFrame
-                      withFont:self.titleFont
-                 lineBreakMode:NSLineBreakByClipping
-                     alignment:self.titleAlignment];
+        
+        if ([self.title respondsToSelector:@selector(drawWithRect:options:attributes:context:)]) {
+            NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+            titleParagraphStyle.alignment = self.titleAlignment;
+            titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
+            
+            [self.title drawWithRect:titleFrame
+                             options:NSStringDrawingUsesLineFragmentOrigin
+                          attributes:@{
+                                       NSFontAttributeName: self.titleFont,
+                                       NSForegroundColorAttributeName: self.titleColor,
+                                       NSParagraphStyleAttributeName: titleParagraphStyle
+                                       }
+                             context:nil];
+            
+        }
+        else {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+            [self.title drawInRect:titleFrame
+                          withFont:self.titleFont
+                     lineBreakMode:NSLineBreakByClipping
+                         alignment:self.titleAlignment];
+
+#pragma clang diagnostic pop
+
+        }
     }
 	
 	if (self.message) {
@@ -265,15 +290,59 @@
         
         // Move down to make room for title
         if (self.title) {
-            textFrame.origin.y += [self.title sizeWithFont:self.titleFont
-                                         constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
-                                             lineBreakMode:NSLineBreakByClipping].height;
+            
+            if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
+                NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+                titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
+
+                textFrame.origin.y += [self.title boundingRectWithSize:CGSizeMake(textFrame.size.width, 99999.0)
+                                                               options:kNilOptions
+                                                            attributes:@{
+                                                                         NSFontAttributeName: self.titleFont,
+                                                                         NSParagraphStyleAttributeName: titleParagraphStyle
+                                                                         }
+                                                               context:nil].size.height;
+            }
+            else {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+                textFrame.origin.y += [self.title sizeWithFont:self.titleFont
+                                             constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
+                                                 lineBreakMode:NSLineBreakByClipping].height;
+
+#pragma clang diagnostic pop
+
+            }
         }
         
-        [self.message drawInRect:textFrame
-                        withFont:self.textFont
-                   lineBreakMode:NSLineBreakByWordWrapping
-                       alignment:self.textAlignment];
+        NSMutableParagraphStyle *textParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+        textParagraphStyle.alignment = self.textAlignment;
+        textParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        
+        if ([self.message respondsToSelector:@selector(drawWithRect:options:attributes:context:)]) {
+            [self.message drawWithRect:textFrame
+                               options:NSStringDrawingUsesLineFragmentOrigin attributes:@{
+                                                                                          NSFontAttributeName: self.textFont,
+                                                                                          NSParagraphStyleAttributeName: textParagraphStyle,
+                                                                                          NSForegroundColorAttributeName: self.textColor
+                                                                                          }
+                               context:nil];
+        }
+        else {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+            [self.message drawInRect:textFrame
+                            withFont:self.textFont
+                       lineBreakMode:NSLineBreakByWordWrapping
+                           alignment:self.textAlignment];
+
+#pragma clang diagnostic pop
+
+        }
     }
 }
 
@@ -329,17 +398,60 @@
 	CGSize textSize = CGSizeZero;
     
     if (self.message!=nil) {
-        textSize= [self.message sizeWithFont:self.textFont
-                           constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                               lineBreakMode:NSLineBreakByWordWrapping];
+        if ([self.message respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
+            NSMutableParagraphStyle *textParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+            textParagraphStyle.alignment = self.textAlignment;
+            textParagraphStyle.lineBreakMode  =NSLineBreakByWordWrapping;
+
+            textSize = [self.message boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+                                                  options:NSStringDrawingUsesLineFragmentOrigin
+                                               attributes:@{
+                                                            NSFontAttributeName: self.textFont,
+                                                            NSParagraphStyleAttributeName: textParagraphStyle
+                                                            }
+                                                  context:nil].size;
+        }
+        else {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+            textSize= [self.message sizeWithFont:self.textFont
+                               constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                                   lineBreakMode:NSLineBreakByWordWrapping];
+
+#pragma clang diagnostic pop
+        
+        }
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
     }
     if (self.title != nil) {
-        textSize.height += [self.title sizeWithFont:self.titleFont
-                                  constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                                      lineBreakMode:NSLineBreakByClipping].height;
+        if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
+            NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+            titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
+
+            textSize.height += [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+                                                        options:kNilOptions
+                                                     attributes:@{
+                                                                  NSFontAttributeName: self.titleFont,
+                                                                  NSParagraphStyleAttributeName: titleParagraphStyle
+                                                                  }
+                                                        context:nil].size.height;
+        }
+        else {
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+            textSize.height += [self.title sizeWithFont:self.titleFont
+                                      constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                                          lineBreakMode:NSLineBreakByClipping].height;
+
+#pragma clang diagnostic pop
+        
+        }
     }
     
 	_bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
