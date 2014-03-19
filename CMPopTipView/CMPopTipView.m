@@ -2,7 +2,7 @@
 //  CMPopTipView.m
 //
 //  Created by Chris Miles on 18/07/10.
-//  Copyright (c) Chris Miles 2010-2013.
+//  Copyright (c) Chris Miles 2010-2014.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
@@ -416,9 +416,9 @@
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-            textSize= [self.message sizeWithFont:self.textFont
-                               constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                                   lineBreakMode:NSLineBreakByWordWrapping];
+            textSize = [self.message sizeWithFont:self.textFont
+                                constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                                    lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
         
@@ -428,30 +428,35 @@
         textSize = self.customView.frame.size;
     }
     if (self.title != nil) {
+        CGSize titleSize;
+
         if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
             titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
 
-            textSize.height += [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
-                                                        options:kNilOptions
-                                                     attributes:@{
-                                                                  NSFontAttributeName: self.titleFont,
-                                                                  NSParagraphStyleAttributeName: titleParagraphStyle
-                                                                  }
-                                                        context:nil].size.height;
+            titleSize = [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+                                                 options:kNilOptions
+                                              attributes:@{
+                                                           NSFontAttributeName: self.titleFont,
+                                                           NSParagraphStyleAttributeName: titleParagraphStyle
+                                                           }
+                                                 context:nil].size;
         }
         else {
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-            textSize.height += [self.title sizeWithFont:self.titleFont
-                                      constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                                          lineBreakMode:NSLineBreakByClipping].height;
+            titleSize = [self.title sizeWithFont:self.titleFont
+                               constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                                   lineBreakMode:NSLineBreakByClipping];
 
 #pragma clang diagnostic pop
         
         }
+
+        if (titleSize.width > textSize.width) textSize.width = titleSize.width;
+        textSize.height += titleSize.height;
     }
     
 	_bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
