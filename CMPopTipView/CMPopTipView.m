@@ -536,6 +536,7 @@
 								   y_b,
 								   _bubbleSize.width+_sidePadding*2,
 								   fullHeight);
+    finalFrame = CGRectIntegral(finalFrame);
     
    	
 	if (animated) {
