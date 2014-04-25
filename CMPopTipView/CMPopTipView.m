@@ -665,12 +665,7 @@
 
 - (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    UIView *view = [self.containerView hitTest:[touch locationInView:self.containerView] withEvent:nil];
-    if (view == self.containerView)
-    {
-        [self dismissByUser];
-    }
-    
+    [self dismissByUser];
     return NO;
 }
 
