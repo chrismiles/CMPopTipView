@@ -739,6 +739,11 @@
   return _pointDirection;
 }
 
+- (BOOL)isBeingShown
+{
+	return self.targetObject != nil;
+}
+
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow
 {
 	CGRect frame = CGRectZero;

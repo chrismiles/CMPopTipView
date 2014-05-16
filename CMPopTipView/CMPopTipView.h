@@ -133,6 +133,7 @@ typedef enum {
 @property (nonatomic, assign)           CGFloat                 pointerSize;
 
 /* Contents can be either a message or a UIView */
+- (BOOL)isBeingShown;
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow;
 - (id)initWithMessage:(NSString *)messageToShow;
 - (id)initWithCustomView:(UIView *)aView;
