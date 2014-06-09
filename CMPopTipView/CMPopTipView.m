@@ -58,14 +58,14 @@
 - (CGRect)contentFrame {
     CGRect bubbleFrame = [self bubbleFrame];
 
-    if (self.shouldEnforceCustomViewPadding)
-    {
+    if (self.shouldEnforceCustomViewPadding) {
         CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
                                   bubbleFrame.origin.y + _cornerRadius,
                                   bubbleFrame.size.width - _cornerRadius*2,
                                   bubbleFrame.size.height - _cornerRadius*2);
         return contentFrame;
-    } else {
+    }
+    else {
         return bubbleFrame;
     }
 }
@@ -470,7 +470,8 @@
 
     if (self.shouldEnforceCustomViewPadding) {
         _bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
-    } else {
+    }
+    else {
         _bubbleSize = CGSizeMake(textSize.width, textSize.height);
     }
 
@@ -736,7 +737,8 @@
             self.layer.shadowRadius = 2.0;
             self.layer.shadowColor = [[UIColor blackColor] CGColor];
             self.layer.shadowOpacity = 0.3;
-        } else {
+        }
+        else {
             self.layer.shadowOpacity = 0.0;
         }
     }
