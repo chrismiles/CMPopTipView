@@ -57,20 +57,17 @@
 
 - (CGRect)contentFrame {
     CGRect bubbleFrame = [self bubbleFrame];
-    CGRect contentFrame;
+
     if (self.shouldEnforceCustomViewPadding)
     {
-        contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
+        CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
                                   bubbleFrame.origin.y + _cornerRadius,
                                   bubbleFrame.size.width - _cornerRadius*2,
                                   bubbleFrame.size.height - _cornerRadius*2);
+        return contentFrame;
     } else {
-        contentFrame = CGRectMake(bubbleFrame.origin.x,
-                                  bubbleFrame.origin.y,
-                                  bubbleFrame.size.width,
-                                  bubbleFrame.size.height);
+        return bubbleFrame;
     }
-	return contentFrame;
 }
 
 - (void)layoutSubviews {
@@ -476,7 +473,6 @@
     } else {
         _bubbleSize = CGSizeMake(textSize.width, textSize.height);
     }
-
 
 	UIView *superview = containerView.superview;
 	if ([superview isKindOfClass:[UIWindow class]])
