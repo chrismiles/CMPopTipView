@@ -56,18 +56,31 @@
 }
 
 - (CGRect)contentFrame {
-	CGRect bubbleFrame = [self bubbleFrame];
-	CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
-									 bubbleFrame.origin.y + _cornerRadius,
-									 bubbleFrame.size.width - _cornerRadius*2,
-									 bubbleFrame.size.height - _cornerRadius*2);
+    CGRect bubbleFrame = [self bubbleFrame];
+    CGRect contentFrame;
+    if (self.shouldEnforceCustomViewPadding)
+    {
+        contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
+                                  bubbleFrame.origin.y + _cornerRadius,
+                                  bubbleFrame.size.width - _cornerRadius*2,
+                                  bubbleFrame.size.height - _cornerRadius*2);
+    } else {
+        contentFrame = CGRectMake(bubbleFrame.origin.x,
+                                  bubbleFrame.origin.y,
+                                  bubbleFrame.size.width,
+                                  bubbleFrame.size.height);
+    }
 	return contentFrame;
 }
 
 - (void)layoutSubviews {
-	if (self.customView  && self.shouldEnforceCustomViewPadding) {
+	if (self.customView) {
 		CGRect contentFrame = [self contentFrame];
         [self.customView setFrame:contentFrame];
+    }
+    if (self.customView && self.shouldMaskCustomView) {
+        self.customView.layer.cornerRadius = self.cornerRadius;
+        self.customView.layer.masksToBounds = YES;
     }
 }
 
@@ -457,9 +470,14 @@
         if (titleSize.width > textSize.width) textSize.width = titleSize.width;
         textSize.height += titleSize.height;
     }
-    
-	_bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
-	
+
+    if (self.shouldEnforceCustomViewPadding) {
+        _bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
+    } else {
+        _bubbleSize = CGSizeMake(textSize.width, textSize.height);
+    }
+
+
 	UIView *superview = containerView.superview;
 	if ([superview isKindOfClass:[UIWindow class]])
 		superview = containerView;
@@ -767,6 +785,7 @@
 	if ((self = [self initWithFrame:frame])) {
 		self.customView = aView;
         self.shouldEnforceCustomViewPadding = YES;
+        self.shouldMaskCustomView = YES;
         [self addSubview:self.customView];
 	}
 	return self;
