@@ -65,8 +65,7 @@
 }
 
 - (void)layoutSubviews {
-	if (self.customView) {
-		
+	if (self.customView  && self.shouldEnforceCustomViewPadding) {
 		CGRect contentFrame = [self contentFrame];
         [self.customView setFrame:contentFrame];
     }
@@ -767,6 +766,7 @@
 	
 	if ((self = [self initWithFrame:frame])) {
 		self.customView = aView;
+        self.shouldEnforceCustomViewPadding = YES;
         [self addSubview:self.customView];
 	}
 	return self;
