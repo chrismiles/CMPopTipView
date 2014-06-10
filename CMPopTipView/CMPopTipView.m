@@ -359,7 +359,7 @@
         self.dismissTarget = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissTapAnywhereFired:)];
         self.dismissTarget.delegate = self;
         self.containerView = containerView;
-        [containerView addGestureRecognizer:self.dismissTarget];
+        [containerView.window addGestureRecognizer:self.dismissTarget];
     }
 	
 	[containerView addSubview:self];
@@ -600,7 +600,7 @@
 	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
 
     if (self.dismissTarget) {
-        [self.containerView removeGestureRecognizer:self.dismissTarget];
+        [self.containerView.window removeGestureRecognizer:self.dismissTarget];
 		self.dismissTarget = nil;
     }
 	
