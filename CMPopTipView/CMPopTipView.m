@@ -26,7 +26,7 @@
 #import "CMPopTipView.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface CMPopTipView ()
+@interface CMPopTipView () <UIGestureRecognizerDelegate>
 {
 	CGSize					_bubbleSize;
 	CGFloat					_cornerRadius;
@@ -38,7 +38,9 @@
 
 @property (nonatomic, strong, readwrite)	id	targetObject;
 @property (nonatomic, strong) NSTimer *autoDismissTimer;
-@property (nonatomic, strong) UIButton *dismissTarget;
+@property (nonatomic, weak) UIView *containerView;
+@property (nonatomic, strong) UITapGestureRecognizer *dismissTarget;
+
 @end
 
 
@@ -354,11 +356,10 @@
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
     if ( self.dismissTapAnywhere ) {
-        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
-        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
-        self.dismissTarget.frame = containerView.bounds;
-        [containerView addSubview:self.dismissTarget];
+        self.dismissTarget = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissTapAnywhereFired:)];
+        self.dismissTarget.delegate = self;
+        self.containerView = containerView;
+        [containerView.window addGestureRecognizer:self.dismissTarget];
     }
 	
 	[containerView addSubview:self];
@@ -599,7 +600,7 @@
 	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
 
     if (self.dismissTarget) {
-        [self.dismissTarget removeFromSuperview];
+        [self.containerView.window removeGestureRecognizer:self.dismissTarget];
 		self.dismissTarget = nil;
     }
 	
@@ -660,6 +661,12 @@
 	}
 
 	[self dismissByUser];
+}
+
+- (BOOL) gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    [self dismissByUser];
+    return NO;
 }
 
 - (void)dismissTapAnywhereFired:(__unused UIButton *)button
