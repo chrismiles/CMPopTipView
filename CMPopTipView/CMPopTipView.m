@@ -348,6 +348,19 @@
     }
 }
 
+- (UIViewController *) farthestViewControllerInResponderChainStartingFrom:(id)responder {
+    id viewController = nil;
+    id current = responder;
+    do {
+        if ([current isKindOfClass:[UIViewController class]] && ![current isKindOfClass:[UINavigationController class]]) {
+            viewController = current;
+        }
+        current = [current nextResponder];
+    } while (current != nil);
+    
+    return viewController;
+}
+
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
 	if (!self.targetObject) {
 		self.targetObject = targetView;
@@ -359,7 +372,11 @@
         self.dismissTarget = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissTapAnywhereFired:)];
         self.dismissTarget.delegate = self;
         self.containerView = containerView;
-        [containerView.window addGestureRecognizer:self.dismissTarget];
+        
+        id rootViewController = [self farthestViewControllerInResponderChainStartingFrom:containerView];
+        
+        NSLog(@"Adding gesture recognizer to %@",rootViewController);
+        [[rootViewController view] addGestureRecognizer:self.dismissTarget];
     }
 	
 	[containerView addSubview:self];
@@ -600,8 +617,10 @@
 	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
 
     if (self.dismissTarget) {
-        [self.containerView.window removeGestureRecognizer:self.dismissTarget];
-		self.dismissTarget = nil;
+        id rootViewController = [self farthestViewControllerInResponderChainStartingFrom:self.containerView];
+        
+        [[rootViewController view] removeGestureRecognizer:self.dismissTarget];
+    	self.dismissTarget = nil;
     }
 	
 	[self removeFromSuperview];
