@@ -554,7 +554,11 @@
     
    	
 	if (animated) {
-        if (self.animation == CMPopTipAnimationSlide) {
+        if (self.animation == CMPopTipAnimationFade) {
+            self.alpha = 0;
+            self.frame = finalFrame;
+        }
+        else if (self.animation == CMPopTipAnimationSlide) {
             self.alpha = 0.0;
             CGRect startFrame = finalFrame;
             startFrame.origin.y += 10;
@@ -578,8 +582,12 @@
         }
 		
 		[self setNeedsDisplay];
-		
-		if (self.animation == CMPopTipAnimationSlide) {
+		if (self.animation == CMPopTipAnimationFade) {
+            [UIView animateWithDuration:0.15 animations:^{
+                self.alpha = 1.0;
+            }];
+        }
+		else if (self.animation == CMPopTipAnimationSlide) {
 			[UIView beginAnimations:nil context:nil];
 			self.alpha = 1.0;
 			self.frame = finalFrame;
@@ -631,15 +639,24 @@
 - (void)dismissAnimated:(BOOL)animated {
 	
 	if (animated) {
-		CGRect frame = self.frame;
-		frame.origin.y += 10.0;
-		
-		[UIView beginAnimations:nil context:nil];
-		self.alpha = 0.0;
-		self.frame = frame;
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(dismissAnimationDidStop:finished:context:)];
-		[UIView commitAnimations];
+        if (self.animation == CMPopTipAnimationFade) {
+            [UIView beginAnimations:nil context:nil];
+            self.alpha = 0.0;
+            [UIView setAnimationDuration:0.3];
+            [UIView setAnimationDelegate:self];
+            [UIView setAnimationDidStopSelector:@selector(dismissAnimationDidStop:finished:context:)];
+            [UIView commitAnimations];
+        } else {
+            CGRect frame = self.frame;
+            frame.origin.y += 10.0;
+
+            [UIView beginAnimations:nil context:nil];
+            self.alpha = 0.0;
+            self.frame = frame;
+            [UIView setAnimationDelegate:self];
+            [UIView setAnimationDidStopSelector:@selector(dismissAnimationDidStop:finished:context:)];
+            [UIView commitAnimations];
+        }
 	}
 	else {
 		[self finaliseDismiss];
