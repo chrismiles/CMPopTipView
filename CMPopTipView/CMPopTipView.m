@@ -757,6 +757,8 @@
 	
 	if ((self = [self initWithFrame:frame])) {
 		self.message = messageToShow;
+        self.isAccessibilityElement = YES;
+        self.accessibilityHint = messageToShow;
 	}
 	return self;
 }
