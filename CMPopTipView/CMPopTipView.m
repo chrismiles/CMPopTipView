@@ -257,7 +257,7 @@
         if ([self.title respondsToSelector:@selector(drawWithRect:options:attributes:context:)]) {
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
             titleParagraphStyle.alignment = self.titleAlignment;
-            titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
+            titleParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
             
             [self.title drawWithRect:titleFrame
                              options:NSStringDrawingUsesLineFragmentOrigin
@@ -276,7 +276,7 @@
 
             [self.title drawInRect:titleFrame
                           withFont:self.titleFont
-                     lineBreakMode:NSLineBreakByClipping
+                     lineBreakMode:NSLineBreakByWordWrapping
                          alignment:self.titleAlignment];
 
 #pragma clang diagnostic pop
@@ -293,10 +293,10 @@
             
             if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
                 NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-                titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
+                titleParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
 
                 textFrame.origin.y += [self.title boundingRectWithSize:CGSizeMake(textFrame.size.width, 99999.0)
-                                                               options:kNilOptions
+                                                               options:NSStringDrawingUsesLineFragmentOrigin
                                                             attributes:@{
                                                                          NSFontAttributeName: self.titleFont,
                                                                          NSParagraphStyleAttributeName: titleParagraphStyle
@@ -310,7 +310,7 @@
 
                 textFrame.origin.y += [self.title sizeWithFont:self.titleFont
                                              constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
-                                                 lineBreakMode:NSLineBreakByClipping].height;
+                                                 lineBreakMode:NSLineBreakByWordWrapping].height;
 
 #pragma clang diagnostic pop
 
@@ -432,10 +432,10 @@
 
         if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-            titleParagraphStyle.lineBreakMode = NSLineBreakByClipping;
+            titleParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
 
             titleSize = [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
-                                                 options:kNilOptions
+                                                 options:NSStringDrawingUsesLineFragmentOrigin
                                               attributes:@{
                                                            NSFontAttributeName: self.titleFont,
                                                            NSParagraphStyleAttributeName: titleParagraphStyle
@@ -449,7 +449,7 @@
 
             titleSize = [self.title sizeWithFont:self.titleFont
                                constrainedToSize:CGSizeMake(rectWidth, 99999.0)
-                                   lineBreakMode:NSLineBreakByClipping];
+                                   lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
         
