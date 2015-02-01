@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12D15AF61A7EEE4B00E606D4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 12D15AF51A7EEE4B00E606D4 /* LaunchScreen.xib */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		12D15AF51A7EEE4B00E606D4 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* CMPopTipViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CMPopTipViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -121,6 +123,7 @@
 		29B97315FDCFA39411CA2CEA /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
+				12D15AF51A7EEE4B00E606D4 /* LaunchScreen.xib */,
 				32CA4F630368D1EE00C91783 /* CMPopTipViewDemo_Prefix.pch */,
 				29B97316FDCFA39411CA2CEA /* main.m */,
 			);
@@ -212,6 +215,7 @@
 				2860E329111B887F00E27156 /* MainWindow_iPhone.xib in Resources */,
 				2860E32F111B888700E27156 /* MainWindow_iPad.xib in Resources */,
 				83FEEE62128E4F98007C310F /* Demo1ViewController.xib in Resources */,
+				12D15AF61A7EEE4B00E606D4 /* LaunchScreen.xib in Resources */,
 				839195F71377FE2700FC65F9 /* appicon57.png in Resources */,
 				839195F81377FE2700FC65F9 /* appicon114.png in Resources */,
 				837E311517CF6D1800C6F242 /* Default-568h@2x.png in Resources */,
@@ -247,6 +251,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CMPopTipViewDemo_Prefix.pch;
 				INFOPLIST_FILE = "CMPopTipViewDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = CMPopTipViewDemo;
 			};
 			name = Debug;
@@ -260,6 +265,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = CMPopTipViewDemo_Prefix.pch;
 				INFOPLIST_FILE = "CMPopTipViewDemo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				PRODUCT_NAME = CMPopTipViewDemo;
 				VALIDATE_PRODUCT = YES;
 			};
