@@ -699,7 +699,12 @@
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
-		self.textAlignment = NSTextAlignmentCenter;
+        self.textAlignment = NSTextAlignmentCenter;
+        
+        self.titleFont = [UIFont boldSystemFontOfSize:16.0];
+        self.titleColor = [UIColor whiteColor];
+        self.titleAlignment = NSTextAlignmentCenter;
+        
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.has3DStyle = YES;
         self.borderColor = [UIColor blackColor];
@@ -739,28 +744,28 @@
 	CGRect frame = CGRectZero;
 	
 	if ((self = [self initWithFrame:frame])) {
-        self.title = titleToShow;
-		self.message = messageToShow;
         
-        self.titleFont = [UIFont boldSystemFontOfSize:16.0];
-        self.titleColor = [UIColor whiteColor];
-        self.titleAlignment = NSTextAlignmentCenter;
-        self.textFont = [UIFont systemFontOfSize:14.0];
-		self.textColor = [UIColor whiteColor];
+        self.title = titleToShow;
+        self.message = messageToShow;
+        
+        self.isAccessibilityElement = YES;
+        self.accessibilityHint = messageToShow;
 	}
 	return self;
 }
 
 - (id)initWithMessage:(NSString *)messageToShow
 {
-	CGRect frame = CGRectZero;
-	
-	if ((self = [self initWithFrame:frame])) {
-		self.message = messageToShow;
+    CGRect frame = CGRectZero;
+    
+    if ((self = [self initWithFrame:frame])) {
+        
+        self.message = messageToShow;
+        
         self.isAccessibilityElement = YES;
         self.accessibilityHint = messageToShow;
-	}
-	return self;
+    }
+    return self;
 }
 
 - (id)initWithCustomView:(UIView *)aView
