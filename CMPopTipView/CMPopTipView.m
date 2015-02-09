@@ -44,6 +44,80 @@
 
 @implementation CMPopTipView
 
+#pragma mark - Init Methods
+- (id)initWithFrame:(CGRect)frame
+{
+    if ((self = [super initWithFrame:frame])) {
+        // Initialization code
+        self.opaque = NO;
+        
+        _topMargin = 2.0;
+        _pointerSize = 12.0;
+        _sidePadding = 2.0;
+        _borderWidth = 1.0;
+        
+        self.textFont = [UIFont boldSystemFontOfSize:14.0];
+        self.textColor = [UIColor whiteColor];
+        self.textAlignment = NSTextAlignmentCenter;
+        
+        self.titleFont = [UIFont boldSystemFontOfSize:16.0];
+        self.titleColor = [UIColor whiteColor];
+        self.titleAlignment = NSTextAlignmentCenter;
+        
+        self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
+        self.has3DStyle = YES;
+        self.borderColor = [UIColor blackColor];
+        self.hasShadow = YES;
+        self.animation = CMPopTipAnimationSlide;
+        self.dismissTapAnywhere = NO;
+        self.preferredPointDirection = PointDirectionAny;
+        self.hasGradientBackground = YES;
+        self.cornerRadius = 10.0;
+    }
+    return self;
+}
+
+- (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow
+{
+    CGRect frame = CGRectZero;
+    
+    if ((self = [self initWithFrame:frame])) {
+        
+        self.title = titleToShow;
+        self.message = messageToShow;
+        
+        self.isAccessibilityElement = YES;
+        self.accessibilityHint = messageToShow;
+    }
+    return self;
+}
+
+- (id)initWithMessage:(NSString *)messageToShow
+{
+    CGRect frame = CGRectZero;
+    
+    if ((self = [self initWithFrame:frame])) {
+        
+        self.message = messageToShow;
+        
+        self.isAccessibilityElement = YES;
+        self.accessibilityHint = messageToShow;
+    }
+    return self;
+}
+
+- (id)initWithCustomView:(UIView *)aView
+{
+    CGRect frame = CGRectZero;
+    
+    if ((self = [self initWithFrame:frame])) {
+        self.customView = aView;
+        [self addSubview:self.customView];
+    }
+    return self;
+}
+
+#pragma mark Size calculation
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
 	if (_pointDirection == PointDirectionUp) {
@@ -64,6 +138,7 @@
 	return contentFrame;
 }
 
+#pragma mark Layout and draw
 - (void)layoutSubviews {
 	if (self.customView) {
 		
@@ -346,6 +421,7 @@
     }
 }
 
+#pragma mark Presentation
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
 	if (!self.targetObject) {
 		self.targetObject = targetView;
@@ -595,6 +671,7 @@
 	[self presentPointingAtView:targetView inView:containerView animated:animated];
 }
 
+#pragma mark Dismiss
 - (void)finaliseDismiss {
 	[self.autoDismissTimer invalidate]; self.autoDismissTimer = nil;
 
@@ -607,11 +684,6 @@
     
 	_highlight = NO;
 	self.targetObject = nil;
-}
-
-- (void)dismissAnimationDidStop:(__unused NSString *)animationID finished:(__unused NSNumber *)finished context:(__unused void *)context
-{
-	[self finaliseDismiss];
 }
 
 - (void)dismissAnimated:(BOOL)animated {
@@ -677,6 +749,12 @@
 	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
+#pragma mark Animation call back
+- (void)dismissAnimationDidStop:(__unused NSString *)animationID finished:(__unused NSNumber *)finished context:(__unused void *)context
+{
+    [self finaliseDismiss];
+}
+
 - (void)popAnimationDidStop:(__unused NSString *)animationID finished:(__unused NSNumber *)finished context:(__unused void *)context
 {
     // at the end set to normal size
@@ -686,38 +764,7 @@
 	[UIView commitAnimations];
 }
 
-- (id)initWithFrame:(CGRect)frame
-{
-    if ((self = [super initWithFrame:frame])) {
-        // Initialization code
-		self.opaque = NO;
-
-		_topMargin = 2.0;
-		_pointerSize = 12.0;
-		_sidePadding = 2.0;
-        _borderWidth = 1.0;
-		
-		self.textFont = [UIFont boldSystemFontOfSize:14.0];
-		self.textColor = [UIColor whiteColor];
-        self.textAlignment = NSTextAlignmentCenter;
-        
-        self.titleFont = [UIFont boldSystemFontOfSize:16.0];
-        self.titleColor = [UIColor whiteColor];
-        self.titleAlignment = NSTextAlignmentCenter;
-        
-		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
-        self.has3DStyle = YES;
-        self.borderColor = [UIColor blackColor];
-        self.hasShadow = YES;
-        self.animation = CMPopTipAnimationSlide;
-        self.dismissTapAnywhere = NO;
-        self.preferredPointDirection = PointDirectionAny;
-        self.hasGradientBackground = YES;
-        self.cornerRadius = 10.0;
-    }
-    return self;
-}
-
+#pragma mark Other
 - (void)setHasShadow:(BOOL)hasShadow
 {
     if (hasShadow != _hasShadow) {
@@ -737,46 +784,6 @@
 - (PointDirection) getPointDirection
 {
   return _pointDirection;
-}
-
-- (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow
-{
-	CGRect frame = CGRectZero;
-	
-	if ((self = [self initWithFrame:frame])) {
-        
-        self.title = titleToShow;
-        self.message = messageToShow;
-        
-        self.isAccessibilityElement = YES;
-        self.accessibilityHint = messageToShow;
-	}
-	return self;
-}
-
-- (id)initWithMessage:(NSString *)messageToShow
-{
-    CGRect frame = CGRectZero;
-    
-    if ((self = [self initWithFrame:frame])) {
-        
-        self.message = messageToShow;
-        
-        self.isAccessibilityElement = YES;
-        self.accessibilityHint = messageToShow;
-    }
-    return self;
-}
-
-- (id)initWithCustomView:(UIView *)aView
-{
-	CGRect frame = CGRectZero;
-	
-	if ((self = [self initWithFrame:frame])) {
-		self.customView = aView;
-        [self addSubview:self.customView];
-	}
-	return self;
 }
 
 @end
