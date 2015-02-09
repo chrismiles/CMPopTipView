@@ -287,9 +287,9 @@
         size_t locationCount = 5;
         CGFloat locationList[] = {0.0, bubbleMiddle-0.03, bubbleMiddle, bubbleMiddle+0.03, 1.0};
         
-        CGFloat colourHL = 0.0;
+        CGFloat colorHL = 0.0;
         if (_highlight) {
-            colourHL = 0.25;
+            colorHL = 0.25;
         }
         
         CGFloat red;
@@ -312,11 +312,11 @@
         }
         CGFloat colorList[] = {
             //red, green, blue, alpha 
-            red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
-            red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
-            red*1.08+colourHL, green*1.08+colourHL, blue*1.08+colourHL, alpha,
-            red     +colourHL, green     +colourHL, blue     +colourHL, alpha,
-            red     +colourHL, green     +colourHL, blue     +colourHL, alpha
+            red*1.16+colorHL, green*1.16+colorHL, blue*1.16+colorHL, alpha,
+            red*1.16+colorHL, green*1.16+colorHL, blue*1.16+colorHL, alpha,
+            red*1.08+colorHL, green*1.08+colorHL, blue*1.08+colorHL, alpha,
+            red     +colorHL, green     +colorHL, blue     +colorHL, alpha,
+            red     +colorHL, green     +colorHL, blue     +colorHL, alpha
         };
         myColorSpace = CGColorSpaceCreateDeviceRGB();
         myGradient = CGGradientCreateWithColorComponents(myColorSpace, colorList, locationList, locationCount);
@@ -702,10 +702,10 @@
 	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
-- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal {
+- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInterval {
     NSDictionary * userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:animated] forKey:@"animated"];
     
-    self.autoDismissTimer = [NSTimer scheduledTimerWithTimeInterval:timeInvertal
+    self.autoDismissTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval
 															 target:self
 														   selector:@selector(autoDismissAnimatedDidFire:)
 														   userInfo:userInfo
