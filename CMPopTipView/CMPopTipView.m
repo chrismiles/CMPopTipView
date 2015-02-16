@@ -34,6 +34,10 @@
 	PointDirection			_pointDirection;
 	CGFloat					_pointerSize;
 	CGPoint					_targetPoint;
+    CGFloat                 _bubbleFrameWidth;
+    CGFloat                 _bubbleFrameHeight;
+    CGFloat                 _contentFrameYCoord;
+    CGFloat                 _contentFrameXCoord;
 }
 
 @property (nonatomic, strong, readwrite)	id	targetObject;
@@ -47,7 +51,7 @@
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
 	if (_pointDirection == PointDirectionUp) {
-		bubbleFrame = CGRectMake(_sidePadding, _targetPoint.y+_pointerSize, _bubbleSize.width, _bubbleSize.height);
+		bubbleFrame = CGRectMake(_sidePadding, _targetPoint.y+_pointerSize, _bubbleSize.width + _bubbleFrameWidth, _bubbleSize.height + _bubbleFrameHeight);
 	}
 	else {
 		bubbleFrame = CGRectMake(_sidePadding, _targetPoint.y-_pointerSize-_bubbleSize.height, _bubbleSize.width, _bubbleSize.height);
@@ -61,6 +65,10 @@
 									 bubbleFrame.origin.y + _cornerRadius,
 									 bubbleFrame.size.width - _cornerRadius*2,
 									 bubbleFrame.size.height - _cornerRadius*2);
+    
+    contentFrame.origin.x += _contentFrameXCoord;
+    contentFrame.origin.y += _contentFrameYCoord;
+    
 	return contentFrame;
 }
 
