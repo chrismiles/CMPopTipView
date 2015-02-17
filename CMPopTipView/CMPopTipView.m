@@ -34,10 +34,8 @@
 	PointDirection			_pointDirection;
 	CGFloat					_pointerSize;
 	CGPoint					_targetPoint;
-    CGFloat                 _bubbleFrameWidth;
-    CGFloat                 _bubbleFrameHeight;
-    CGFloat                 _contentFrameYCoord;
-    CGFloat                 _contentFrameXCoord;
+	CGFloat					_bubblePaddingX;
+	CGFloat					_bubblePaddingY;
 }
 
 @property (nonatomic, strong, readwrite)	id	targetObject;
@@ -51,7 +49,7 @@
 - (CGRect)bubbleFrame {
 	CGRect bubbleFrame;
 	if (_pointDirection == PointDirectionUp) {
-		bubbleFrame = CGRectMake(_sidePadding, _targetPoint.y+_pointerSize, _bubbleSize.width + _bubbleFrameWidth, _bubbleSize.height + _bubbleFrameHeight);
+		bubbleFrame = CGRectMake(_sidePadding, _targetPoint.y+_pointerSize, _bubbleSize.width, _bubbleSize.height);
 	}
 	else {
 		bubbleFrame = CGRectMake(_sidePadding, _targetPoint.y-_pointerSize-_bubbleSize.height, _bubbleSize.width, _bubbleSize.height);
@@ -61,14 +59,10 @@
 
 - (CGRect)contentFrame {
 	CGRect bubbleFrame = [self bubbleFrame];
-	CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
-									 bubbleFrame.origin.y + _cornerRadius,
-									 bubbleFrame.size.width - _cornerRadius*2,
-									 bubbleFrame.size.height - _cornerRadius*2);
-    
-    contentFrame.origin.x += _contentFrameXCoord;
-    contentFrame.origin.y += _contentFrameYCoord;
-    
+	CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius + _bubblePaddingX,
+									 bubbleFrame.origin.y + _cornerRadius + _bubblePaddingY,
+									 bubbleFrame.size.width - (_bubblePaddingX*2) - (_cornerRadius*2),
+									 bubbleFrame.size.height - (_bubblePaddingY*2) - (_cornerRadius*2));
 	return contentFrame;
 }
 
@@ -467,7 +461,7 @@
         textSize.height += titleSize.height;
     }
     
-	_bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
+	_bubbleSize = CGSizeMake(textSize.width + (_bubblePaddingX*2) + (_cornerRadius*2), textSize.height + (_bubblePaddingY*2) + (_cornerRadius*2));
 	
 	UIView *superview = containerView.superview;
 	if ([superview isKindOfClass:[UIWindow class]])
@@ -700,22 +694,22 @@
         // Initialization code
 		self.opaque = NO;
 
-		_topMargin = 2.0;
+		_topMargin = 0.0;
 		_pointerSize = 12.0;
-		_sidePadding = 2.0;
+		_sidePadding = 15.0;
         _borderWidth = 1.0;
 		
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
 		self.textAlignment = NSTextAlignmentCenter;
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
-        self.has3DStyle = YES;
+        self.has3DStyle = NO;
         self.borderColor = [UIColor blackColor];
-        self.hasShadow = YES;
+        self.hasShadow = NO;
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
         self.preferredPointDirection = PointDirectionAny;
-        self.hasGradientBackground = YES;
+        self.hasGradientBackground = NO;
         self.cornerRadius = 10.0;
     }
     return self;
