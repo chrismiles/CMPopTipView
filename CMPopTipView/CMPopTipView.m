@@ -607,6 +607,9 @@
     
 	_highlight = NO;
 	self.targetObject = nil;
+    
+    if ([self.delegate respondsToSelector:@selector(popTipViewDismissalAnimationDidEnd:)])
+        [self.delegate popTipViewDismissalAnimationDidEnd:self];
 }
 
 - (void)dismissAnimationDidStop:(__unused NSString *)animationID finished:(__unused NSNumber *)finished context:(__unused void *)context
@@ -649,8 +652,9 @@
 }
 
 - (void)notifyDelegatePopTipViewWasDismissedByUser {
-	__strong id<CMPopTipViewDelegate> delegate = self.delegate;
-	[delegate popTipViewWasDismissedByUser:self];
+    
+    if ([self.delegate respondsToSelector:@selector(popTipViewWasDismissedByUser:)])
+        [self.delegate popTipViewWasDismissedByUser:self];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
