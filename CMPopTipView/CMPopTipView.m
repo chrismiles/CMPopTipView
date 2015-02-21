@@ -322,6 +322,7 @@
 }
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
+    
     if (!self.targetObject) {
         self.targetObject = targetView;
     }
@@ -382,140 +383,146 @@
                                               options:NSStringDrawingUsesLineFragmentOrigin
                                            attributes:[self messageAttributes]
                                               context:nil].size;
+        textSize = CGSizeMake(ceilf(textSize.width), ceilf(textSize.height));
     }
+    
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
     }
+    
     if (self.title != nil) {
         
         CGSize titleSize = [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
                                                     options:NSStringDrawingUsesLineFragmentOrigin
                                                  attributes:[self titleAttributes]
                                                     context:nil].size;
+        titleSize = CGSizeMake(ceilf(textSize.width), ceilf(textSize.height));
         
         if (titleSize.width > textSize.width) textSize.width = titleSize.width;
         textSize.height += titleSize.height;
-        
-        _bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
-        
-        UIView *superview = containerView.superview;
-        if ([superview isKindOfClass:[UIWindow class]])
-            superview = containerView;
-        
-        CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:superview];
-        CGPoint containerRelativeOrigin = [superview convertPoint:containerView.frame.origin toView:superview];
-        
-        CGFloat pointerY;	// Y coordinate of pointer target (within containerView)
-        
-        
-        if (targetRelativeOrigin.y+targetView.bounds.size.height < containerRelativeOrigin.y) {
-            pointerY = 0.0;
-            _pointDirection = PointDirectionUp;
-        }
-        else if (targetRelativeOrigin.y > containerRelativeOrigin.y+containerView.bounds.size.height) {
-            pointerY = containerView.bounds.size.height;
-            _pointDirection = PointDirectionDown;
-        }
-        else {
-            _pointDirection = _preferredPointDirection;
-            CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:containerView];
-            CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
-            if (_pointDirection == PointDirectionAny) {
-                if (sizeBelow > targetOriginInContainer.y) {
-                    pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
-                    _pointDirection = PointDirectionUp;
-                }
-                else {
-                    pointerY = targetOriginInContainer.y;
-                    _pointDirection = PointDirectionDown;
-                }
+    }
+    
+    _bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
+    
+    UIView *superview = containerView.superview;
+    if ([superview isKindOfClass:[UIWindow class]])
+        superview = containerView;
+    
+    CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:superview];
+    CGPoint containerRelativeOrigin = [superview convertPoint:containerView.frame.origin toView:superview];
+    
+    CGFloat pointerY;	// Y coordinate of pointer target (within containerView)
+    
+    
+    if (targetRelativeOrigin.y+targetView.bounds.size.height < containerRelativeOrigin.y) {
+        pointerY = 0.0;
+        _pointDirection = PointDirectionUp;
+    }
+    else if (targetRelativeOrigin.y > containerRelativeOrigin.y+containerView.bounds.size.height) {
+        pointerY = containerView.bounds.size.height;
+        _pointDirection = PointDirectionDown;
+    }
+    else {
+        _pointDirection = _preferredPointDirection;
+        CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:containerView];
+        CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
+        if (_pointDirection == PointDirectionAny) {
+            
+            if (sizeBelow > targetOriginInContainer.y) {
+                pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
+                _pointDirection = PointDirectionUp;
             }
             else {
-                if (_pointDirection == PointDirectionDown) {
-                    pointerY = targetOriginInContainer.y;
-                }
-                else {
-                    pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
-                }
-            }
-        }
-        
-        CGFloat W = containerView.bounds.size.width;
-        
-        CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
-        CGFloat x_p = p.x;
-        CGFloat x_b = x_p - roundf(_bubbleSize.width/2);
-        if (x_b < _sidePadding) {
-            x_b = _sidePadding;
-        }
-        if (x_b + _bubbleSize.width + _sidePadding > W) {
-            x_b = W - _bubbleSize.width - _sidePadding;
-        }
-        if (x_p - _pointerSize < x_b + _cornerRadius) {
-            x_p = x_b + _cornerRadius + _pointerSize;
-        }
-        if (x_p + _pointerSize > x_b + _bubbleSize.width - _cornerRadius) {
-            x_p = x_b + _bubbleSize.width - _cornerRadius - _pointerSize;
-        }
-        
-        CGFloat fullHeight = _bubbleSize.height + _pointerSize + 10.0;
-        CGFloat y_b;
-        if (_pointDirection == PointDirectionUp) {
-            y_b = _topMargin + pointerY;
-            _targetPoint = CGPointMake(x_p-x_b, 0);
-        }
-        else {
-            y_b = pointerY - fullHeight;
-            _targetPoint = CGPointMake(x_p-x_b, fullHeight-2.0);
-        }
-        
-        CGRect finalFrame = CGRectMake(x_b-_sidePadding,
-                                       y_b,
-                                       _bubbleSize.width+_sidePadding*2,
-                                       fullHeight);
-        finalFrame = CGRectIntegral(finalFrame);
-        
-        
-        if (animated) {
-            if (self.animation == CMPopTipAnimationSlide) {
-                self.alpha = 0.0;
-                CGRect startFrame = finalFrame;
-                startFrame.origin.y += 10;
-                self.frame = startFrame;
-            }
-            else if (self.animation == CMPopTipAnimationPop) {
-                self.frame = finalFrame;
-                self.alpha = 0.5;
-                
-                // start a little smaller
-                self.transform = CGAffineTransformMakeScale(0.75f, 0.75f);
-                
-                // animate to a bigger size
-                [UIView beginAnimations:nil context:nil];
-                [UIView setAnimationDelegate:self];
-                [UIView setAnimationDidStopSelector:@selector(popAnimationDidStop:finished:context:)];
-                [UIView setAnimationDuration:0.15f];
-                self.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
-                self.alpha = 1.0;
-                [UIView commitAnimations];
-            }
-            
-            [self setNeedsDisplay];
-            
-            if (self.animation == CMPopTipAnimationSlide) {
-                [UIView beginAnimations:nil context:nil];
-                self.alpha = 1.0;
-                self.frame = finalFrame;
-                [UIView commitAnimations];
+                pointerY = targetOriginInContainer.y;
+                _pointDirection = PointDirectionDown;
             }
         }
         else {
-            // Not animated
-            [self setNeedsDisplay];
-            self.frame = finalFrame;
+            
+            if (_pointDirection == PointDirectionDown) {
+                pointerY = targetOriginInContainer.y;
+            }
+            else {
+                pointerY = targetOriginInContainer.y + targetView.bounds.size.height;
+            }
         }
     }
+    
+    CGFloat W = containerView.bounds.size.width;
+    
+    CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
+    CGFloat x_p = p.x;
+    CGFloat x_b = x_p - roundf(_bubbleSize.width/2);
+    if (x_b < _sidePadding) {
+        x_b = _sidePadding;
+    }
+    if (x_b + _bubbleSize.width + _sidePadding > W) {
+        x_b = W - _bubbleSize.width - _sidePadding;
+    }
+    if (x_p - _pointerSize < x_b + _cornerRadius) {
+        x_p = x_b + _cornerRadius + _pointerSize;
+    }
+    if (x_p + _pointerSize > x_b + _bubbleSize.width - _cornerRadius) {
+        x_p = x_b + _bubbleSize.width - _cornerRadius - _pointerSize;
+    }
+    
+    CGFloat fullHeight = _bubbleSize.height + _pointerSize + 10.0;
+    CGFloat y_b;
+    if (_pointDirection == PointDirectionUp) {
+        y_b = _topMargin + pointerY;
+        _targetPoint = CGPointMake(x_p-x_b, 0);
+    }
+    else {
+        y_b = pointerY - fullHeight;
+        _targetPoint = CGPointMake(x_p-x_b, fullHeight-2.0);
+    }
+    
+    CGRect finalFrame = CGRectMake(x_b-_sidePadding,
+                                   y_b,
+                                   _bubbleSize.width+_sidePadding*2,
+                                   fullHeight);
+    finalFrame = CGRectIntegral(finalFrame);
+    
+    if (animated) {
+        if (self.animation == CMPopTipAnimationSlide) {
+            self.alpha = 0.0;
+            CGRect startFrame = finalFrame;
+            startFrame.origin.y += 10;
+            self.frame = startFrame;
+        }
+        else if (self.animation == CMPopTipAnimationPop) {
+            self.frame = finalFrame;
+            self.alpha = 0.5;
+            
+            // start a little smaller
+            self.transform = CGAffineTransformMakeScale(0.75f, 0.75f);
+            
+            // animate to a bigger size
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDelegate:self];
+            [UIView setAnimationDidStopSelector:@selector(popAnimationDidStop:finished:context:)];
+            [UIView setAnimationDuration:0.15f];
+            self.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
+            self.alpha = 1.0;
+            [UIView commitAnimations];
+        }
+        
+        [self setNeedsDisplay];
+        
+        if (self.animation == CMPopTipAnimationSlide) {
+            [UIView beginAnimations:nil context:nil];
+            self.alpha = 1.0;
+            self.frame = finalFrame;
+            [UIView commitAnimations];
+        }
+    }
+    else {
+        // Not animated
+        [self setNeedsDisplay];
+        self.frame = finalFrame;
+    }
 }
+
 
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
     UIView *targetView = (UIView *)[barButtonItem performSelector:@selector(view)];
