@@ -271,20 +271,32 @@
         }
         else {
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+//#pragma clang diagnostic push
+//#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
-            [self.title drawInRect:titleFrame
-                          withFont:self.titleFont
-                     lineBreakMode:NSLineBreakByWordWrapping
-                         alignment:self.titleAlignment];
+//            [self.title drawInRect:titleFrame
+//                          withFont:self.titleFont
+//                     lineBreakMode:NSLineBreakByWordWrapping
+//                         alignment:self.titleAlignment];
+            
+            [self.title drawInRect:titleFrame withAttributes:nil];
 
-#pragma clang diagnostic pop
+//#pragma clang diagnostic pop
 
         }
     }
 	
 	if (self.message) {
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        [paragraphStyle setAlignment:self.textAlignment];
+        [paragraphStyle setLineBreakMode:NSLineBreakByWordWrapping];
+        
+        NSDictionary *messageAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+                                           self.textFont, NSFontAttributeName,
+                                           self.textColor, NSForegroundColorAttributeName,
+                                           paragraphStyle, NSParagraphStyleAttributeName,nil];
+
 		[self.textColor set];
 		CGRect textFrame = [self contentFrame];
         
@@ -313,35 +325,17 @@
                                                  lineBreakMode:NSLineBreakByWordWrapping].height;
 
 #pragma clang diagnostic pop
-
+                
             }
         }
         
-        NSMutableParagraphStyle *textParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-        textParagraphStyle.alignment = self.textAlignment;
-        textParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        
         if ([self.message respondsToSelector:@selector(drawWithRect:options:attributes:context:)]) {
-            [self.message drawWithRect:textFrame
-                               options:NSStringDrawingUsesLineFragmentOrigin attributes:@{
-                                                                                          NSFontAttributeName: self.textFont,
-                                                                                          NSParagraphStyleAttributeName: textParagraphStyle,
-                                                                                          NSForegroundColorAttributeName: self.textColor
-                                                                                          }
-                               context:nil];
+            
+            [self.message drawInRect:textFrame withAttributes:messageAttributes];
         }
         else {
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-
-            [self.message drawInRect:textFrame
-                            withFont:self.textFont
-                       lineBreakMode:NSLineBreakByWordWrapping
-                           alignment:self.textAlignment];
-
-#pragma clang diagnostic pop
-
+            
+            [self.message drawInRect:textFrame withAttributes:messageAttributes];
         }
     }
 }
