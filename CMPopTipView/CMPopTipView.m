@@ -56,6 +56,7 @@
 }
 
 - (CGRect)contentFrame {
+    
     CGRect bubbleFrame = [self bubbleFrame];
     CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
                                      bubbleFrame.origin.y + _cornerRadius,
@@ -327,14 +328,10 @@
         self.targetObject = targetView;
     }
     
-    // If we want to dismiss the bubble when the user taps anywhere, we need to insert
-    // an invisible button over the background.
     if ( self.dismissTapAnywhere ) {
-        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
-        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
-        self.dismissTarget.frame = containerView.bounds;
-        [containerView addSubview:self.dismissTarget];
+        
+        UITapGestureRecognizer *tr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissTapAnywhereFired:)];
+        [containerView addGestureRecognizer:tr];
     }
     
     [containerView addSubview:self];
@@ -611,8 +608,10 @@
     [self dismissByUser];
 }
 
-- (void)dismissTapAnywhereFired:(__unused UIButton *)button
+- (void)dismissTapAnywhereFired:(UIGestureRecognizer *)gestureRecognizer
 {
+    UIView *view = gestureRecognizer.view;
+    [view removeGestureRecognizer:gestureRecognizer];
     [self dismissByUser];
 }
 
@@ -658,6 +657,7 @@
         self.preferredPointDirection = PointDirectionAny;
         self.hasGradientBackground = YES;
         self.cornerRadius = 10.0;
+        self.edgeInsets = UIEdgeInsetsZero;
     }
     return self;
 }
