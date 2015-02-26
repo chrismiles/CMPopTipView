@@ -254,7 +254,7 @@
 	// Draw title and text
     if (self.title) {
         [self.titleColor set];
-        CGRect titleFrame = [self contentFrame];
+        CGRect titleFrame = CGRectIntegral([self contentFrame]);
         
         if ([self.title respondsToSelector:@selector(drawWithRect:options:attributes:context:)]) {
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -288,7 +288,7 @@
 	
 	if (self.message) {
 		[self.textColor set];
-		CGRect textFrame = [self contentFrame];
+		CGRect textFrame = CGRectIntegral([self contentFrame]);
         
         // Move down to make room for title
         if (self.title) {
