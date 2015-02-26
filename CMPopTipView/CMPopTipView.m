@@ -34,6 +34,8 @@
 	PointDirection			_pointDirection;
 	CGFloat					_pointerSize;
 	CGPoint					_targetPoint;
+	CGFloat					_bubblePaddingX;
+	CGFloat					_bubblePaddingY;
 }
 
 @property (nonatomic, strong, readwrite)	id	targetObject;
@@ -57,10 +59,10 @@
 
 - (CGRect)contentFrame {
 	CGRect bubbleFrame = [self bubbleFrame];
-	CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius,
-									 bubbleFrame.origin.y + _cornerRadius,
-									 bubbleFrame.size.width - _cornerRadius*2,
-									 bubbleFrame.size.height - _cornerRadius*2);
+	CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius + _bubblePaddingX,
+									 bubbleFrame.origin.y + _cornerRadius + _bubblePaddingY,
+									 bubbleFrame.size.width - (_bubblePaddingX*2) - (_cornerRadius*2),
+									 bubbleFrame.size.height - (_bubblePaddingY*2) - (_cornerRadius*2));
 	return contentFrame;
 }
 
@@ -459,7 +461,7 @@
         textSize.height += titleSize.height;
     }
     
-	_bubbleSize = CGSizeMake(textSize.width + _cornerRadius*2, textSize.height + _cornerRadius*2);
+	_bubbleSize = CGSizeMake(textSize.width + (_bubblePaddingX*2) + (_cornerRadius*2), textSize.height + (_bubblePaddingY*2) + (_cornerRadius*2));
 	
 	UIView *superview = containerView.superview;
 	if ([superview isKindOfClass:[UIWindow class]])
