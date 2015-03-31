@@ -37,10 +37,12 @@ URLs
  * http://chrismiles-tech.blogspot.com/2011/05/cmpoptipview-new-animation-option.html
 
 Used in apps:
+
  * River Level http://itunes.apple.com/au/app/river-level/id356158594?mt=8
  * The Happiest Hour http://itunes.apple.com/au/app/the-happiest-hour/id414453120?mt=8
  * I-Sea http://www.i-sea.no/
  * Petunia https://itunes.apple.com/us/app/petunia/id716806296?mt=8
+ * Sitecity https://itunes.apple.com/us/app/sitecity/id925455900
  * *Many many more apps*
  * *Your app here ...?*
 
@@ -105,6 +107,38 @@ Example 2 - pointing at a UIButton, with custom color scheme::
     // User can tap CMPopTipView to dismiss it
     self.roundRectButtonPopTipView = nil;
   }
+
+Avalaible Options
+-----
+
+* **id < CMPopTipViewDelegate >**	delegate
+* **UIColor** 					*backgroundColor
+* **BOOL** 						disableTapToDismiss
+* **BOOL** 						dismissTapAnywhere
+* **NSString**					*title
+* **NSString**					*message
+* **UIView**	                *customView
+* **id**							targetObject
+* **UIColor**					*titleColor
+* **UIFont**						*titleFont
+* **UIColor**					*textColor
+* **UIFont**						*textFont
+* **NSTextAlignment**			titleAlignment
+* **NSTextAlignment**			textAlignment
+* **BOOL**                    has3DStyle
+* **UIColor**					*borderColor
+* **CGFloat**                cornerRadius
+* **CGFloat**					borderWidth
+* **BOOL**                    hasShadow
+* **CMPopTipAnimation**       animation
+* **CGFloat**                 maxWidth
+* **PointDirection**          preferredPointDirection
+* **BOOL**                    hasGradientBackground
+* **CGFloat**                 sidePadding
+* **CGFloat**                 topMargin
+* **CGFloat**                 pointerSize
+* **CGFloat**                 bubblePaddingX
+* **CGFloat**                 bubblePaddingY
 
 
 ARC
