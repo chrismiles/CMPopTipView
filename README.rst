@@ -108,7 +108,7 @@ Example 2 - pointing at a UIButton, with custom color scheme::
     self.roundRectButtonPopTipView = nil;
   }
 
-Avalaible Options
+Available Options
 -----
 
 * **id < CMPopTipViewDelegate >**	delegate
