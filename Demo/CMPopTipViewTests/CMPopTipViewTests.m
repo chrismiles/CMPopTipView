@@ -10,12 +10,37 @@
 #import <XCTest/XCTest.h>
 #import "CMPopTipView.h"
 
+@interface UIView (RenderToImage)
+- (UIImage *)imageByRenderingView;
+@end
+
+@implementation UIView (RenderViewToImage)
+- (UIImage *)imageByRenderingView {
+    UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [[UIScreen mainScreen] scale]);
+    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:YES];
+    UIImage * snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return snapshotImage;
+}
+@end
+
 @interface CMPopTipViewTests : XCTestCase {
     CMPopTipView *popTipView;
     
     NSString *sampleTitle;
     NSString *sampleMessage;
     UIView *sampleView;
+    
+    // Options to try
+    
+    //popTipView.disableTapToDismiss = YES;
+    //popTipView.preferredPointDirection = PointDirectionUp;
+    //popTipView.hasGradientBackground = NO;
+    //popTipView.cornerRadius = 2.0;
+    //popTipView.sidePadding = 30.0f;
+    //popTipView.topMargin = 20.0f;
+    //popTipView.pointerSize = 50.0f;
+    //popTipView.hasShadow = NO;
 }
 
 @end
@@ -32,11 +57,17 @@
 }
 
 - (void)tearDown {
+    sampleTitle = nil;
+    sampleMessage = nil;
+    sampleView = nil;
     popTipView = nil;
+    
     [super tearDown];
 }
 
-- (void)testInitializerShouldHaveTitleAndMessage {
+#pragma mark - Initializer tests
+
+- (void)testPopTipViewInitializerShouldHaveTitleAndMessage {
     popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
     
     XCTAssertNotNil(popTipView, @"Pop tip view should not be nil");
@@ -44,16 +75,60 @@
     XCTAssertEqualObjects(sampleMessage, popTipView.message, @"Pop tip view should have correct message");
 }
 
-- (void)testInitializerShouldHaveMessage {
+- (void)testPopTipViewInitializerShouldHaveMessage {
     popTipView = [[CMPopTipView alloc] initWithMessage:sampleMessage];
     
     XCTAssertEqualObjects(sampleMessage, popTipView.message, @"Pop tip view should have correct message");
 }
 
-- (void)testInitilizerShouldHaveCustomView {
+- (void)testPopTipViewInitilizerShouldHaveCustomView {
     popTipView = [[CMPopTipView alloc] initWithCustomView:sampleView];
     
     XCTAssertEqual(sampleView, popTipView.customView, @"Pop tip view should have correct custom view");
 }
+
+#pragma mark - Presenter tests
+
+- (void)testPresentPopTipViewShouldAppearInsideContainerView {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    [containerView addSubview:targetView];
+    
+    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    
+    XCTAssertTrue([containerView.subviews containsObject:popTipView], @"Pop tip should be a subview of container view");
+    XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
+}
+
+- (void)testPresentPopTipViewShouldAppearInsideContainerViewWithoutTargetView {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    
+    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    [popTipView presentPointingAtView:nil inView:containerView animated:NO];
+    
+    XCTAssertTrue([containerView.subviews containsObject:popTipView], @"Pop tip should be a subview of container view");
+    XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
+}
+
+- (void)testPresentPopTipViewShouldAppearPointingToBarButton {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:containerView.bounds];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:sampleTitle style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    toolbar.items = @[button];
+    [containerView addSubview:toolbar];
+    
+    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    [popTipView presentPointingAtBarButtonItem:button animated:NO];
+    
+    XCTAssertTrue([containerView.subviews containsObject:popTipView], @"Pop tip should be a subview of container view");
+    XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
+}
+
+#pragma mark - Delegate tests
+
+
+
 
 @end
