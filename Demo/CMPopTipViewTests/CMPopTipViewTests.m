@@ -30,17 +30,6 @@
     NSString *sampleTitle;
     NSString *sampleMessage;
     UIView *sampleView;
-    
-    // Options to try
-    
-    //popTipView.disableTapToDismiss = YES;
-    //popTipView.preferredPointDirection = PointDirectionUp;
-    //popTipView.hasGradientBackground = NO;
-    //popTipView.cornerRadius = 2.0;
-    //popTipView.sidePadding = 30.0f;
-    //popTipView.topMargin = 20.0f;
-    //popTipView.pointerSize = 50.0f;
-    //popTipView.hasShadow = NO;
 }
 
 @end
