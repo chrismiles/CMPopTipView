@@ -74,10 +74,10 @@ Example 1 - point at a UIBarButtonItem in a nav bar::
   CMPopTipView *navBarLeftButtonPopTipView = [[[CMPopTipView alloc] initWithMessage:@"A Message"] autorelease];
   navBarLeftButtonPopTipView.delegate = self;
   [navBarLeftButtonPopTipView presentPointingAtBarButtonItem:self.navigationItem.leftBarButtonItem animated:YES];
-  
+
   // Dismiss a CMPopTipView
   [navBarLeftButtonPopTipView dismissAnimated:YES];
-  
+
   // CMPopTipViewDelegate method
   - (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
     // Any cleanup code, such as releasing a CMPopTipView instance variable, if necessary
