@@ -1,6 +1,8 @@
 CMPopTipView
 ============
 
+[![Build Status](https://travis-ci.org/ixnixnixn/CMPopTipView.svg?branch=master)](https://travis-ci.org/ixnixnixn/CMPopTipView)
+
 An iOS UIView subclass that displays a rounded rect "bubble", containing
 a text message, pointing at a specified button or view.
 
