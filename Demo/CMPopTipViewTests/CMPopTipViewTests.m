@@ -115,6 +115,30 @@
     XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
 }
 
+#pragma mark - Point direction tests 
+
+- (void)testPopTipViewShouldPointUpIfPresentedFromAbove {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    [containerView addSubview:targetView];
+    
+    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    
+    XCTAssertEqual(PointDirectionUp, [popTipView getPointDirection], @"Pop tip should point upwards");
+}
+
+- (void)testPopTipViewShouldPointDownIfPresentedFromBelow {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 90, 10, 10)];
+    [containerView addSubview:targetView];
+    
+    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    
+    XCTAssertEqual(PointDirectionDown, [popTipView getPointDirection], @"Pop tip should point downwards");
+}
+
 #pragma mark - Delegate tests
 
 
