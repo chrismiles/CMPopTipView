@@ -12,15 +12,23 @@
 
 @interface CMPopTipViewTests : XCTestCase {
     CMPopTipView *popTipView;
+    
+    NSString *sampleTitle;
+    NSString *sampleMessage;
+    UIView *sampleView;
 }
 
 @end
+
 
 @implementation CMPopTipViewTests
 
 - (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    
+    sampleTitle = @"title";
+    sampleMessage = @"message";
+    sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
 }
 
 - (void)tearDown {
@@ -28,5 +36,24 @@
     [super tearDown];
 }
 
+- (void)testInitializerShouldHaveTitleAndMessage {
+    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    
+    XCTAssertNotNil(popTipView, @"Pop tip view should not be nil");
+    XCTAssertEqualObjects(sampleTitle, popTipView.title, @"Pop tip view should have correct title");
+    XCTAssertEqualObjects(sampleMessage, popTipView.message, @"Pop tip view should have correct message");
+}
+
+- (void)testInitializerShouldHaveMessage {
+    popTipView = [[CMPopTipView alloc] initWithMessage:sampleMessage];
+    
+    XCTAssertEqualObjects(sampleMessage, popTipView.message, @"Pop tip view should have correct message");
+}
+
+- (void)testInitilizerShouldHaveCustomView {
+    popTipView = [[CMPopTipView alloc] initWithCustomView:sampleView];
+    
+    XCTAssertEqual(sampleView, popTipView.customView, @"Pop tip view should have correct custom view");
+}
 
 @end
