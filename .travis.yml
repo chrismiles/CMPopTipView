@@ -1,8 +1,6 @@
 osx_image: xcode61
 language: objective-c
 
-before_install:
-  - brew update
-  - brew update xctool
+before_install: brew update
 
 script: xctool -workspace CMPopTipView.xcworkspace -scheme CMPopTipViewTests -sdk iphonesimulator build test
