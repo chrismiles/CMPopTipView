@@ -10,20 +10,6 @@
 #import <XCTest/XCTest.h>
 #import "CMPopTipView.h"
 
-@interface UIView (RenderToImage)
-- (UIImage *)imageByRenderingView;
-@end
-
-@implementation UIView (RenderViewToImage)
-- (UIImage *)imageByRenderingView {
-    UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, [[UIScreen mainScreen] scale]);
-    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:YES];
-    UIImage * snapshotImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return snapshotImage;
-}
-@end
-
 @interface CMPopTipViewTests : XCTestCase {
     CMPopTipView *popTipView;
     
@@ -115,6 +101,18 @@
     XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
 }
 
+- (void)testPresentPopTipViewShouldRemovedFromContainerView {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    [containerView addSubview:targetView];
+    
+    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    [popTipView dismissAnimated:NO];
+    
+    XCTAssertFalse([containerView.subviews containsObject:popTipView], @"Pop tip should be removed from container view");
+}
+
 #pragma mark - Point direction tests 
 
 - (void)testPopTipViewShouldPointUpIfPresentedFromAbove {
@@ -140,7 +138,6 @@
 }
 
 #pragma mark - Delegate tests
-
 
 
 
