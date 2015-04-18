@@ -1,7 +1,7 @@
 CMPopTipView
 ============
 
-[![Build Status](https://travis-ci.org/ixnixnixn/CMPopTipView.svg?branch=master)](https://travis-ci.org/ixnixnixn/CMPopTipView)
+[![Build Status](https://travis-ci.org/chrismiles/CMPopTipView.svg?branch=master)](https://travis-ci.org/chrismiles/CMPopTipView)
 
 An iOS UIView subclass that displays a rounded rect "bubble", containing
 a text message, pointing at a specified button or view.
@@ -68,7 +68,7 @@ Usage
 
 Example 1 - point at a UIBarButtonItem in a nav bar:
 
-```
+```objc
 // Present a CMPopTipView pointing at a UIBarButtonItem in the nav bar
 CMPopTipView *navBarLeftButtonPopTipView = [[CMPopTipView alloc] initWithMessage:@"A Message"];
 navBarLeftButtonPopTipView.delegate = self;
@@ -86,7 +86,7 @@ navBarLeftButtonPopTipView.delegate = self;
 
 Example 2 - pointing at a UIButton, with custom color scheme::
 
-```
+```objc
 - (IBAction)buttonAction:(id)sender {
     // Toggle popTipView when a standard UIButton is pressed
     if (nil == self.roundRectButtonPopTipView) {
