@@ -3,6 +3,6 @@ language: objective-c
 
 before_install:
   - brew update
-  - brew install xctool
+  - brew update xctool
 
 script: xctool -workspace CMPopTipView.xcworkspace -scheme CMPopTipViewTests -sdk iphonesimulator build test
