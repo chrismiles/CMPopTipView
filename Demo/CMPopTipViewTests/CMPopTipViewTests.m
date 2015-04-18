@@ -10,12 +10,18 @@
 #import <XCTest/XCTest.h>
 #import "CMPopTipView.h"
 
+@interface CMPopTipView (Testing)
+- (void)dismissByUser;
+@end
+
 @interface CMPopTipViewTests : XCTestCase {
-    CMPopTipView *popTipView;
+    CMPopTipView *_popTipView;
     
-    NSString *sampleTitle;
-    NSString *sampleMessage;
-    UIView *sampleView;
+    NSString *_sampleTitle;
+    NSString *_sampleMessage;
+    UIView *_sampleView;
+    
+    BOOL _isDelegateCalled;
 }
 
 @end
@@ -26,16 +32,17 @@
 - (void)setUp {
     [super setUp];
     
-    sampleTitle = @"title";
-    sampleMessage = @"message";
-    sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    _sampleTitle = @"title";
+    _sampleMessage = @"message";
+    _sampleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    _isDelegateCalled = NO;
 }
 
 - (void)tearDown {
-    sampleTitle = nil;
-    sampleMessage = nil;
-    sampleView = nil;
-    popTipView = nil;
+    _sampleTitle = nil;
+    _sampleMessage = nil;
+    _sampleView = nil;
+    _popTipView = nil;
     
     [super tearDown];
 }
@@ -43,23 +50,23 @@
 #pragma mark - Initializer tests
 
 - (void)testPopTipViewInitializerShouldHaveTitleAndMessage {
-    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
     
-    XCTAssertNotNil(popTipView, @"Pop tip view should not be nil");
-    XCTAssertEqualObjects(sampleTitle, popTipView.title, @"Pop tip view should have correct title");
-    XCTAssertEqualObjects(sampleMessage, popTipView.message, @"Pop tip view should have correct message");
+    XCTAssertNotNil(_popTipView, @"Pop tip view should not be nil");
+    XCTAssertEqualObjects(_sampleTitle, _popTipView.title, @"Pop tip view should have correct title");
+    XCTAssertEqualObjects(_sampleMessage, _popTipView.message, @"Pop tip view should have correct message");
 }
 
 - (void)testPopTipViewInitializerShouldHaveMessage {
-    popTipView = [[CMPopTipView alloc] initWithMessage:sampleMessage];
+    _popTipView = [[CMPopTipView alloc] initWithMessage:_sampleMessage];
     
-    XCTAssertEqualObjects(sampleMessage, popTipView.message, @"Pop tip view should have correct message");
+    XCTAssertEqualObjects(_sampleMessage, _popTipView.message, @"Pop tip view should have correct message");
 }
 
 - (void)testPopTipViewInitilizerShouldHaveCustomView {
-    popTipView = [[CMPopTipView alloc] initWithCustomView:sampleView];
+    _popTipView = [[CMPopTipView alloc] initWithCustomView:_sampleView];
     
-    XCTAssertEqual(sampleView, popTipView.customView, @"Pop tip view should have correct custom view");
+    XCTAssertEqual(_sampleView, _popTipView.customView, @"Pop tip view should have correct custom view");
 }
 
 #pragma mark - Presenter tests
@@ -69,36 +76,36 @@
     UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     [containerView addSubview:targetView];
     
-    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
-    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
+    [_popTipView presentPointingAtView:targetView inView:containerView animated:NO];
     
-    XCTAssertTrue([containerView.subviews containsObject:popTipView], @"Pop tip should be a subview of container view");
-    XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
+    XCTAssertTrue([containerView.subviews containsObject:_popTipView], @"Pop tip should be a subview of container view");
+    XCTAssertFalse(_popTipView.hidden, @"Pop tip should be visible");
 }
 
 - (void)testPresentPopTipViewShouldAppearInsideContainerViewWithoutTargetView {
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     
-    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
-    [popTipView presentPointingAtView:nil inView:containerView animated:NO];
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
+    [_popTipView presentPointingAtView:nil inView:containerView animated:NO];
     
-    XCTAssertTrue([containerView.subviews containsObject:popTipView], @"Pop tip should be a subview of container view");
-    XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
+    XCTAssertTrue([containerView.subviews containsObject:_popTipView], @"Pop tip should be a subview of container view");
+    XCTAssertFalse(_popTipView.hidden, @"Pop tip should be visible");
 }
 
 - (void)testPresentPopTipViewShouldAppearPointingToBarButton {
     UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:containerView.bounds];
-    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:sampleTitle style:UIBarButtonItemStylePlain target:nil action:nil];
+    UIBarButtonItem *button = [[UIBarButtonItem alloc] initWithTitle:_sampleTitle style:UIBarButtonItemStylePlain target:nil action:nil];
     
     toolbar.items = @[button];
     [containerView addSubview:toolbar];
     
-    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
-    [popTipView presentPointingAtBarButtonItem:button animated:NO];
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
+    [_popTipView presentPointingAtBarButtonItem:button animated:NO];
     
-    XCTAssertTrue([containerView.subviews containsObject:popTipView], @"Pop tip should be a subview of container view");
-    XCTAssertFalse(popTipView.hidden, @"Pop tip should be visible");
+    XCTAssertTrue([containerView.subviews containsObject:_popTipView], @"Pop tip should be a subview of container view");
+    XCTAssertFalse(_popTipView.hidden, @"Pop tip should be visible");
 }
 
 - (void)testPresentPopTipViewShouldRemovedFromContainerView {
@@ -106,11 +113,11 @@
     UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     [containerView addSubview:targetView];
     
-    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
-    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
-    [popTipView dismissAnimated:NO];
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
+    [_popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    [_popTipView dismissAnimated:NO];
     
-    XCTAssertFalse([containerView.subviews containsObject:popTipView], @"Pop tip should be removed from container view");
+    XCTAssertFalse([containerView.subviews containsObject:_popTipView], @"Pop tip should be removed from container view");
 }
 
 #pragma mark - Point direction tests 
@@ -120,10 +127,10 @@
     UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     [containerView addSubview:targetView];
     
-    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
-    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
+    [_popTipView presentPointingAtView:targetView inView:containerView animated:NO];
     
-    XCTAssertEqual(PointDirectionUp, [popTipView getPointDirection], @"Pop tip should point upwards");
+    XCTAssertEqual(PointDirectionUp, [_popTipView getPointDirection], @"Pop tip should point upwards");
 }
 
 - (void)testPopTipViewShouldPointDownIfPresentedFromBelow {
@@ -131,14 +138,30 @@
     UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 90, 10, 10)];
     [containerView addSubview:targetView];
     
-    popTipView = [[CMPopTipView alloc] initWithTitle:sampleTitle message:sampleMessage];
-    [popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
+    [_popTipView presentPointingAtView:targetView inView:containerView animated:NO];
     
-    XCTAssertEqual(PointDirectionDown, [popTipView getPointDirection], @"Pop tip should point downwards");
+    XCTAssertEqual(PointDirectionDown, [_popTipView getPointDirection], @"Pop tip should point downwards");
 }
 
 #pragma mark - Delegate tests
 
+- (void)popTipViewWasDismissedByUser:(CMPopTipView *)popTipView {
+    NSLog(@"%@", popTipView);
+    _isDelegateCalled = YES;
+}
 
+- (void)testPopTipViewDelegateIsCalled {
+    UIView *containerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    UIView *targetView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
+    [containerView addSubview:targetView];
+    
+    _popTipView = [[CMPopTipView alloc] initWithTitle:_sampleTitle message:_sampleMessage];
+    _popTipView.delegate = (id<CMPopTipViewDelegate>)self;
+    [_popTipView presentPointingAtView:targetView inView:containerView animated:NO];
+    [_popTipView dismissByUser];
+    
+    XCTAssertTrue(_isDelegateCalled, @"Pop tip's delegate should get called");
+}
 
 @end
