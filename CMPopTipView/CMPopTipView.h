@@ -109,6 +109,7 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, weak)				id<CMPopTipViewDelegate>	delegate;
 @property (nonatomic, assign)			BOOL					disableTapToDismiss;
 @property (nonatomic, assign)			BOOL					dismissTapAnywhere;
+@property (nonatomic, assign)			BOOL                    showOverlay;
 @property (nonatomic, strong)			NSString				*title;
 @property (nonatomic, strong)			NSString				*message;
 @property (nonatomic, strong)           UIView	                *customView;

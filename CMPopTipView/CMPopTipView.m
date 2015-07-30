@@ -41,6 +41,7 @@
 @property (nonatomic, strong, readwrite)	id	targetObject;
 @property (nonatomic, strong) NSTimer *autoDismissTimer;
 @property (nonatomic, strong) UIButton *dismissTarget;
+@property (nonatomic, strong) UIView *overlayView;
 @end
 
 
@@ -362,6 +363,15 @@
         self.dismissTarget.frame = containerView.bounds;
         [containerView addSubview:self.dismissTarget];
     }
+    
+    if ( self.showOverlay ) {
+        self.overlayView = [[UIView alloc] init];
+        self.overlayView.backgroundColor = [UIColor darkGrayColor];
+        self.overlayView.alpha = 0.0;
+        self.overlayView.frame = containerView.bounds;
+        [containerView addSubview:self.overlayView];
+        [containerView bringSubviewToFront:self.dismissTarget];
+    }
 	
 	[containerView addSubview:self];
     
@@ -562,6 +572,7 @@
             [UIView setAnimationDuration:0.15f];
             self.transform = CGAffineTransformMakeScale(1.1f, 1.1f);
             self.alpha = 1.0;
+            self.overlayView.alpha = 0.5;
             [UIView commitAnimations];
         }
 		
@@ -570,6 +581,7 @@
 		if (self.animation == CMPopTipAnimationSlide) {
 			[UIView beginAnimations:nil context:nil];
 			self.alpha = 1.0;
+            self.overlayView.alpha = 0.5;
 			self.frame = finalFrame;
 			[UIView commitAnimations];
 		}
@@ -604,6 +616,11 @@
         [self.dismissTarget removeFromSuperview];
 		self.dismissTarget = nil;
     }
+    
+    if (self.overlayView) {
+        [self.overlayView removeFromSuperview];
+        self.overlayView = nil;
+    }
 	
 	[self removeFromSuperview];
     
@@ -624,6 +641,7 @@
 		
 		[UIView beginAnimations:nil context:nil];
 		self.alpha = 0.0;
+        self.overlayView.alpha = 0.0;
 		self.frame = frame;
 		[UIView setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(dismissAnimationDidStop:finished:context:)];
@@ -708,6 +726,7 @@
         self.hasShadow = YES;
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
+        self.showOverlay = NO;
         self.preferredPointDirection = PointDirectionAny;
         self.hasGradientBackground = YES;
         self.cornerRadius = 10.0;
