@@ -67,6 +67,7 @@
 }
 
 - (void)layoutSubviews {
+    [super layoutSubviews];
 	if (self.customView) {
 		
 		CGRect contentFrame = [self contentFrame];
