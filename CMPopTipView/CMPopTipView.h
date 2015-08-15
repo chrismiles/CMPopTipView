@@ -32,7 +32,7 @@
 			designated view or button.
  
 	A UIView subclass drawn using core graphics. Pops up (optionally animated)
-	a speech bubble-like view on screen, a rounded rectangle with a gradiant
+	a speech bubble-like view on screen, a rounded rectangle with a gradient
 	fill containing a specified text message, drawn with a pointer dynamically
 	positioned to point at the center of the designated button or view.
  
@@ -142,7 +142,7 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated;
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated;
 - (void)dismissAnimated:(BOOL)animated;
-- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal;
+- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInterval;
 - (PointDirection) getPointDirection;
 
 @end
