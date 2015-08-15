@@ -73,6 +73,8 @@
 		CGRect contentFrame = [self contentFrame];
         [self.customView setFrame:contentFrame];
     }
+    
+    [super layoutSubviews];
 }
 
 - (void)drawRect:(__unused CGRect)rect
