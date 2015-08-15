@@ -641,10 +641,10 @@
 	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
-- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInvertal {
+- (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInterval {
     NSDictionary * userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:animated] forKey:@"animated"];
     
-    self.autoDismissTimer = [NSTimer scheduledTimerWithTimeInterval:timeInvertal
+    self.autoDismissTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval
 															 target:self
 														   selector:@selector(autoDismissAnimatedDidFire:)
 														   userInfo:userInfo
