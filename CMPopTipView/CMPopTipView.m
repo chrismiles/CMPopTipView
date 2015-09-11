@@ -644,6 +644,8 @@
 - (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInterval {
     NSDictionary * userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:animated] forKey:@"animated"];
     
+    [self.autoDismissTimer invalidate]; 
+    self.autoDismissTimer = nil;    
     self.autoDismissTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval
 															 target:self
 														   selector:@selector(autoDismissAnimatedDidFire:)
