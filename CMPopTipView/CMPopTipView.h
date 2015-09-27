@@ -135,7 +135,7 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, assign)           CGFloat                 bubblePaddingY;
 
 /**
- Dismiss along with user interaction if YES. For example, users can scroll down a table view when a tip view is shown. The tip view dismiss when he or she touches down and user interaction continues.
+ Dismiss along with user interaction if YES. For example, users can scroll down a table view when a tip view is shown. The tip view dismiss when he or she touches down and user interaction continues. Default is NO.
  @note Make sure `dismissTapAnywhere` is NO.
  */
 @property (nonatomic, assign)           BOOL                    dismissAlongWithUserInteraction;
