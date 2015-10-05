@@ -124,6 +124,10 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, assign)           CGFloat                 cornerRadius;
 @property (nonatomic, assign)			CGFloat					borderWidth;
 @property (nonatomic, assign)           BOOL                    hasShadow;
+@property (nonatomic, assign)           CGSize                  shadowOffset;
+@property (nonatomic, assign)			CGFloat					shadowRadius;
+@property (nonatomic, assign)			CGFloat					shadowOpacity;
+@property (nonatomic, strong)			UIColor					*shadowColor;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
 @property (nonatomic, assign)           CGFloat                 maxWidth;
 @property (nonatomic, assign)           PointDirection          preferredPointDirection;
