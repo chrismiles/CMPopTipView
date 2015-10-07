@@ -24,6 +24,7 @@
 //
 
 #import "CMPopTipView.h"
+#import "CMTipDismissBackgroundButton.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface CMPopTipView ()
@@ -40,7 +41,7 @@
 
 @property (nonatomic, strong, readwrite)	id	targetObject;
 @property (nonatomic, strong) NSTimer *autoDismissTimer;
-@property (nonatomic, strong) UIButton *dismissTarget;
+@property (nonatomic, strong) CMTipDismissBackgroundButton *dismissTarget;
 @end
 
 
@@ -357,9 +358,9 @@
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
     if ( self.dismissTapAnywhere ) {
-        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.dismissTarget = [CMTipDismissBackgroundButton buttonWithType:UIButtonTypeCustom];
+        self.dismissTarget.toolTipTarget = targetView;
         [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
-        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
         self.dismissTarget.frame = containerView.bounds;
         [containerView addSubview:self.dismissTarget];
     }
