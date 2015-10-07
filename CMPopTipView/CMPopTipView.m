@@ -149,7 +149,7 @@
         CGGradientRef myGradient;
         CGColorSpaceRef myColorSpace;
         size_t locationCount = 5;
-        CGFloat locationList[] = {0.0, bubbleMiddle-0.03, bubbleMiddle, bubbleMiddle+0.03, 1.0};
+        CGFloat locationList[] = {0.0, (CGFloat)(bubbleMiddle-0.03), bubbleMiddle, (CGFloat)(bubbleMiddle+0.03), 1.0};
         
         CGFloat colourHL = 0.0;
         if (_highlight) {
@@ -176,9 +176,9 @@
         }
         CGFloat colorList[] = {
             //red, green, blue, alpha 
-            red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
-            red*1.16+colourHL, green*1.16+colourHL, blue*1.16+colourHL, alpha,
-            red*1.08+colourHL, green*1.08+colourHL, blue*1.08+colourHL, alpha,
+            (CGFloat)(red*1.16+colourHL), (CGFloat)(green*1.16+colourHL),  (CGFloat)(blue*1.16+colourHL), alpha,
+             (CGFloat)(red*1.16+colourHL),  (CGFloat)(green*1.16+colourHL),  (CGFloat)(blue*1.16+colourHL), alpha,
+             (CGFloat)(red*1.08+colourHL),  (CGFloat)(green*1.08+colourHL),  (CGFloat)(blue*1.08+colourHL), alpha,
             red     +colourHL, green     +colourHL, blue     +colourHL, alpha,
             red     +colourHL, green     +colourHL, blue     +colourHL, alpha
         };
