@@ -367,36 +367,25 @@
 	[containerView addSubview:self];
     
 	// Size of rounded rect
-	CGFloat rectWidth;
+	CGFloat maxContentWidth = containerView.frame.size.width;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         // iPad
         if (self.maxWidth) {
             if (self.maxWidth < containerView.frame.size.width) {
-                rectWidth = self.maxWidth;
+                maxContentWidth = self.maxWidth;
             }
-            else {
-                rectWidth = containerView.frame.size.width - 20;
-            }
-        }
-        else {
-            rectWidth = (int)(containerView.frame.size.width/3);
         }
     }
     else {
         // iPhone
         if (self.maxWidth) {
             if (self.maxWidth < containerView.frame.size.width) {
-                rectWidth = self.maxWidth;
+                maxContentWidth = self.maxWidth;
             }
-            else {
-                rectWidth = containerView.frame.size.width - 10;
-            }
-        }
-        else {
-            rectWidth = (int)(containerView.frame.size.width*2/3);
         }
     }
+    maxContentWidth = maxContentWidth - ((_bubblePaddingX*2) + (2* _cornerRadius) + (2* _sidePadding));
 
 	CGSize textSize = CGSizeZero;
     
@@ -406,7 +395,7 @@
             textParagraphStyle.alignment = self.textAlignment;
             textParagraphStyle.lineBreakMode  =NSLineBreakByWordWrapping;
 
-            textSize = [self.message boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+            textSize = [self.message boundingRectWithSize:CGSizeMake(maxContentWidth, 99999.0)
                                                   options:NSStringDrawingUsesLineFragmentOrigin
                                                attributes:@{
                                                             NSFontAttributeName: self.textFont,
@@ -420,7 +409,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
             textSize = [self.message sizeWithFont:self.textFont
-                                constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                                constrainedToSize:CGSizeMake(maxContentWidth, 99999.0)
                                     lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
@@ -437,7 +426,7 @@
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
             titleParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
 
-            titleSize = [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+            titleSize = [self.title boundingRectWithSize:CGSizeMake(maxContentWidth, 99999.0)
                                                  options:NSStringDrawingUsesLineFragmentOrigin
                                               attributes:@{
                                                            NSFontAttributeName: self.titleFont,
@@ -451,7 +440,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
             titleSize = [self.title sizeWithFont:self.titleFont
-                               constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                               constrainedToSize:CGSizeMake(maxContentWidth, 99999.0)
                                    lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
