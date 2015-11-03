@@ -438,7 +438,7 @@
         textSize = self.customView.frame.size;
     }
     if (self.title != nil) {
-        CGSize titleSize;
+        CGSize titleSize = CGSizeZero;
 
         if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
