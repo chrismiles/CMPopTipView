@@ -133,6 +133,7 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, assign)           CGFloat                 pointerSize;
 @property (nonatomic, assign)           CGFloat                 bubblePaddingX;
 @property (nonatomic, assign)           CGFloat                 bubblePaddingY;
+@property (nonatomic, assign)           NSTimeInterval          hideAfter;
 
 /* Contents can be either a message or a UIView */
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow;
