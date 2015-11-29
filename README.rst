@@ -139,7 +139,7 @@ Available Options
 * **CGFloat**                 pointerSize
 * **CGFloat**                 bubblePaddingX
 * **CGFloat**                 bubblePaddingY
-
+* **BOOL**        	          dismissAlongWithUserInteraction
 
 ARC
 ---
