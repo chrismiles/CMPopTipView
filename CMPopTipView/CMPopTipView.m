@@ -676,6 +676,16 @@
 	[self dismissByUser];
 }
 
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+    if (self.dismissAlongWithUserInteraction) {
+        [self dismissAnimated:YES];
+        [self notifyDelegatePopTipViewWasDismissedByUser];
+        return nil;
+    }
+    
+    return [super hitTest:point withEvent:event];
+}
+
 - (void)dismissTapAnywhereFired:(__unused UIButton *)button
 {
 	[self dismissByUser];
