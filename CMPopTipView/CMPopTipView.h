@@ -124,6 +124,10 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, assign)           CGFloat                 cornerRadius;
 @property (nonatomic, assign)			CGFloat					borderWidth;
 @property (nonatomic, assign)           BOOL                    hasShadow;
+@property (nonatomic, assign)           CGSize                  shadowOffset;
+@property (nonatomic, assign)			CGFloat					shadowRadius;
+@property (nonatomic, assign)			CGFloat					shadowOpacity;
+@property (nonatomic, strong)			UIColor					*shadowColor;
 @property (nonatomic, assign)           CMPopTipAnimation       animation;
 @property (nonatomic, assign)           CGFloat                 maxWidth;
 @property (nonatomic, assign)           PointDirection          preferredPointDirection;
@@ -133,6 +137,7 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, assign)           CGFloat                 pointerSize;
 @property (nonatomic, assign)           CGFloat                 bubblePaddingX;
 @property (nonatomic, assign)           CGFloat                 bubblePaddingY;
+@property (nonatomic, strong)			NSDictionary            *customData;
 
 /**
  Dismiss along with user interaction if YES. For example, users can scroll down a table view when a tip view is shown. The tip view dismiss when he or she touches down and user interaction continues. Default is NO.

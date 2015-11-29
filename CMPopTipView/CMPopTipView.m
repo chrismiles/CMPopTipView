@@ -24,6 +24,7 @@
 //
 
 #import "CMPopTipView.h"
+#import "CMTipDismissBackgroundButton.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface CMPopTipView ()
@@ -40,7 +41,7 @@
 
 @property (nonatomic, strong, readwrite)	id	targetObject;
 @property (nonatomic, strong) NSTimer *autoDismissTimer;
-@property (nonatomic, strong) UIButton *dismissTarget;
+@property (nonatomic, strong) CMTipDismissBackgroundButton *dismissTarget;
 @end
 
 
@@ -362,9 +363,9 @@
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
     if ( self.dismissTapAnywhere ) {
-        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.dismissTarget = [CMTipDismissBackgroundButton buttonWithType:UIButtonTypeCustom];
+        self.dismissTarget.toolTipTarget = targetView;
         [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
-        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
         self.dismissTarget.frame = containerView.bounds;
         [containerView addSubview:self.dismissTarget];
     }
@@ -372,36 +373,25 @@
 	[containerView addSubview:self];
     
 	// Size of rounded rect
-	CGFloat rectWidth;
+	CGFloat maxContentWidth = containerView.frame.size.width;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         // iPad
         if (self.maxWidth) {
             if (self.maxWidth < containerView.frame.size.width) {
-                rectWidth = self.maxWidth;
+                maxContentWidth = self.maxWidth;
             }
-            else {
-                rectWidth = containerView.frame.size.width - 20;
-            }
-        }
-        else {
-            rectWidth = (int)(containerView.frame.size.width/3);
         }
     }
     else {
         // iPhone
         if (self.maxWidth) {
             if (self.maxWidth < containerView.frame.size.width) {
-                rectWidth = self.maxWidth;
+                maxContentWidth = self.maxWidth;
             }
-            else {
-                rectWidth = containerView.frame.size.width - 10;
-            }
-        }
-        else {
-            rectWidth = (int)(containerView.frame.size.width*2/3);
         }
     }
+    maxContentWidth = maxContentWidth - ((_bubblePaddingX*2) + (2* _cornerRadius) + (2* _sidePadding));
 
 	CGSize textSize = CGSizeZero;
     
@@ -411,7 +401,7 @@
             textParagraphStyle.alignment = self.textAlignment;
             textParagraphStyle.lineBreakMode  =NSLineBreakByWordWrapping;
 
-            textSize = [self.message boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+            textSize = [self.message boundingRectWithSize:CGSizeMake(maxContentWidth, 99999.0)
                                                   options:NSStringDrawingUsesLineFragmentOrigin
                                                attributes:@{
                                                             NSFontAttributeName: self.textFont,
@@ -426,7 +416,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
             textSize = [self.message sizeWithFont:self.textFont
-                                constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                                constrainedToSize:CGSizeMake(maxContentWidth, 99999.0)
                                     lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
@@ -444,7 +434,7 @@
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
             titleParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
 
-            titleSize = [self.title boundingRectWithSize:CGSizeMake(rectWidth, 99999.0)
+            titleSize = [self.title boundingRectWithSize:CGSizeMake(maxContentWidth, 99999.0)
                                                  options:NSStringDrawingUsesLineFragmentOrigin
                                               attributes:@{
                                                            NSFontAttributeName: self.titleFont,
@@ -459,7 +449,7 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
             titleSize = [self.title sizeWithFont:self.titleFont
-                               constrainedToSize:CGSizeMake(rectWidth, 99999.0)
+                               constrainedToSize:CGSizeMake(maxContentWidth, 99999.0)
                                    lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
@@ -727,7 +717,11 @@
 		self.backgroundColor = [UIColor colorWithRed:62.0/255.0 green:60.0/255.0 blue:154.0/255.0 alpha:1.0];
         self.has3DStyle = YES;
         self.borderColor = [UIColor blackColor];
-        self.hasShadow = YES;
+        self.hasShadow = NO;
+        self.shadowOffset = CGSizeMake(0, 3);
+        self.shadowRadius = 2.0;
+        self.shadowColor = [UIColor blackColor];
+        self.shadowOpacity = 0.3;
         self.animation = CMPopTipAnimationSlide;
         self.dismissTapAnywhere = NO;
         self.preferredPointDirection = PointDirectionAny;
@@ -743,10 +737,10 @@
         _hasShadow = hasShadow;
 
         if (hasShadow) {
-            self.layer.shadowOffset = CGSizeMake(0, 3);
-            self.layer.shadowRadius = 2.0;
-            self.layer.shadowColor = [[UIColor blackColor] CGColor];
-            self.layer.shadowOpacity = 0.3;
+            self.layer.shadowOffset = self.shadowOffset;
+            self.layer.shadowRadius = self.shadowRadius;
+            self.layer.shadowColor = [self.shadowColor CGColor];
+            self.layer.shadowOpacity = self.shadowOpacity;
         } else {
             self.layer.shadowOpacity = 0.0;
         }
