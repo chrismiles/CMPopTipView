@@ -274,6 +274,7 @@
         }
         else {
 
+#if !TARGET_OS_TV
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
@@ -283,6 +284,7 @@
                          alignment:self.titleAlignment];
 
 #pragma clang diagnostic pop
+#endif
 
         }
     }
@@ -308,14 +310,15 @@
             }
             else {
 
+#if !TARGET_OS_TV
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
                 textFrame.origin.y += [self.title sizeWithFont:self.titleFont
                                              constrainedToSize:CGSizeMake(textFrame.size.width, 99999.0)
                                                  lineBreakMode:NSLineBreakByWordWrapping].height;
-
 #pragma clang diagnostic pop
+#endif
 
             }
         }
@@ -335,6 +338,7 @@
         }
         else {
 
+#if !TARGET_OS_TV
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
@@ -344,6 +348,7 @@
                            alignment:self.textAlignment];
 
 #pragma clang diagnostic pop
+#endif
 
         }
     }
@@ -416,6 +421,7 @@
         }
         else {
 
+#if !TARGET_OS_TV
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
@@ -424,14 +430,15 @@
                                     lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
-        
+#endif
+
         }
     }
     if (self.customView != nil) {
         textSize = self.customView.frame.size;
     }
     if (self.title != nil) {
-        CGSize titleSize;
+        CGSize titleSize = CGSizeZero;
 
         if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -447,6 +454,7 @@
         }
         else {
 
+#if !TARGET_OS_TV
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
@@ -455,7 +463,8 @@
                                    lineBreakMode:NSLineBreakByWordWrapping];
 
 #pragma clang diagnostic pop
-        
+#endif
+
         }
 
         if (titleSize.width > textSize.width) textSize.width = titleSize.width;
