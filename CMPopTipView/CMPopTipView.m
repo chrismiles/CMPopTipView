@@ -355,7 +355,10 @@
 }
 
 - (void)presentPointingAtView:(UIView *)targetView inView:(UIView *)containerView animated:(BOOL)animated {
-	if (!self.targetObject) {
+	
+    [containerView addSubview:self];
+    
+    if (!self.targetObject) {
 		self.targetObject = targetView;
 	}
     
@@ -369,8 +372,6 @@
         [containerView addSubview:self.dismissTarget];
     }
 	
-	[containerView addSubview:self];
-    
 	// Size of rounded rect
 	CGFloat rectWidth;
     
