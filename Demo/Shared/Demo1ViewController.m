@@ -94,6 +94,7 @@
 		
 		/* Some options to try.
 		 */
+        //popTipView.shouldEnforceCustomViewPadding = YES;
 		//popTipView.disableTapToDismiss = YES;
 		//popTipView.preferredPointDirection = PointDirectionUp;
 		//popTipView.hasGradientBackground = NO;
