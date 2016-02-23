@@ -141,6 +141,7 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, assign)           BOOL                    dismissAlongWithUserInteraction;
 
 /* Contents can be either a message or a UIView */
+- (BOOL)isBeingShown;
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow;
 - (id)initWithMessage:(NSString *)messageToShow;
 - (id)initWithCustomView:(UIView *)aView;
