@@ -237,7 +237,7 @@
 	CGContextRestoreGState(c);
 
     //Draw Border
-    if (self.borderWidth > 0) {
+    if (self.borderWidth > 0 && self.borderColor != Nil) {
         size_t numBorderComponents = CGColorGetNumberOfComponents([self.borderColor CGColor]);
         const CGFloat *borderComponents = CGColorGetComponents(self.borderColor.CGColor);
         CGFloat r, g, b, a;
