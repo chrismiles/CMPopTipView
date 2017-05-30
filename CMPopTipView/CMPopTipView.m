@@ -507,7 +507,8 @@
     }
     else {
         _pointDirection = _preferredPointDirection;
-        CGPoint targetOriginInContainer = [targetView convertPoint:CGPointMake(0.0, 0.0) toView:containerView];
+        CGPoint showPoint = self.showFromCenter ? CGPointMake(targetView.bounds.size.width/2, targetView.bounds.size.height/2) : CGPointMake(0.0, 0.0);
+        CGPoint targetOriginInContainer = [targetView convertPoint:showPoint toView:containerView];
         CGFloat sizeBelow = containerView.bounds.size.height - targetOriginInContainer.y;
         if (_pointDirection == PointDirectionAny) {
             if (sizeBelow > targetOriginInContainer.y) {
