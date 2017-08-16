@@ -10,10 +10,10 @@
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 //  copies of the Software, and to permit persons to whom the Software is
 //  furnished to do so, subject to the following conditions:
-//  
+//
 //  The above copyright notice and this permission notice shall be included in
 //  all copies or substantial portions of the Software.
-//  
+//
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 //  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 //  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -58,38 +58,47 @@
 }
 
 - (CGRect)contentFrame {
-	CGRect bubbleFrame = [self bubbleFrame];
-	CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius + _bubblePaddingX,
-									 bubbleFrame.origin.y + _cornerRadius + _bubblePaddingY,
-									 bubbleFrame.size.width - (_bubblePaddingX*2) - (_cornerRadius*2),
-									 bubbleFrame.size.height - (_bubblePaddingY*2) - (_cornerRadius*2));
-	return contentFrame;
+    CGRect bubbleFrame = [self bubbleFrame];
+
+    if (self.shouldEnforceCustomViewPadding) {
+				CGRect contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius + _bubblePaddingX,
+												 bubbleFrame.origin.y + _cornerRadius + _bubblePaddingY,
+												 bubbleFrame.size.width - (_bubblePaddingX*2) - (_cornerRadius*2),
+												 bubbleFrame.size.height - (_bubblePaddingY*2) - (_cornerRadius*2));
+        return contentFrame;
+    }
+    else {
+        return bubbleFrame;
+    }
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
 	if (self.customView) {
-		
 		CGRect contentFrame = [self contentFrame];
         [self.customView setFrame:contentFrame];
+    }
+    if (self.customView && self.shouldMaskCustomView) {
+        self.customView.layer.cornerRadius = self.cornerRadius;
+        self.customView.layer.masksToBounds = YES;
     }
 }
 
 - (void)drawRect:(__unused CGRect)rect
 {
 	CGRect bubbleRect = [self bubbleFrame];
-	
-	CGContextRef c = UIGraphicsGetCurrentContext(); 
-    
+
+	CGContextRef c = UIGraphicsGetCurrentContext();
+
     CGContextSetRGBStrokeColor(c, 0.0, 0.0, 0.0, 1.0);	// black
 	CGContextSetLineWidth(c, self.borderWidth);
-    
+
 	CGMutablePathRef bubblePath = CGPathCreateMutable();
-	
+
 	if (_pointDirection == PointDirectionUp) {
 		CGPathMoveToPoint(bubblePath, NULL, _targetPoint.x+_sidePadding, _targetPoint.y);
 		CGPathAddLineToPoint(bubblePath, NULL, _targetPoint.x+_sidePadding+_pointerSize, _targetPoint.y+_pointerSize);
-		
+
 		CGPathAddArcToPoint(bubblePath, NULL,
 							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y,
 							bubbleRect.origin.x+bubbleRect.size.width, bubbleRect.origin.y+_cornerRadius,
@@ -111,7 +120,7 @@
 	else {
 		CGPathMoveToPoint(bubblePath, NULL, _targetPoint.x+_sidePadding, _targetPoint.y);
 		CGPathAddLineToPoint(bubblePath, NULL, _targetPoint.x+_sidePadding-_pointerSize, _targetPoint.y-_pointerSize);
-		
+
 		CGPathAddArcToPoint(bubblePath, NULL,
 							bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height,
 							bubbleRect.origin.x, bubbleRect.origin.y+bubbleRect.size.height-_cornerRadius,
@@ -130,9 +139,9 @@
 							_cornerRadius);
 		CGPathAddLineToPoint(bubblePath, NULL, _targetPoint.x+_sidePadding+_pointerSize, _targetPoint.y-_pointerSize);
 	}
-    
+
 	CGPathCloseSubpath(bubblePath);
-    
+
     CGContextSaveGState(c);
 	CGContextAddPath(c, bubblePath);
 	CGContextClip(c);
@@ -145,17 +154,17 @@
     else {
         // Draw clipped background gradient
         CGFloat bubbleMiddle = (bubbleRect.origin.y+(bubbleRect.size.height/2)) / self.bounds.size.height;
-        
+
         CGGradientRef myGradient;
         CGColorSpaceRef myColorSpace;
         size_t locationCount = 5;
         CGFloat locationList[] = {0.0, (CGFloat)(bubbleMiddle-0.03), bubbleMiddle, (CGFloat)(bubbleMiddle+0.03), 1.0};
-        
+
         CGFloat colourHL = 0.0;
         if (_highlight) {
             colourHL = 0.25;
         }
-        
+
         CGFloat red;
         CGFloat green;
         CGFloat blue;
@@ -175,7 +184,7 @@
             alpha = components[3];
         }
         CGFloat colorList[] = {
-            //red, green, blue, alpha 
+            //red, green, blue, alpha
             (CGFloat)(red*1.16+colourHL), (CGFloat)(green*1.16+colourHL),  (CGFloat)(blue*1.16+colourHL), alpha,
              (CGFloat)(red*1.16+colourHL),  (CGFloat)(green*1.16+colourHL),  (CGFloat)(blue*1.16+colourHL), alpha,
              (CGFloat)(red*1.08+colourHL),  (CGFloat)(green*1.08+colourHL),  (CGFloat)(blue*1.08+colourHL), alpha,
@@ -189,42 +198,42 @@
         startPoint.y = 0;
         endPoint.x = 0;
         endPoint.y = CGRectGetMaxY(self.bounds);
-        
+
         CGContextDrawLinearGradient(c, myGradient, startPoint, endPoint,0);
         CGGradientRelease(myGradient);
         CGColorSpaceRelease(myColorSpace);
     }
-	
+
     // Draw top highlight and bottom shadow
     if (self.has3DStyle) {
         CGContextSaveGState(c);
         CGMutablePathRef innerShadowPath = CGPathCreateMutable();
-        
+
         // add a rect larger than the bounds of bubblePath
         CGPathAddRect(innerShadowPath, NULL, CGRectInset(CGPathGetPathBoundingBox(bubblePath), -30, -30));
-        
+
         // add bubblePath to innershadow
         CGPathAddPath(innerShadowPath, NULL, bubblePath);
         CGPathCloseSubpath(innerShadowPath);
-        
+
         // draw top highlight
         UIColor *highlightColor = [UIColor colorWithWhite:1.0 alpha:0.75];
         CGContextSetFillColorWithColor(c, highlightColor.CGColor);
         CGContextSetShadowWithColor(c, CGSizeMake(0.0, 4.0), 4.0, highlightColor.CGColor);
         CGContextAddPath(c, innerShadowPath);
         CGContextEOFillPath(c);
-        
+
         // draw bottom shadow
         UIColor *shadowColor = [UIColor colorWithWhite:0.0 alpha:0.4];
         CGContextSetFillColorWithColor(c, shadowColor.CGColor);
         CGContextSetShadowWithColor(c, CGSizeMake(0.0, -4.0), 4.0, shadowColor.CGColor);
         CGContextAddPath(c, innerShadowPath);
         CGContextEOFillPath(c);
-        
+
         CGPathRelease(innerShadowPath);
         CGContextRestoreGState(c);
     }
-	
+
 	CGContextRestoreGState(c);
 
     //Draw Border
@@ -244,24 +253,24 @@
             b = borderComponents[2];
             a = borderComponents[3];
         }
-        
+
         CGContextSetRGBStrokeColor(c, r, g, b, a);
         CGContextAddPath(c, bubblePath);
         CGContextDrawPath(c, kCGPathStroke);
     }
-    
+
 	CGPathRelease(bubblePath);
-	
+
 	// Draw title and text
     if (self.title) {
         [self.titleColor set];
         CGRect titleFrame = CGRectIntegral([self contentFrame]);
-        
+
         if ([self.title respondsToSelector:@selector(drawWithRect:options:attributes:context:)]) {
             NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
             titleParagraphStyle.alignment = self.titleAlignment;
             titleParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-            
+
             [self.title drawWithRect:titleFrame
                              options:NSStringDrawingUsesLineFragmentOrigin
                           attributes:@{
@@ -270,7 +279,7 @@
                                        NSParagraphStyleAttributeName: titleParagraphStyle
                                        }
                              context:nil];
-            
+
         }
         else {
 
@@ -288,14 +297,14 @@
 
         }
     }
-	
+
 	if (self.message) {
 		[self.textColor set];
 		CGRect textFrame = CGRectIntegral([self contentFrame]);
-        
+
         // Move down to make room for title
         if (self.title) {
-            
+
             if ([self.title respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
                 NSMutableParagraphStyle *titleParagraphStyle = [[NSMutableParagraphStyle alloc] init];
                 titleParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -322,11 +331,11 @@
 
             }
         }
-        
+
         NSMutableParagraphStyle *textParagraphStyle = [[NSMutableParagraphStyle alloc] init];
         textParagraphStyle.alignment = self.textAlignment;
         textParagraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        
+
         if ([self.message respondsToSelector:@selector(drawWithRect:options:attributes:context:)]) {
             [self.message drawWithRect:textFrame
                                options:NSStringDrawingUsesLineFragmentOrigin attributes:@{
@@ -358,7 +367,7 @@
 	if (!self.targetObject) {
 		self.targetObject = targetView;
 	}
-    
+
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
     if ( self.dismissTapAnywhere ) {
@@ -368,12 +377,12 @@
         self.dismissTarget.frame = containerView.bounds;
         [containerView addSubview:self.dismissTarget];
     }
-	
+
 	[containerView addSubview:self];
-    
+
 	// Size of rounded rect
 	CGFloat rectWidth;
-    
+
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         // iPad
         if (self.maxWidth) {
@@ -404,7 +413,7 @@
     }
 
 	CGSize textSize = CGSizeZero;
-    
+
     if (self.message!=nil) {
         if ([self.message respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
             NSMutableParagraphStyle *textParagraphStyle = [[NSMutableParagraphStyle alloc] init];
@@ -470,19 +479,24 @@
         if (titleSize.width > textSize.width) textSize.width = titleSize.width;
         textSize.height += titleSize.height;
     }
-    
-	_bubbleSize = CGSizeMake(textSize.width + (_bubblePaddingX*2) + (_cornerRadius*2), textSize.height + (_bubblePaddingY*2) + (_cornerRadius*2));
-	
+
+    if (self.shouldEnforceCustomViewPadding) {
+				_bubbleSize = CGSizeMake(textSize.width + (_bubblePaddingX*2) + (_cornerRadius*2), textSize.height + (_bubblePaddingY*2) + (_cornerRadius*2));
+    }
+    else {
+        _bubbleSize = CGSizeMake(textSize.width, textSize.height);
+    }
+
 	UIView *superview = containerView.superview;
 	if ([superview isKindOfClass:[UIWindow class]])
 		superview = containerView;
-	
+
 	CGPoint targetRelativeOrigin    = [targetView.superview convertPoint:targetView.frame.origin toView:superview];
 	CGPoint containerRelativeOrigin = [superview convertPoint:containerView.frame.origin toView:superview];
-    
+
 	CGFloat pointerY;	// Y coordinate of pointer target (within containerView)
-	
-    
+
+
     if (targetRelativeOrigin.y+targetView.bounds.size.height < containerRelativeOrigin.y) {
         pointerY = 0.0;
         _pointDirection = PointDirectionUp;
@@ -514,9 +528,9 @@
             }
         }
     }
-    
+
 	CGFloat W = containerView.bounds.size.width;
-	
+
 	CGPoint p = [targetView.superview convertPoint:targetView.center toView:containerView];
 	CGFloat x_p = p.x;
 	CGFloat x_b = x_p - roundf(_bubbleSize.width/2);
@@ -532,7 +546,7 @@
 	if (x_p + _pointerSize > x_b + _bubbleSize.width - _cornerRadius) {
 		x_p = x_b + _bubbleSize.width - _cornerRadius - _pointerSize;
 	}
-	
+
 	CGFloat fullHeight = _bubbleSize.height + _pointerSize + 10.0;
 	CGFloat y_b;
 	if (_pointDirection == PointDirectionUp) {
@@ -543,16 +557,20 @@
 		y_b = pointerY - fullHeight;
 		_targetPoint = CGPointMake(x_p-x_b, fullHeight-2.0);
 	}
-	
+
 	CGRect finalFrame = CGRectMake(x_b-_sidePadding,
 								   y_b,
 								   _bubbleSize.width+_sidePadding*2,
 								   fullHeight);
     finalFrame = CGRectIntegral(finalFrame);
-    
-   	
+
+
 	if (animated) {
-        if (self.animation == CMPopTipAnimationSlide) {
+        if (self.animation == CMPopTipAnimationFade) {
+            self.alpha = 0;
+            self.frame = finalFrame;
+        }
+        else if (self.animation == CMPopTipAnimationSlide) {
             self.alpha = 0.0;
             CGRect startFrame = finalFrame;
             startFrame.origin.y += 10;
@@ -561,10 +579,10 @@
 		else if (self.animation == CMPopTipAnimationPop) {
             self.frame = finalFrame;
             self.alpha = 0.5;
-            
+
             // start a little smaller
             self.transform = CGAffineTransformMakeScale(0.75f, 0.75f);
-            
+
             // animate to a bigger size
             [UIView beginAnimations:nil context:nil];
             [UIView setAnimationDelegate:self];
@@ -574,10 +592,14 @@
             self.alpha = 1.0;
             [UIView commitAnimations];
         }
-		
+
 		[self setNeedsDisplay];
-		
-		if (self.animation == CMPopTipAnimationSlide) {
+		if (self.animation == CMPopTipAnimationFade) {
+            [UIView animateWithDuration:0.15 animations:^{
+                self.alpha = 1.0;
+            }];
+        }
+		else if (self.animation == CMPopTipAnimationSlide) {
 			[UIView beginAnimations:nil context:nil];
 			self.alpha = 1.0;
 			self.frame = finalFrame;
@@ -608,9 +630,9 @@
 		self.targetObject = nil;
 		return;
 	}
-	
+
 	self.targetObject = barButtonItem;
-	
+
 	[self presentPointingAtView:targetView inView:containerView animated:animated];
 }
 
@@ -621,9 +643,9 @@
         [self.dismissTarget removeFromSuperview];
 		self.dismissTarget = nil;
     }
-	
+
 	[self removeFromSuperview];
-    
+
 	_highlight = NO;
 	self.targetObject = nil;
 }
@@ -634,17 +656,26 @@
 }
 
 - (void)dismissAnimated:(BOOL)animated {
-	
+
 	if (animated) {
-		CGRect frame = self.frame;
-		frame.origin.y += 10.0;
-		
-		[UIView beginAnimations:nil context:nil];
-		self.alpha = 0.0;
-		self.frame = frame;
-		[UIView setAnimationDelegate:self];
-		[UIView setAnimationDidStopSelector:@selector(dismissAnimationDidStop:finished:context:)];
-		[UIView commitAnimations];
+        if (self.animation == CMPopTipAnimationFade) {
+            [UIView beginAnimations:nil context:nil];
+            self.alpha = 0.0;
+            [UIView setAnimationDuration:0.3];
+            [UIView setAnimationDelegate:self];
+            [UIView setAnimationDidStopSelector:@selector(dismissAnimationDidStop:finished:context:)];
+            [UIView commitAnimations];
+        } else {
+            CGRect frame = self.frame;
+            frame.origin.y += 10.0;
+
+            [UIView beginAnimations:nil context:nil];
+            self.alpha = 0.0;
+            self.frame = frame;
+            [UIView setAnimationDelegate:self];
+            [UIView setAnimationDidStopSelector:@selector(dismissAnimationDidStop:finished:context:)];
+            [UIView commitAnimations];
+        }
 	}
 	else {
 		[self finaliseDismiss];
@@ -659,9 +690,9 @@
 
 - (void)autoDismissAnimated:(BOOL)animated atTimeInterval:(NSTimeInterval)timeInterval {
     NSDictionary * userInfo = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:animated] forKey:@"animated"];
-    
-    [self.autoDismissTimer invalidate]; 
-    self.autoDismissTimer = nil;    
+
+    [self.autoDismissTimer invalidate];
+    self.autoDismissTimer = nil;
     self.autoDismissTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval
 															 target:self
 														   selector:@selector(autoDismissAnimatedDidFire:)
@@ -689,7 +720,7 @@
         [self notifyDelegatePopTipViewWasDismissedByUser];
         return nil;
     }
-    
+
     return [super hitTest:point withEvent:event];
 }
 
@@ -702,9 +733,9 @@
 {
 	_highlight = YES;
 	[self setNeedsDisplay];
-	
+
 	[self dismissAnimated:YES];
-	
+
 	[self notifyDelegatePopTipViewWasDismissedByUser];
 }
 
@@ -727,7 +758,7 @@
 		_pointerSize = 12.0;
 		_sidePadding = 2.0;
         _borderWidth = 1.0;
-		
+
 		self.textFont = [UIFont boldSystemFontOfSize:14.0];
 		self.textColor = [UIColor whiteColor];
 		self.textAlignment = NSTextAlignmentCenter;
@@ -754,7 +785,8 @@
             self.layer.shadowRadius = 2.0;
             self.layer.shadowColor = [[UIColor blackColor] CGColor];
             self.layer.shadowOpacity = 0.3;
-        } else {
+        }
+        else {
             self.layer.shadowOpacity = 0.0;
         }
     }
@@ -765,14 +797,19 @@
   return _pointDirection;
 }
 
+- (BOOL)isBeingShown
+{
+	return self.targetObject != nil;
+}
+
 - (id)initWithTitle:(NSString *)titleToShow message:(NSString *)messageToShow
 {
 	CGRect frame = CGRectZero;
-	
+
 	if ((self = [self initWithFrame:frame])) {
         self.title = titleToShow;
 		self.message = messageToShow;
-        
+
         self.titleFont = [UIFont boldSystemFontOfSize:16.0];
         self.titleColor = [UIColor whiteColor];
         self.titleAlignment = NSTextAlignmentCenter;
@@ -785,7 +822,7 @@
 - (id)initWithMessage:(NSString *)messageToShow
 {
 	CGRect frame = CGRectZero;
-	
+
 	if ((self = [self initWithFrame:frame])) {
 		self.message = messageToShow;
         self.isAccessibilityElement = YES;
@@ -797,9 +834,11 @@
 - (id)initWithCustomView:(UIView *)aView
 {
 	CGRect frame = CGRectZero;
-	
+
 	if ((self = [self initWithFrame:frame])) {
 		self.customView = aView;
+        self.shouldEnforceCustomViewPadding = YES;
+        self.shouldMaskCustomView = YES;
         [self addSubview:self.customView];
 	}
 	return self;
