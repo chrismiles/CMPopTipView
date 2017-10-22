@@ -615,9 +615,15 @@
 
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
 	UIView *targetView = (UIView *)[barButtonItem performSelector:@selector(view)];
+    
     // Try to find the superview of the UINavigationBar. Limit the number of tries to 8.
     UIView *containerView = targetView.superview;
     for(NSInteger i = 0; i < 8; ++i) {
+        if ([containerView isKindOfClass:[UIToolbar class]]) {
+            containerView = containerView.superview;
+            break;
+        }
+        
         if([containerView isKindOfClass:[UINavigationBar class]]) {
             containerView = containerView.superview;
             break;
