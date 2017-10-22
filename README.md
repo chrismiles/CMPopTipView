@@ -138,6 +138,7 @@ Available Options
 * **CGFloat**                 maxWidth
 * **PointDirection**          preferredPointDirection
 * **BOOL**                    hasGradientBackground
+* **BOOL**                    showFromCenter
 * **CGFloat**                 sidePadding
 * **CGFloat**                 topMargin
 * **CGFloat**                 pointerSize
