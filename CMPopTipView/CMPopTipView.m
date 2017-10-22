@@ -615,32 +615,18 @@
 }
 
 - (void)presentPointingAtBarButtonItem:(UIBarButtonItem *)barButtonItem animated:(BOOL)animated {
-	UIView *targetView = (UIView *)[barButtonItem performSelector:@selector(view)];
-    
-    // Try to find the superview of the UINavigationBar. Limit the number of tries to 8.
-    UIView *containerView = targetView.superview;
-    for(NSInteger i = 0; i < 8; ++i) {
-        if ([containerView isKindOfClass:[UIToolbar class]]) {
-            containerView = containerView.superview;
-            break;
-        }
-        
-        if([containerView isKindOfClass:[UINavigationBar class]]) {
-            containerView = containerView.superview;
-            break;
-        }
-        containerView = containerView.superview;
+    UIView *targetView = (UIView *)[barButtonItem performSelector:@selector(view)];
+    UIView *containerView = targetView.window;
+
+    if (nil == containerView) {
+        NSLog(@"Cannot determine container view from UIBarButtonItem: %@", barButtonItem);
+        self.targetObject = nil;
+        return;
     }
 
-	if (nil == containerView) {
-		NSLog(@"Cannot determine container view from UIBarButtonItem: %@", barButtonItem);
-		self.targetObject = nil;
-		return;
-	}
+    self.targetObject = barButtonItem;
 
-	self.targetObject = barButtonItem;
-
-	[self presentPointingAtView:targetView inView:containerView animated:animated];
+    [self presentPointingAtView:targetView inView:containerView animated:animated];
 }
 
 - (void)finaliseDismiss {
