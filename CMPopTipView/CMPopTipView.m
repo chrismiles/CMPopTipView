@@ -370,15 +370,25 @@
 
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
-    if ( self.dismissTapAnywhere ) {
-        self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
-        [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
-        [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
-        self.dismissTarget.frame = containerView.bounds;
+    if ( self.dismissTapAnywhere) {
+        if (!self.dismissTarget) {
+            self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
+            [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
+            [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
+            self.dismissTarget.frame = containerView.bounds;
+            
+        }
+        else
+        {
+            [self.dismissTarget removeFromSuperview];
+        }
+        
         [containerView addSubview:self.dismissTarget];
+        
     }
-
-	[containerView addSubview:self];
+    
+    [containerView addSubview:self];
+    [containerView bringSubviewToFront:self];
 
 	// Size of rounded rect
 	CGFloat rectWidth;
