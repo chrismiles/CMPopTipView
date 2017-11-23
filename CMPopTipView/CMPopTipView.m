@@ -370,7 +370,7 @@
 
     // If we want to dismiss the bubble when the user taps anywhere, we need to insert
     // an invisible button over the background.
-    if ( self.dismissTapAnywhere ) {
+    if ( self.dismissTapAnywhere && !self.dismissTarget ) {
         self.dismissTarget = [UIButton buttonWithType:UIButtonTypeCustom];
         [self.dismissTarget addTarget:self action:@selector(dismissTapAnywhereFired:) forControlEvents:UIControlEventTouchUpInside];
         [self.dismissTarget setTitle:@"" forState:UIControlStateNormal];
