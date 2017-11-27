@@ -139,7 +139,7 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
  @note Make sure `dismissTapAnywhere` is NO.
  */
 @property (nonatomic, assign)           BOOL                    dismissAlongWithUserInteraction;
-@property (nonatomic, assign)           BOOL                    shouldEnforceCustomViewPadding;
+@property (nonatomic, assign)           BOOL                    shouldEnforceCustomViewPadding __attribute__((deprecated("This property is no longer required. Padding is automatically applied when using bubblePaddingX, bubblePaddingY or cornerRadius.")));
 @property (nonatomic, assign)           BOOL                    shouldMaskCustomView;
 
 /* Contents can be either a message or a UIView */
