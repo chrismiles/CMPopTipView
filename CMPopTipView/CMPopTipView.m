@@ -355,6 +355,10 @@
 #endif
 
         }
+
+        if (self.hideAfter) {
+            [self performSelector:@selector(dismissByUser) withObject:nil afterDelay:self.hideAfter];
+        }
     }
 }
 
