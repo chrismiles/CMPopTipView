@@ -133,7 +133,9 @@ typedef NS_ENUM(NSInteger, CMPopTipAnimation) {
 @property (nonatomic, assign)           CGFloat                 pointerSize;
 @property (nonatomic, assign)           CGFloat                 bubblePaddingX;
 @property (nonatomic, assign)           CGFloat                 bubblePaddingY;
-
+@property (nonatomic, strong)           NSString                *rightImageName;
+@property (nonatomic, assign)           CGFloat                 rightImageWidth;
+@property (nonatomic, assign)           CGFloat                 rightImageMargin;
 /**
  Dismiss along with user interaction if YES. For example, users can scroll down a table view when a tip view is shown. The tip view dismiss when he or she touches down and user interaction continues. Default is NO.
  @note Make sure `dismissTapAnywhere` is NO.
