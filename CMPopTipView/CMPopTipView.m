@@ -65,7 +65,7 @@
     if (_rightImageName && _rightImageName.length > 0){
         contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius + _bubblePaddingX,
         bubbleFrame.origin.y + _cornerRadius + _bubblePaddingY,
-        bubbleFrame.size.width - (_bubblePaddingX*2) - (_cornerRadius*2) - _rightImageWidth - _rightImageMargin,
+        bubbleFrame.size.width - (_bubblePaddingX*2) - (_cornerRadius*2) - _rightImageWidth,
         bubbleFrame.size.height - (_bubblePaddingY*2) - (_cornerRadius*2));
     }else{
         contentFrame = CGRectMake(bubbleFrame.origin.x + _cornerRadius + _bubblePaddingX,
@@ -486,7 +486,7 @@
     }
 
     if (_rightImageName && _rightImageName.length > 0){
-        _bubbleSize = CGSizeMake(textSize.width + (_bubblePaddingX*2) + (_cornerRadius*2) + _rightImageMargin + _rightImageWidth, textSize.height + (_bubblePaddingY*2) + (_cornerRadius*2));
+        _bubbleSize = CGSizeMake(textSize.width + (_bubblePaddingX*2) + (_cornerRadius*2) + _rightImageWidth, textSize.height + (_bubblePaddingY*2) + (_cornerRadius*2));
     }else{
         _bubbleSize = CGSizeMake(textSize.width + (_bubblePaddingX*2) + (_cornerRadius*2), textSize.height + (_bubblePaddingY*2) + (_cornerRadius*2));
     }
