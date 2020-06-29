@@ -619,6 +619,7 @@
     
     if (_rightImageName && _rightImageName.length > 0){
         UIImageView *rightImageView = [[UIImageView alloc] initWithImage: [UIImage imageNamed:_rightImageName]];
+        rightImageView.contentMode = UIViewContentModeScaleAspectFit;
         rightImageView.frame = CGRectMake(finalFrame.size.width - _sidePadding - _bubblePaddingX -_rightImageWidth, finalFrame.size.height/2 -(_rightImageWidth/2), _rightImageWidth, _rightImageWidth);
         [self addSubview:rightImageView];
     }
